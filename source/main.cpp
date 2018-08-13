@@ -1,4 +1,5 @@
 #include <string.h>
+#include <fstream>
 #include <stdio.h>
 #include <iostream>
 
@@ -16,6 +17,13 @@ struct padding_data {
     int left;
 };
 
+struct rgb_color_data {
+    int r;
+    int g;
+    int b;
+    int a;
+};
+
 struct element_data {
     int height;
     int width;
@@ -25,15 +33,15 @@ struct element_data {
     bool center = false;
     bool floatLeft;
     bool floatRight;
+
+    rgb_color_data color;
+    rgb_color_data background;
 };
 
 std::string console_output = "Console output:\n";
-std::string page ="<html> <head> <title> Test display of HTML elements </title> </head> <body> <h1>Testing display of HTML elements</h1> <h2>This is 2nd level heading</h2> <p>This is a test paragraph.</p> <h3>This is 3rd level heading</h3> <p>This is a test paragraph.</p> <h4>This is 4th level heading</h4> <p>This is a test paragraph.</p> <h5>This is 5th level heading</h5> <p>This is a test paragraph.</p> <h6>This is 6th level heading</h6> <p>This is a test paragraph.</p> <h2>Basic block level elements</h2> <p>This is a normal paragraph (<code>p</code> element). To add some length to it, let us mention that this page was primarily written for testing the effect of <strong>user style sheets</strong>. You can use it for various other purposes as well, like just checking how your browser displays various HTML elements by default. It can also be useful when testing conversions from HTML format to other formats, since some elements can go wrong then.</p> <p>This is another paragraph. I think it needs to be added that the set of elements tested is not exhaustive in any sense. I have selected those elements for which it can make sense to write user style sheet rules, in my opionion.</p> <div>This is a <code>div</code> element. Authors may use such elements instead of paragraph markup for various reasons. (End of <code>div</code>.)</div> <blockquote><p>This is a block quotation containing a single paragraph. Well, not quite, since this is not <em>really</em> quoted text, but I hope you understand the point. After all, this page does not use HTML markup very normally anyway.</p></blockquote> </body> </html>";
+std::string page ="";
 
 int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, element_data* elementData) {
-    if (position > 720-27)
-        return position; //FIXME: Scroll
-
     // H tags
     if (type.length() == 2 && type.at(0) == 'h') {
         // Dynamically generate h1-h6
@@ -69,6 +77,15 @@ int html_parser (const tinyxml2::XMLElement* child, std::string type, int positi
         TTF_CloseFont(font);
 
         position += 16 + 5;
+    } else if (type == "code") {
+        // FIXME: code tag
+        position += 5;
+
+        TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+        sdl_helper::drawText(15, position, child->GetText(), font, elementData->center);
+        TTF_CloseFont(font);
+
+        position += 16 + 5;
     } else if (type == "br") {
         position += 15;
     } else if (type == "center") {
@@ -88,7 +105,7 @@ int html_parser (const tinyxml2::XMLElement* child, std::string type, int positi
 }
 
 void dom_parser (std::string source) {
-    int position = 68;
+    int position = 68; // TODO: scroll
 
     tinyxml2::XMLDocument doc;
     doc.Parse((const char*)source.c_str(), source.size());
@@ -116,6 +133,9 @@ int main(int argc, char **argv) {
     sdl_helper::init();
 
     TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 14);
+
+    std::ifstream ifs("romfs:/pages/test.html");
+    std::string page(std::istreambuf_iterator<char>{ifs}, {});
 
     tinyxml2::XMLDocument doc;
     doc.Parse((const char*)page.c_str(), page.size());

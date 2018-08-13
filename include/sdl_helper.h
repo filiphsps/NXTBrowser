@@ -44,7 +44,7 @@ namespace sdl_helper {
         SDL_RenderCopy(_renderer, tex, NULL, &position);
     }
 
-    void drawText(int x, int y, std::string text, TTF_Font *font) {
+    void drawText(int x, int y, std::string text, TTF_Font *font, bool center = false) {
         SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), {
             r: 0,
             g: 0,
@@ -52,7 +52,15 @@ namespace sdl_helper {
             a: 255
         }, 1280);
         SDL_SetSurfaceAlphaMod(surface, 255);
-        SDL_Rect position = { x, y, surface->w, surface->h };
+        SDL_Rect position;
+        if (!center)
+            position = { x, y, surface->w, surface->h };
+        else {
+            int screen_w = (_surface->w / 2);
+            int text_w = (surface->w / 2);
+
+            position = { (screen_w - text_w) + x, y, surface->w, surface->h };
+        }
         SDL_BlitSurface(surface, NULL, _surface, &position);
         SDL_FreeSurface(surface);
     }

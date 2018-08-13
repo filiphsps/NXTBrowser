@@ -1,5 +1,8 @@
 #pragma once
 
+#include <iostream>
+#include <vector>
+
 #include "../main.h"
 #include "../tinyxml2.h"
 
@@ -13,6 +16,14 @@ static int browser_height = 720;
 static SDL_Surface *_browser_surface;
 static SDL_Rect _browser_position = { 0, 68, 1280, 720 };
 static SDL_Rect _scroll_position = { 0, 0, 1280, browser_height };
+
+struct font {
+    TTF_Font* font;
+    std::string fontPath;
+    int fontSize;
+};
+
+static std::vector<font> fontCache;
 
 namespace browser {
     struct padding_data {
@@ -51,11 +62,24 @@ namespace browser {
         element_data styling;
     };
 
+    namespace utils {
+        TTF_Font* get_font_from_cache(std::string path, int size) {
+            for (int i = 0; i < (int)fontCache.size(); i++) {
+                if (fontCache[i].fontSize == size && fontCache[i].fontPath == path) {
+                    return fontCache[i].font;
+                } else {
+                    TTF_Font *font = TTF_OpenFont(path.c_str(), size);
+                    fontCache.push_back({ font, path, size });
+
+                    return font;
+                }
+            }
+        }
+    }
     namespace parser {
         int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, element_data* elementData) {
             // H tags
             if (type.length() == 2 && type.at(0) == 'h') {
-                return position;
 
                 // Dynamically generate h1-h6
                 if (std::isdigit(type.at(1))) {
@@ -74,48 +98,43 @@ namespace browser {
                     if (h_type >= 7)
                         return position; // H6 is the largest heading
 
-                    TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", font_size);
+                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", font_size);
                     int text_w, text_h;
                     TTF_SizeText(font, child->GetText(), &text_w, &text_h);
 
                     position += padding;
 
                     sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
-                    TTF_CloseFont(font);
 
                     position += text_h + padding;
                 }
             } else if (type == "p") {
-                TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
                 int text_w, text_h;
                 TTF_SizeText(font, child->GetText(), &text_w, &text_h);
 
                 position += 5;
 
                 sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
-                TTF_CloseFont(font);
 
                 position += text_h + 5;
             } else if (type == "a") {
-                return position;
                 // FIXME: a tag
                 position += 5;
 
-                TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
                 int text_w, text_h;
                 TTF_SizeText(font, child->GetText(), &text_w, &text_h);
 
                 sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center, 0, 0, 255, 255);
-                TTF_CloseFont(font);
 
                 position += text_h + 5;
 
             } else if (type == "code") {
-                return position;
                 // FIXME: code tag
                 position += 5;
 
-                TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
                 elementData->background = {
                     r: 155,
                     g: 155,
@@ -127,15 +146,13 @@ namespace browser {
 
                 sdl_helper::drawRect(_browser_surface, 15, position - 5, text_w, text_h + 10, elementData->background.r, elementData->background.g, elementData->background.b, elementData->background.a);
                 sdl_helper::drawText(_browser_surface, 15, position, child->GetText(), font, elementData->center);
-                TTF_CloseFont(font);
 
                 position += 16 + 5;
             } else if (type == "button") {
-                return position;
                 // FIXME: code tag
                 position += 5;
 
-                TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
                 elementData->background = {
                     r: 155,
                     g: 155,
@@ -147,11 +164,9 @@ namespace browser {
 
                 sdl_helper::drawRect(_browser_surface, 0, position - 5, text_w + 20, text_h + 10, elementData->background.r, elementData->background.g, elementData->background.b, elementData->background.a);
                 sdl_helper::drawText(_browser_surface, 0 + 10, position, child->GetText(), font, elementData->center);
-                TTF_CloseFont(font);
 
                 position += 16 + 5;
             } else if (type == "br") {
-                return position;
                 position += 15;
             } else if (type == "center") {
                 elementData->center = true;
@@ -162,15 +177,13 @@ namespace browser {
             } else if (type == "ul") {
 
             } else if (type == "li") {
-                return position;
-                TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
                 int text_w, text_h;
                 TTF_SizeText(font, child->GetText(), &text_w, &text_h);
 
                 position += 5;
 
                 sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
-                TTF_CloseFont(font);
 
                 position += text_h + 5;
             } else {

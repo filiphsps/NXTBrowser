@@ -1,6 +1,8 @@
+#pragma once
+
 #include <iostream>
 
-#include "tinyxml2.h"
+#include "../tinyxml2.h"
 
 namespace browser {
     std::string validate_and_fix (std::string page_source, int tick = 0) {

@@ -37,9 +37,9 @@ APP_VERSION := 1.0.0
 ICON 		:= 	Icon.jpg
 TARGET		:=	SimpleWeb
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	source source/html
 DATA		:=	data
-INCLUDES	:=	include
+INCLUDES	:=	include include/html
 EXEFS_SRC	:=	exefs_src
 ROMFS		:=	romFS
 

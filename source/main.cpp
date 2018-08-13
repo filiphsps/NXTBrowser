@@ -27,24 +27,13 @@ struct element_data {
     bool floatRight;
 };
 
-std::string console_output = "Hello World!\n";
-std::string page =
-"<html> \
-    <head><title>Test page</title></head> \
-    <body> \
-        <h1>h1</h1> \
-        <h2>h2</h2> \
-        <h3>h3</h3> \
-        <br /> \
-        <p>string</p> \
-        <center> \
-            <h1>title in center</h1> \
-            <p>string in center</p> \
-        </center> \
-    </body> \
-</html>";
+std::string console_output = "Console output:\n";
+std::string page ="<html> <head> <title> Test display of HTML elements </title> </head> <body> <h1>Testing display of HTML elements</h1> <h2>This is 2nd level heading</h2> <p>This is a test paragraph.</p> <h3>This is 3rd level heading</h3> <p>This is a test paragraph.</p> <h4>This is 4th level heading</h4> <p>This is a test paragraph.</p> <h5>This is 5th level heading</h5> <p>This is a test paragraph.</p> <h6>This is 6th level heading</h6> <p>This is a test paragraph.</p> <h2>Basic block level elements</h2> <p>This is a normal paragraph (<code>p</code> element). To add some length to it, let us mention that this page was primarily written for testing the effect of <strong>user style sheets</strong>. You can use it for various other purposes as well, like just checking how your browser displays various HTML elements by default. It can also be useful when testing conversions from HTML format to other formats, since some elements can go wrong then.</p> <p>This is another paragraph. I think it needs to be added that the set of elements tested is not exhaustive in any sense. I have selected those elements for which it can make sense to write user style sheet rules, in my opionion.</p> <div>This is a <code>div</code> element. Authors may use such elements instead of paragraph markup for various reasons. (End of <code>div</code>.)</div> <blockquote><p>This is a block quotation containing a single paragraph. Well, not quite, since this is not <em>really</em> quoted text, but I hope you understand the point. After all, this page does not use HTML markup very normally anyway.</p></blockquote> </body> </html>";
 
 int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, element_data* elementData) {
+    if (position > 720-27)
+        return position; //FIXME: Scroll
+
     // H tags
     if (type.length() == 2 && type.at(0) == 'h') {
         // Dynamically generate h1-h6
@@ -83,20 +72,18 @@ int html_parser (const tinyxml2::XMLElement* child, std::string type, int positi
     } else if (type == "br") {
         position += 15;
     } else if (type == "center") {
-        auto element = child;
-        for(const tinyxml2::XMLElement* c = element->FirstChildElement(); c!=0; c=c->NextSiblingElement()) {
-            std::string type = c->Value(); // TODO recursive
-
-            // TODO: set center to true in elementData
-            elementData->center = true;
-            position = html_parser(c, type, position, elementData);
-        }
+        elementData->center = true;
     } else {
         console_output.append("unsupported tag '");
         console_output.append(type);
         console_output.append("'\n");
     }
 
+    auto element = child;
+    for(const tinyxml2::XMLElement* c = element->FirstChildElement(); c!=0; c=c->NextSiblingElement()) {
+        std::string type = c->Value(); // TODO recursive
+        position = html_parser(c, type, position, elementData);
+    }
     return position;
 }
 

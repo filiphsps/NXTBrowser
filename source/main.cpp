@@ -16,6 +16,8 @@
 #include "tinyxml2.h"
 #include "sdl_helper.h"
 
+#include "validator.h"
+
 using namespace std;
 int y = 7;
 
@@ -247,9 +249,8 @@ int main(int argc, char **argv) {
 
     tinyxml2::XMLDocument doc;
 
-    // TODO: create HTML-fixer helper
-    //std::string doctype = "<!DOCTYPE html>";
-    //page.replace(page.find(doctype),doctype.length(),"");
+    // Validate and fix current page source
+    page = browser::validate_and_fix(page);
     doc.Parse((const char*)page.c_str(), page.size());
 
     if (!doc.ErrorID()) {

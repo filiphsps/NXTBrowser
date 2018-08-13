@@ -17,7 +17,7 @@ namespace sdl_helper {
         SDL_CreateWindowAndRenderer(1280, 720, 0, &_window, &_renderer);
         _surface = SDL_GetWindowSurface(_window);
         SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
-        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
         IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF);
         TTF_Init();
         SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
@@ -44,13 +44,23 @@ namespace sdl_helper {
         SDL_RenderCopy(_renderer, tex, NULL, &position);
     }
 
-    void drawText(SDL_Surface *surf, int x, int y, std::string text, TTF_Font *font, bool center = false) {
-        SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), {
-            r: 0,
-            g: 0,
-            b: 0,
-            a: 255
-        }, 1280);
+    void drawRect(SDL_Surface *surf, int x, int y, int h, int w, int r, int b, int g, int a) {
+        SDL_Rect pos;
+        pos.x = x;
+        pos.y = y;
+        pos.w = h;
+        pos.h = w;
+        SDL_FillRect(surf, &pos, SDL_MapRGBA(surf->format, r, g, b, a));
+    }
+
+    void drawText(SDL_Surface *surf, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
+        SDL_Color color;
+        color.r = cr;
+        color.g = cg;
+        color.b = cb;
+        color.a = ca;
+
+        SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), color, 1280);
         SDL_SetSurfaceAlphaMod(surface, 255);
         SDL_Rect position;
         if (!center)

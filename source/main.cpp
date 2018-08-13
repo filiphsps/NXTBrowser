@@ -1,3 +1,11 @@
+/*
+    Extremely **shitty** HTML renderer built in SDL using tinyxml2
+
+    TODO:
+      * Handle invalid XML data (non-closing tags, doctype, scripts, css, etc)
+*/
+
+
 #include <string.h>
 #include <fstream>
 #include <stdio.h>
@@ -9,6 +17,7 @@
 #include "sdl_helper.h"
 
 using namespace std;
+int y = 7;
 
 struct padding_data {
     int top;
@@ -75,28 +84,76 @@ int html_parser (const tinyxml2::XMLElement* child, std::string type, int positi
             if (h_type >= 7)
                 return position; // H6 is the largest heading
 
+            TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", font_size);
+            int text_w, text_h;
+            TTF_SizeText(font, child->GetText(), &text_w, &text_h);
+
             position += padding;
 
-            TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", font_size);
-            sdl_helper::drawText(_browser_surface, 15, position, child->GetText(), font, elementData->center);
+            sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
             TTF_CloseFont(font);
 
-            position += font_size + padding;
+            position += text_h + padding;
         }
     } else if (type == "p") {
+        TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+        int text_w, text_h;
+        TTF_SizeText(font, child->GetText(), &text_w, &text_h);
+
+        position += 5;
+
+        sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
+        TTF_CloseFont(font);
+
+        position += text_h + 5;
+    } else if (type == "a") {
+        // FIXME: a tag
         position += 5;
 
         TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
-        sdl_helper::drawText(_browser_surface, 15, position, child->GetText(), font, elementData->center);
+        int text_w, text_h;
+        TTF_SizeText(font, child->GetText(), &text_w, &text_h);
+
+        sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center, 0, 0, 255, 255);
         TTF_CloseFont(font);
 
-        position += 16 + 5;
+        position += text_h + 5;
+
     } else if (type == "code") {
         // FIXME: code tag
         position += 5;
 
         TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+        elementData->background = {
+            r: 155,
+            g: 155,
+            b: 155
+        };
+
+        int text_w, text_h;
+        TTF_SizeText(font, child->GetText(), &text_w, &text_h);
+
+        sdl_helper::drawRect(_browser_surface, 15, position - 5, text_w, text_h + 10, elementData->background.r, elementData->background.g, elementData->background.b, elementData->background.a);
         sdl_helper::drawText(_browser_surface, 15, position, child->GetText(), font, elementData->center);
+        TTF_CloseFont(font);
+
+        position += 16 + 5;
+    } else if (type == "button") {
+        // FIXME: code tag
+        position += 5;
+
+        TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+        elementData->background = {
+            r: 155,
+            g: 155,
+            b: 155
+        };
+
+        int text_w, text_h;
+        TTF_SizeText(font, child->GetText(), &text_w, &text_h);
+
+        sdl_helper::drawRect(_browser_surface, 0, position - 5, text_w + 20, text_h + 10, elementData->background.r, elementData->background.g, elementData->background.b, elementData->background.a);
+        sdl_helper::drawText(_browser_surface, 0 + 10, position, child->GetText(), font, elementData->center);
         TTF_CloseFont(font);
 
         position += 16 + 5;
@@ -104,6 +161,23 @@ int html_parser (const tinyxml2::XMLElement* child, std::string type, int positi
         position += 15;
     } else if (type == "center") {
         elementData->center = true;
+    } else if (type == "div") {
+        // TODO: handle parent tags
+    } else if (type == "header") {
+        // TODO: handle parent tags
+    } else if (type == "ul") {
+
+    } else if (type == "li") {
+        TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
+        int text_w, text_h;
+        TTF_SizeText(font, child->GetText(), &text_w, &text_h);
+
+        position += 5;
+
+        sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
+        TTF_CloseFont(font);
+
+        position += text_h + 5;
     } else {
         console_output.append("unsupported tag '");
         console_output.append(type);
@@ -112,7 +186,7 @@ int html_parser (const tinyxml2::XMLElement* child, std::string type, int positi
 
     auto element = child;
     for(const tinyxml2::XMLElement* c = element->FirstChildElement(); c!=0; c=c->NextSiblingElement()) {
-        std::string type = c->Value(); // TODO recursive
+        std::string type = c->Value();
         position = html_parser(c, type, position, elementData);
     }
     return position;
@@ -159,6 +233,7 @@ bool dom_parser (std::string source) {
     return false;
 }
 
+bool PAGE_ERROR = false;
 int main(int argc, char **argv) {
     romfsInit();
     sdl_helper::init();
@@ -168,8 +243,27 @@ int main(int argc, char **argv) {
     std::ifstream ifs("romfs:/pages/test.html");
     std::string page(std::istreambuf_iterator<char>{ifs}, {});
 
-    //tinyxml2::XMLDocument doc;
-    //doc.Parse((const char*)page.c_str(), page.size());
+    std::string title = "Error loading the page...";
+
+    tinyxml2::XMLDocument doc;
+
+    // TODO: create HTML-fixer helper
+    //std::string doctype = "<!DOCTYPE html>";
+    //page.replace(page.find(doctype),doctype.length(),"");
+    doc.Parse((const char*)page.c_str(), page.size());
+
+    if (!doc.ErrorID()) {
+        title = doc.FirstChildElement("html")->FirstChildElement("head")->FirstChildElement("title")->GetText();
+    } else {
+        PAGE_ERROR = true;
+        console_output.append("ErrorName: ");
+        console_output.append(doc.ErrorName());
+        console_output.append("\n");
+
+        console_output.append("ErrorID: ");
+        console_output.append(std::to_string(doc.ErrorID()));
+        console_output.append("\n");
+    }
 
     _browser_surface = SDL_CreateRGBSurface(0, 1280, browser_height, 32, 0, 0, 0, 255);
 
@@ -205,7 +299,10 @@ int main(int argc, char **argv) {
         SDL_RenderClear(_renderer);
         sdl_helper::drawTexture(_surface, _background_texture, 0, 0);
 
-        if (DOM_UPDATE) {
+        // Draw title only on DOM_UPDATE
+        sdl_helper::drawText(_surface, 25, 27, title, font, false);
+
+        if (DOM_UPDATE && !PAGE_ERROR) {
             // Update surface height
             SDL_FreeSurface(_browser_surface);
             _browser_surface = SDL_CreateRGBSurface(0, 1280, browser_height, 32, 0, 0, 0, 255);
@@ -213,15 +310,17 @@ int main(int argc, char **argv) {
             // TODO: Draw browser page
             if(!dom_parser(page))
                 DOM_UPDATE = false;
-
-            // Draw title
-            //sdl_helper::drawText(25, 27, doc.FirstChildElement("html")->FirstChildElement("head")->FirstChildElement("title")->GetText(), font, false);
         }
 
-        SDL_BlitSurface(_browser_surface, &_scroll_position, _surface, &_browser_position);
+        if(!PAGE_ERROR)
+            SDL_BlitSurface(_browser_surface, &_scroll_position, _surface, &_browser_position);
+        else {
+            // Error code
+            sdl_helper::drawText(_surface, 200, 640, doc.ErrorName(), font, false, 55, 55, 55, 55);
+        }
 
         // Console log
-        sdl_helper::drawText(_surface, 5, 0, console_output, font, false);
+        sdl_helper::drawText(_surface, 1280/2, 0, console_output, font, false, 255, 0, 0, 55);
 
         SDL_RenderPresent(_renderer);
     }

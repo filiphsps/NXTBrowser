@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
     romfsInit();
     sdl_helper::init();
 
-    TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 14);
+    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 14);
 
     std::ifstream ifs("romfs:/pages/test.html");
     std::string page(std::istreambuf_iterator<char>{ifs}, {});

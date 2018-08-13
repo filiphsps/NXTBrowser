@@ -1,6 +1,13 @@
 #pragma once
 
 #include "../main.h"
+#include "../tinyxml2.h"
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL2_gfxPrimitives.h> 
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 
 static int browser_height = 720;
 static SDL_Surface *_browser_surface;
@@ -48,6 +55,8 @@ namespace browser {
         int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, element_data* elementData) {
             // H tags
             if (type.length() == 2 && type.at(0) == 'h') {
+                return position;
+
                 // Dynamically generate h1-h6
                 if (std::isdigit(type.at(1))) {
                     std::string tag = type;
@@ -88,6 +97,7 @@ namespace browser {
 
                 position += text_h + 5;
             } else if (type == "a") {
+                return position;
                 // FIXME: a tag
                 position += 5;
 
@@ -101,6 +111,7 @@ namespace browser {
                 position += text_h + 5;
 
             } else if (type == "code") {
+                return position;
                 // FIXME: code tag
                 position += 5;
 
@@ -120,6 +131,7 @@ namespace browser {
 
                 position += 16 + 5;
             } else if (type == "button") {
+                return position;
                 // FIXME: code tag
                 position += 5;
 
@@ -139,6 +151,7 @@ namespace browser {
 
                 position += 16 + 5;
             } else if (type == "br") {
+                return position;
                 position += 15;
             } else if (type == "center") {
                 elementData->center = true;
@@ -149,6 +162,7 @@ namespace browser {
             } else if (type == "ul") {
 
             } else if (type == "li") {
+                return position;
                 TTF_Font *font = TTF_OpenFont("romfs:/fonts/NintendoStandard.ttf", 16);
                 int text_w, text_h;
                 TTF_SizeText(font, child->GetText(), &text_w, &text_h);
@@ -166,9 +180,10 @@ namespace browser {
             }
 
             auto element = child;
+
             for(const tinyxml2::XMLElement* c = element->FirstChildElement(); c!=0; c=c->NextSiblingElement()) {
                 std::string type = c->Value();
-                position = html_parser(c, type, position, elementData);
+                position = browser::parser::html_parser(c, type, position, elementData);
             }
             return position;
         }

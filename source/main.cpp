@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
     tinyxml2::XMLDocument doc;
 
     // Validate and fix current page source
-    page = browser::validate_and_fix(page);
+    page = browser::validator::validate_and_fix(page);
     doc.Parse((const char*)page.c_str(), page.size());
 
     if (!doc.ErrorID()) {

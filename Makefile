@@ -30,7 +30,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 #     - <libnx folder>/default_icon.jpg
 #---------------------------------------------------------------------------------
 
-APP_TITLE := Litehtml
+APP_TITLE := SimpleWeb
 APP_AUTHOR := filiphsandstrom
 APP_VERSION := 1.0.0
 
@@ -39,7 +39,7 @@ TARGET		:=	SimpleWeb
 BUILD		:=	build
 SOURCES		:=	source source/html
 DATA		:=	data
-INCLUDES	:=	include include/html
+INCLUDES	:=	include include/html include/tags
 EXEFS_SRC	:=	exefs_src
 ROMFS		:=	romFS
 

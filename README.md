@@ -4,6 +4,8 @@ Don't use this.. like really, just use the built-in applet instead.
 
 Doesn't even render a simple website.
 
+![scr](https://i.imgur.com/rrJ9jTP.jpg)
+
 ## Features
 * Tries to render your shitty site, but fails
 * Javasc.... ahahah good joke

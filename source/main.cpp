@@ -13,8 +13,8 @@ using namespace std;
 
 Console console;
 SDL_Surface *_browser_surface;
-SDL_Rect _browser_position = { 0, 68, 1280, 720 };
-SDL_Rect _scroll_position = { 0, 0, 1280, browser_height };
+SDL_Rect _browser_position = { 0, 68, DEVICE_WIDTH, DEVICE_HEIGHT };
+SDL_Rect _scroll_position = { 0, 0, DEVICE_WIDTH, browser_height };
 
 bool dom_parser (std::string source) {
     int position = 0; // TODO: scroll
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
         console.printf("DOM->Threw error with ID: " + std::to_string(doc.ErrorID()));
     }
 
-    _browser_surface = SDL_CreateRGBSurface(0, 1280, browser_height, 32, 0, 0, 0, 255);
+    _browser_surface = SDL_CreateRGBSurface(0, DEVICE_WIDTH, browser_height, 32, 0, 0, 0, 255);
 
     bool DOM_UPDATE = true;
     int i = 0;
@@ -121,7 +121,7 @@ int main(int argc, char **argv) {
         if (DOM_UPDATE && !PAGE_ERROR) {
             // Update surface height
             SDL_FreeSurface(_browser_surface);
-            _browser_surface = SDL_CreateRGBSurface(0, 1280, browser_height, 32, 0, 0, 0, 255);
+            _browser_surface = SDL_CreateRGBSurface(0, DEVICE_WIDTH, browser_height, 32, 0, 0, 0, 255);
 
             // TODO: Draw browser page
             if(!dom_parser(page))
@@ -132,13 +132,13 @@ int main(int argc, char **argv) {
             SDL_BlitSurface(_browser_surface, &_scroll_position, _surface, &_browser_position);
         else {
             // Error code
-            sdl_helper::drawText(_surface, 200, 640, doc.ErrorName(), font, false, 55, 55, 55, 55);
+            sdl_helper::drawText(_surface, 200, DEVICE_HEIGHT - 80, doc.ErrorName(), font, false, 55, 55, 55, 55);
         }
 
         #ifdef DEBUG
             // Console log
-            sdl_helper::drawRect(_surface, (1280 - 250 - 30) + 15, 15, 250, 720 - 30, 55, 55, 55, 155);
-            sdl_helper::drawText(_surface, (1280 - 250 - 30) + 30, 30, console.getFormattedOutput(), font, false, 255, 0, 0, 55);
+            sdl_helper::drawRect(_surface, (DEVICE_WIDTH - 250 - 30) + 15, 15, 250, 720 - 30, 55, 55, 55, 155);
+            sdl_helper::printText(console.getFormattedOutput(), _surface, {(DEVICE_WIDTH - 250 - 30) + 30, 30, 0, 0}, 250, font, {255, 0, 0, 255});
         #endif
         SDL_RenderPresent(_renderer);
     }

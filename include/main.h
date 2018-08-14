@@ -1,6 +1,15 @@
 #pragma once
 
+// Debug-specific
 #define DEBUG
+//#define DEBUG_DRAW_DOM
+//#define DEBUG_DRAW_DOM_UPDATES // FIXME:
+
+// Device-specific
+#define DEVICE_HEIGHT 720
+#define DEVICE_WIDTH 1280
+
+// Feature-toggles
 
 #include <iostream>
 

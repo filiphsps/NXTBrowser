@@ -1,19 +1,12 @@
 #pragma once
-#include "../../main.h"
+
+#include "properties.h"
+#include "tags/genericElement.h"
+#include "tags/genericTextElement.h"
+#include "tags/p.h"
 
 namespace browser {
     namespace elements {
-        struct properties {
 
-        }
-
-        class element {
-            private:
-                browser::elements::properties properties;
-            public:
-                browser::elements::properties getDefaultData () {
-                    return this.properties;
-                }
-        };
     }
 }

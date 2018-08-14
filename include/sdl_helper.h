@@ -46,42 +46,34 @@ namespace sdl_helper {
         SDL_RenderCopy(_renderer, tex, NULL, &position);
     }
 
-    void drawRect(SDL_Surface *surf, int x, int y, int h, int w, int r, int b, int g, int a) {
+    void drawRect(SDL_Surface *surf, int x, int y, int w, int h, int r, int b, int g, int a) {
         SDL_Rect pos;
         pos.x = x;
         pos.y = y;
-        pos.w = h;
-        pos.h = w;
+        pos.h = h;
+        pos.w = w;
         SDL_FillRect(surf, &pos, SDL_MapRGBA(surf->format, r, g, b, a));
     }
 
-    SDL_Rect drawText(SDL_Surface *surf, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
-        SDL_Color color;
-        color.r = cr;
-        color.g = cg;
-        color.b = cb;
-        color.a = ca;
+    SDL_Rect printText (std::string text, SDL_Surface *surf, SDL_Rect pos, int width,
+                        TTF_Font *font, SDL_Color color) {
 
-        SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), color, 1280);
+        SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), color, width);
         SDL_SetSurfaceAlphaMod(surface, 255);
-        SDL_Rect position;
-        if (!center)
-            position = { x, y, surf->w, surf->h };
-        else {
-            int screen_w = (surf->w / 2);
-            int text_w = (surface->w / 2);
-
-            position = { (screen_w - text_w) + x, y, surf->w, surf->h };
-        }
+        
         SDL_Rect size;
+        size.x = pos.x;
+        size.y = pos.y;
         size.h = surface->h;
         size.w = surface->w;
 
-        SDL_BlitSurface(surface, NULL, surf, &position);
+        SDL_BlitSurface(surface, NULL, surf, &size);
         SDL_FreeSurface(surface);
-
         return size;
     }
 
-    void print ();
+    // deprecated, remove asap
+    SDL_Rect drawText(SDL_Surface *surf, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
+        return printText(text, surf, {x, y, 0, 0}, DEVICE_WIDTH, font, {cr, cg, cb, ca});
+    }
 }

@@ -1,13 +1,13 @@
 #pragma once
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
-//#define DEBUG_DRAW_DOM
-
 #include <iostream>
 #include <vector>
 
 #include "../main.h"
 #include "../console.h"
+
+#include "html/elements.h"
 
 static int browser_height = 720;
 extern SDL_Surface *_browser_surface;
@@ -116,7 +116,7 @@ namespace browser {
                     int text_w, text_h;
                     TTF_SizeText(font, text.c_str(), &text_w, &text_h);
 
-                    position += padding;
+                    position += padding + 5;
 
                     SDL_Rect size;
 
@@ -124,7 +124,7 @@ namespace browser {
                         size = sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
                         text_h = size.h;
 
-                        sdl_helper::drawRect(_browser_surface, 0, position - padding, text_w, text_h + (padding*2), position, 55, 255, 255);
+                        sdl_helper::drawRect(_browser_surface, 0, position - padding, text_w, text_h + 5 + (padding*2), position, 55, 255, 255);
                         sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
                         console.printf("size.h: " + std::to_string(size.h));
                     #else

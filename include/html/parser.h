@@ -126,7 +126,6 @@ namespace browser {
 
                         sdl_helper::drawRect(_browser_surface, 0, position - padding, text_w, text_h + 5 + (padding*2), position, 55, 255, 255);
                         sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
-                        console.printf("size.h: " + std::to_string(size.h));
                     #else
                         size = sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
                         text_h = size.h;
@@ -138,7 +137,8 @@ namespace browser {
                 std::string text = child->GetText();
                 TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
 
-                // FIXME:
+                // FIXME: create new rendering system where every element is its own surface
+                // that way we only need to re-draw whatever changes
                 browser::elements::P *element = new browser::elements::P((browser::elements::properties*)nullptr, text);
                 element->SetFont(font);
                 browser::elements::renderQueueItem renderItem = element->getRenderQueueItem();

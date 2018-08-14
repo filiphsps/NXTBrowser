@@ -13,9 +13,10 @@ namespace browser {
                     display: Block,
                     x: 0, y: 0,
                     height: 0, width: 0,
+                    maxHeight: DEVICE_HEIGHT, maxWidth: DEVICE_WIDTH,
 
                     padding: {0, 0, 0, 0},
-                    margin: {18, 0, 18, 0},
+                    margin: {22, 0, 22, 0},
 
                     fontSize: 32,
                     fontStyle: Bold,
@@ -24,8 +25,8 @@ namespace browser {
                     background: {255, 255, 255, 0}
                 };
                 
-                H1(browser::elements::properties *props, std::string content) : browser::elements::GenericTextElement(props, content) {
-                    this->properties = (browser::elements::properties*)&this->defaultProperties;
+                H1(std::string content) : browser::elements::GenericTextElement(content) {
+                    this->properties = this->defaultProperties;
                 }
         };
     }

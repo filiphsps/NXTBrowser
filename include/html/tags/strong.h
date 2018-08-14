@@ -10,7 +10,7 @@ namespace browser {
         class Strong: public browser::elements::B {
             private:
             public:
-                Strong(browser::elements::properties *props, std::string content) : browser::elements::B(props, content) { }
+                Strong(std::string content) : browser::elements::B(content) { }
         };
     }
 }

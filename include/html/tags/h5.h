@@ -2,19 +2,11 @@
 
 #include <iostream>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-
-#include "../../console.h"
-
 #include "../properties.h"
-#include "genericElement.h"
-
-extern Console console;
 
 namespace browser {
     namespace elements {
-        class Br: public browser::elements::GenericElement {
+        class H5: public browser::elements::GenericTextElement {
             private:
             public:
                 const browser::elements::properties defaultProperties = {
@@ -24,15 +16,17 @@ namespace browser {
                     maxHeight: DEVICE_HEIGHT, maxWidth: DEVICE_WIDTH,
 
                     padding: {0, 0, 0, 0},
-                    margin: {16, 0, 16, 0},
+                    margin: {14, 0, 14, 0},
+
+                    fontSize: 14,
+                    fontStyle: Bold,
+
+                    color: {55, 55, 55, 255},
+                    background: {255, 255, 255, 0}
                 };
                 
-                Br() : browser::elements::GenericElement() {
+                H5(std::string content) : browser::elements::GenericTextElement(content) {
                     this->properties = this->defaultProperties;
-                }
-
-                virtual browser::elements::renderQueueItem getRenderQueueItem () {
-                    return browser::elements::GenericElement::getRenderQueueItem();
                 }
         };
     }

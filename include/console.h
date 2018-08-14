@@ -23,12 +23,12 @@ class Console {
                 this->consoleLog.erase(this->consoleLog.begin());
 
             // Group duplicated messages
-            //for (int i = 0; i < (int)this->consoleLog.size(); i++) {
+            for (int i = 0; i < (int)this->consoleLog.size(); i++) {
                 if (this->consoleLog[(int)this->consoleLog.size()-1].message == message) {
                     this->consoleLog[(int)this->consoleLog.size()-1].num += 1;
                     return 0;
                 }
-            //}
+            }
 
             this->consoleLog.push_back({ message, 0 });
             return 0;

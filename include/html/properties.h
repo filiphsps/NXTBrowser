@@ -66,7 +66,7 @@ namespace browser {
 
         struct renderQueueItem {
             browser::elements::size size;
-            browser::elements::properties *properties;
+            browser::elements::properties properties;
         };
     }
 }

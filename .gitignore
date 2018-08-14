@@ -1,7 +1,4 @@
 .vscode/
 build/
+bin/
 *.elf
-*.nacp
-*.nro
-*.nso
-*.pfs0

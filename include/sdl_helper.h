@@ -3,7 +3,9 @@
 #include <iostream>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h> 
+#ifdef __SWITCH__
+#include <SDL2/SDL2_gfxPrimitives.h>
+#endif
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
@@ -16,13 +18,24 @@ static SDL_Texture *_background_texture;
 namespace sdl_helper {
     void init() {
         SDL_Init(SDL_INIT_EVERYTHING);
+        #ifdef __SWITCH__
         SDL_CreateWindowAndRenderer(1280, 720, 0, &_window, &_renderer);
+        #elif __MACOS__
+        _window = SDL_CreateWindow(
+            "NXTBrowser",
+            SDL_WINDOWPOS_UNDEFINED,
+            SDL_WINDOWPOS_UNDEFINED,
+            1280,
+            720,
+            SDL_WINDOW_OPENGL
+        );
+        _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
+        #endif
         _surface = SDL_GetWindowSurface(_window);
         SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
-        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "4");
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
         IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF);
         TTF_Init();
-        SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
 
         SDL_Surface *_background_surface = IMG_Load("romfs:/gui/browser.png");
         _background_texture = SDL_CreateTextureFromSurface(_renderer, _background_surface);
@@ -49,7 +62,7 @@ namespace sdl_helper {
     SDL_Rect renderText (std::string text, SDL_Surface *surf, SDL_Rect pos, int width,
                         TTF_Font *font, SDL_Color color) {
 
-        SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), color, width);
+        SDL_Surface *surface = TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, width);
         SDL_SetSurfaceAlphaMod(surface, 255);
         
         SDL_Rect size;

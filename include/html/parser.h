@@ -1,14 +1,18 @@
 #pragma once
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include <iostream>
 #include <vector>
 
 #include "../main.h"
+#include "../console.h"
 
 static int browser_height = 720;
-static SDL_Surface *_browser_surface;
-static SDL_Rect _browser_position = { 0, 68, 1280, 720 };
-static SDL_Rect _scroll_position = { 0, 0, 1280, browser_height };
+extern SDL_Surface *_browser_surface;
+extern SDL_Rect _browser_position;
+extern SDL_Rect _scroll_position;
+
+extern Console console;
 extern std::string console_output;
 
 struct font {
@@ -20,6 +24,7 @@ struct font {
 static std::vector<font> fontCache;
 
 namespace browser {
+    // TODO move this to /tags & then rework it
     struct padding_data {
         int top;
         int right;
@@ -60,7 +65,7 @@ namespace browser {
         TTF_Font* get_font_from_cache(std::string path, int size) {
             for (int i = 0; i < (int)fontCache.size(); i++) {
                 if (fontCache[i].fontSize == size && fontCache[i].fontPath == path) {
-                    console_output.append("used a cached font\n");
+                    console.printf("used a cached font...");
                     return fontCache[i].font;
                 }
             }
@@ -181,9 +186,7 @@ namespace browser {
 
                 position += text_h + 5;
             } else {
-                console_output.append("unsupported tag '");
-                console_output.append(type);
-                console_output.append("'\n");
+                console.printf("DOM->Unsupported Tag: " + type);
             }
 
             auto element = child;

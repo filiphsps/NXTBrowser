@@ -1,11 +1,3 @@
-/*
-    Extremely **shitty** HTML renderer built in SDL using tinyxml2
-
-    TODO:
-      * Handle invalid XML data (non-closing tags, doctype, scripts, css, etc)
-*/
-
-
 #include <string.h>
 #include <fstream>
 #include <stdio.h>
@@ -15,8 +7,14 @@
 
 #include "main.h"
 #include "html.h"
+#include "console.h"
 
 using namespace std;
+
+Console console;
+SDL_Surface *_browser_surface;
+SDL_Rect _browser_position = { 0, 68, 1280, 720 };
+SDL_Rect _scroll_position = { 0, 0, 1280, browser_height };
 
 bool dom_parser (std::string source) {
     int position = 0; // TODO: scroll
@@ -34,14 +32,13 @@ bool dom_parser (std::string source) {
         // TODO: Do this properly
         std::string type = child->Value();
 
-        browser::element_data* elementData;
-        position = browser::parser::html_parser(child, type, position, elementData);
+        browser::element_data elementData;
+        elementData.height = position;
+        position = browser::parser::html_parser(child, type, position, &elementData);
     }
     
-    console_output.append(std::to_string(position));
-    console_output.append("\n");
-    console_output.append(std::to_string(browser_height));
-    console_output.append("\n");
+    console.printf("position: " + std::to_string(position));
+    console.printf("browser_height: " + std::to_string(browser_height));
 
     SDL_FreeSurface(browser);
 
@@ -64,6 +61,8 @@ int main(int argc, char **argv) {
     romfsInit();
     sdl_helper::init();
 
+    console = Console();
+    
     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 14);
 
     std::ifstream ifs("romfs:/pages/test.html");
@@ -81,18 +80,13 @@ int main(int argc, char **argv) {
         title = doc.FirstChildElement("html")->FirstChildElement("head")->FirstChildElement("title")->GetText();
     } else {
         PAGE_ERROR = true;
-        console_output.append("ErrorName: ");
-        console_output.append(doc.ErrorName());
-        console_output.append("\n");
-
-        console_output.append("ErrorID: ");
-        console_output.append(std::to_string(doc.ErrorID()));
-        console_output.append("\n");
+        console.printf("DOM->Threw error with ID: " + std::to_string(doc.ErrorID()));
     }
 
     _browser_surface = SDL_CreateRGBSurface(0, 1280, browser_height, 32, 0, 0, 0, 255);
 
     bool DOM_UPDATE = true;
+    int i = 0;
     while(appletMainLoop()) {
         // FIXME: only render on change
 
@@ -100,13 +94,10 @@ int main(int argc, char **argv) {
         u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
         u64 kHeld = hidKeysHeld(CONTROLLER_P1_AUTO);
 
-        if (kDown & KEY_PLUS)
+        if (kDown & KEY_PLUS) {
             break;
-        else if (kDown & KEY_B) {
-            console_output.append(std::to_string(_scroll_position.y));
-            console_output.append("\n");
-            console_output.append(std::to_string(browser_height));
-            console_output.append("\n");
+        } else if (kDown & KEY_B) {
+            console.printf("DOM->Current height: " + std::to_string(browser_height));
         }
 
         if (kHeld & KEY_DDOWN) {
@@ -145,8 +136,8 @@ int main(int argc, char **argv) {
         }
 
         // Console log
-        sdl_helper::drawText(_surface, 1280/2, 0, console_output, font, false, 255, 0, 0, 55);
-
+        sdl_helper::drawRect(_surface, (1280 - 250 - 30) + 15, 15, 250, 720 - 30, 55, 55, 55, 155);
+        sdl_helper::drawText(_surface, (1280 - 250 - 30) + 30, 30, console.getFormattedOutput(), font, false, 255, 0, 0, 55);
         SDL_RenderPresent(_renderer);
     }
     

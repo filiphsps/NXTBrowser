@@ -53,7 +53,7 @@ CFLAGS	:=	-g -W -O2 -fpermissive -ffunction-sections \
 
 CFLAGS	+=	$(INCLUDE) -Wmissing-field-initializers -D__SWITCH__
 
-CXXFLAGS	:= $(CFLAGS) -fexceptions -std=c++17
+CXXFLAGS	:= $(CFLAGS) -Wno-missing-field-initializers -Wno-implicit-fallthrough -fexceptions -std=c++17
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)

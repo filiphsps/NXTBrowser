@@ -6,5 +6,5 @@
 #include "tinyxml2.h"
 #include "html.h"
 
-static std::string console_output = "Console output:\n";
+extern Console console;
 static std::string page = "";

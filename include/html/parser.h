@@ -45,11 +45,10 @@ namespace browser {
         // FIXME: create new rendering system where every element is its own surface
         // that way we only need to re-draw whatever changes
         int html_parser (const tinyxml2::XMLElement* child, std::string type, int position) {
-            console.printf("DOM->Parser->Tag: " + type);
-            browser::elements::GenericElement *tag;
+            browser::elements::GenericElement *tag = new browser::elements::GenericElement((browser::elements::properties*)nullptr);
             browser::elements::renderQueueItem renderItem;
 
-            std::string text;
+            std::string text = "";
 
             if (type == "h1") {
                 text = child->GetText();
@@ -63,8 +62,7 @@ namespace browser {
             } else if (type == "br") {
                 tag = new browser::elements::Br((browser::elements::properties*)nullptr);
             } else {
-                tag = new browser::elements::GenericElement((browser::elements::properties*)nullptr);
-                //console.printf("DOM->Parser->Unsupported Tag: " + type);
+                console.printf("DOM->Parser->Unsupported Tag: " + type);
             }
             
             TTF_Font *fontFamily;

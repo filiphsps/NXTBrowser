@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_CONSOLE_OUTPUT 400
+#define MAX_CONSOLE_OUTPUT 35
 
 #include <iostream>
 #include <vector>

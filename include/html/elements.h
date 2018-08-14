@@ -6,6 +6,7 @@
 
 #include "tags/b.h"
 #include "tags/br.h"
+#include "tags/h1.h"
 #include "tags/p.h"
 #include "tags/strong.h"
 

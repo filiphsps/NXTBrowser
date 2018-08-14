@@ -8,6 +8,7 @@ namespace browser {
     namespace elements {
         class P: public browser::elements::GenericTextElement {
             private:
+            public:
                 const browser::elements::properties defaultProperties = {
                     display: Block,
                     x: 0, y: 0,
@@ -22,7 +23,7 @@ namespace browser {
                     color: {55, 55, 55, 255},
                     background: {255, 255, 255, 0}
                 };
-            public:
+                
                 P(browser::elements::properties *props, std::string content) : browser::elements::GenericTextElement(props, content) {
                     this->properties = (browser::elements::properties*)&this->defaultProperties;
                 }

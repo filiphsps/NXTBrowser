@@ -3,6 +3,13 @@
 
 namespace browser {
     namespace elements {
+        enum elementTypes {
+            Container,
+            Text,
+            Interactable,
+            Special
+        };
+
         enum displayModes {
             Inline,
             InlineBlock,

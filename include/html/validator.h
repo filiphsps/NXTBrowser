@@ -11,7 +11,7 @@ extern Console console;
 namespace browser {
     namespace validator {
         std::string validate_and_fix (std::string page_source, int tick = 0) {
-            console.printf("DOM->Validator->Trying to fix document...");
+            console.printf("DOM->Validator->Trying to validate & fix the document...");
 
             std::string new_page_source = page_source;
 

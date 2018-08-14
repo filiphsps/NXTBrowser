@@ -17,7 +17,7 @@ SDL_Rect _browser_position = { 0, 68, DEVICE_WIDTH, DEVICE_HEIGHT };
 SDL_Rect _scroll_position = { 0, 0, DEVICE_WIDTH, browser_height };
 
 bool dom_parser (std::string source) {
-    int position = 0; // TODO: scroll
+    int position = 0; // TODO: good scroll
 
     tinyxml2::XMLDocument doc;
     doc.Parse((const char*)source.c_str(), source.size());
@@ -27,14 +27,10 @@ bool dom_parser (std::string source) {
     SDL_BlitSurface(browser, NULL, _browser_surface, NULL);
 
     auto element = doc.FirstChildElement("html")->FirstChildElement("body");
-    for(const tinyxml2::XMLElement* child = element->FirstChildElement(); child!=0; child=child->NextSiblingElement()) {
-
+    for(const tinyxml2::XMLElement* child = element->FirstChildElement(); child != NULL; child=child->NextSiblingElement()) {
         // TODO: Do this properly
         std::string type = child->Value();
-
-        browser::element_data elementData;
-        elementData.height = position;
-        position = browser::parser::html_parser(child, type, position, &elementData);
+        position = browser::parser::html_parser(child, type, position);
     }
 
     SDL_FreeSurface(browser);

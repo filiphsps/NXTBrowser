@@ -20,6 +20,7 @@ namespace browser {
                 std::string content;
             public:
                 GenericTextElement(browser::elements::properties *props, std::string content) : browser::elements::GenericElement(props) {
+                    this->elementType = browser::elements::elementTypes::Text;
                     this->content = content;
                 }
 

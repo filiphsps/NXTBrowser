@@ -6,25 +6,25 @@
 
 namespace browser {
     namespace elements {
-        class B: public browser::elements::GenericTextElement {
+        class H1: public browser::elements::GenericTextElement {
             private:
             public:
                 const browser::elements::properties defaultProperties = {
-                    display: Inline,
+                    display: Block,
                     x: 0, y: 0,
                     height: 0, width: 0,
 
                     padding: {0, 0, 0, 0},
-                    margin: {16, 0, 16, 0},
+                    margin: {18, 0, 18, 0},
 
-                    fontSize: 16,
+                    fontSize: 32,
                     fontStyle: Bold,
 
                     color: {55, 55, 55, 255},
                     background: {255, 255, 255, 0}
                 };
                 
-                B(browser::elements::properties *props, std::string content) : browser::elements::GenericTextElement(props, content) {
+                H1(browser::elements::properties *props, std::string content) : browser::elements::GenericTextElement(props, content) {
                     this->properties = (browser::elements::properties*)&this->defaultProperties;
                 }
         };

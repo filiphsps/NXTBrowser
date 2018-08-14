@@ -16,6 +16,7 @@ namespace browser {
     namespace elements {
         class Br: public browser::elements::GenericElement {
             private:
+            public:
                 const browser::elements::properties defaultProperties = {
                     display: Block,
                     x: 0, y: 0,
@@ -24,13 +25,12 @@ namespace browser {
                     padding: {0, 0, 0, 0},
                     margin: {16, 0, 16, 0},
                 };
-            public:
+                
                 Br(browser::elements::properties *props) : browser::elements::GenericElement(props) {
                     this->properties = (browser::elements::properties*)&this->defaultProperties;
                 }
 
                 virtual browser::elements::renderQueueItem getRenderQueueItem () {
-                    console.printf("DOM->PARSER->Br->margin: " + std::to_string(this->properties->margin.top));
                     return browser::elements::GenericElement::getRenderQueueItem();
                 }
         };

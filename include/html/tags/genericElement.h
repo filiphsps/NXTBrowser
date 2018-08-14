@@ -10,8 +10,9 @@ namespace browser {
     namespace elements {
         class GenericElement {
             private:
-                const browser::elements::properties *defaultProperties;
             public:
+                browser::elements::elementTypes elementType = browser::elements::elementTypes::Container;
+                const browser::elements::properties *defaultProperties;
                 browser::elements::properties *properties;
 
                 GenericElement (browser::elements::properties *props) {
@@ -28,6 +29,8 @@ namespace browser {
                 const browser::elements::properties* getDefaultProperties () {
                     return this->defaultProperties;
                 }
+
+                void SetFont(TTF_Font *font) {};
 
                 virtual browser::elements::renderQueueItem getRenderQueueItem () {
                     // Get element height and width

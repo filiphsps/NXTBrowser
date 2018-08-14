@@ -149,6 +149,7 @@ endif
 all: $(BUILD)
 
 $(BUILD):
+	@clear
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 

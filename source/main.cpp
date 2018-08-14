@@ -137,8 +137,8 @@ int main(int argc, char **argv) {
 
         #ifdef DEBUG
             // Console log
-            sdl_helper::drawRect(_surface, (DEVICE_WIDTH - 250 - 30) + 15, 15, 250, 720 - 30, 55, 55, 55, 155);
-            sdl_helper::printText(console.getFormattedOutput(), _surface, {(DEVICE_WIDTH - 250 - 30) + 30, 30, 0, 0}, 250, font, {255, 0, 0, 255});
+            sdl_helper::drawRect(_surface, (DEVICE_WIDTH - 350 - 30) + 15, 15, 350, 720 - 30, 55, 55, 55, 155);
+            sdl_helper::printText(console.getFormattedOutput(), _surface, {(DEVICE_WIDTH - 350 - 30) + 30, 30, 0, 0}, 350, font, {255, 0, 0, 255});
         #endif
         SDL_RenderPresent(_renderer);
     }

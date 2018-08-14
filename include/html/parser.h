@@ -107,7 +107,7 @@ namespace browser {
                         diff = (h_type * 2);
 
                     int padding = 15 - diff;
-                    int font_size = 24 - diff;
+                    int font_size = 32 - diff;
 
                     if (h_type >= 7)
                         return position; // H6 is the largest heading
@@ -136,31 +136,26 @@ namespace browser {
                 }
             } else if (type == "p") {
                 std::string text = child->GetText();
+                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
 
                 // FIXME:
                 browser::elements::P *element = new browser::elements::P((browser::elements::properties*)nullptr, text);
-                
-                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
-                int text_w, text_h;
-                TTF_SizeText(font, text.c_str(), &text_w, &text_h);
-
-                position += 5;
-
-                SDL_Rect size;
+                element->SetFont(font);
+                browser::elements::renderQueueItem renderItem = element->getRenderQueueItem();
 
                 #ifdef DEBUG_DRAW_DOM
-                    size = sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
-                    text_h = size.h;
-
-                    sdl_helper::drawRect(_browser_surface, 0, position - 5, text_w, text_h + 10, position, 55, 255, 255);
-                    sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
-                    console.printf("size.h: " + std::to_string(size.h));
-                #else
-                    size = sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
-                    text_h = size.h;
+                    sdl_helper::drawRect(_browser_surface, renderItem.properties->margin.left,
+                        position + renderItem.properties->margin.top, renderItem.properties->width, renderItem.properties->height,
+                        position, 55, 255, 255);
                 #endif
 
-                position += text_h + 5;
+                position += renderItem.properties->margin.top;
+                sdl_helper::printText(text, _browser_surface,
+                    {renderItem.properties->margin.left + renderItem.properties->padding.left,
+                    position, 0, 0}, DEVICE_WIDTH, font, {0, 0, 0, 255});
+                position += renderItem.properties->height;
+                position += renderItem.properties->margin.bottom;
+
             } else if (true) {} else if (type == "a") {
                 // FIXME: a tag
                 position += 5;

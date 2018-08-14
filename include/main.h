@@ -2,7 +2,7 @@
 
 // Debug-specific
 #define DEBUG
-//#define DEBUG_DRAW_DOM
+#define DEBUG_DRAW_DOM
 //#define DEBUG_DRAW_DOM_UPDATES // FIXME:
 
 // Device-specific

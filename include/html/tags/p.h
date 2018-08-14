@@ -23,7 +23,7 @@ namespace browser {
                 };
             public:
                 P(browser::elements::properties *props, std::string content) : browser::elements::GenericTextElement(props, content) {
-                    
+                    this->properties = (browser::elements::properties*)&this->defaultProperties;
                 }
         };
     }

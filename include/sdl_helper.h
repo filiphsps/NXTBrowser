@@ -74,6 +74,6 @@ namespace sdl_helper {
 
     // deprecated, remove asap
     SDL_Rect drawText(SDL_Surface *surf, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
-        return printText(text, surf, {x, y, 0, 0}, DEVICE_WIDTH, font, {cr, cg, cb, ca});
+        return printText(text, surf, {x, y, 0, 0}, DEVICE_WIDTH, font, {(unsigned char)cr, (unsigned char)cg, (unsigned char)cb, (unsigned char)ca});
     }
 }

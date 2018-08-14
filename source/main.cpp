@@ -135,9 +135,11 @@ int main(int argc, char **argv) {
             sdl_helper::drawText(_surface, 200, 640, doc.ErrorName(), font, false, 55, 55, 55, 55);
         }
 
-        // Console log
-        sdl_helper::drawRect(_surface, (1280 - 250 - 30) + 15, 15, 250, 720 - 30, 55, 55, 55, 155);
-        sdl_helper::drawText(_surface, (1280 - 250 - 30) + 30, 30, console.getFormattedOutput(), font, false, 255, 0, 0, 55);
+        #ifdef DEBUG
+            // Console log
+            sdl_helper::drawRect(_surface, (1280 - 250 - 30) + 15, 15, 250, 720 - 30, 55, 55, 55, 155);
+            sdl_helper::drawText(_surface, (1280 - 250 - 30) + 30, 30, console.getFormattedOutput(), font, false, 255, 0, 0, 55);
+        #endif
         SDL_RenderPresent(_renderer);
     }
     

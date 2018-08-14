@@ -55,7 +55,7 @@ namespace sdl_helper {
         SDL_FillRect(surf, &pos, SDL_MapRGBA(surf->format, r, g, b, a));
     }
 
-    void drawText(SDL_Surface *surf, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
+    SDL_Rect drawText(SDL_Surface *surf, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
         SDL_Color color;
         color.r = cr;
         color.g = cg;
@@ -73,8 +73,14 @@ namespace sdl_helper {
 
             position = { (screen_w - text_w) + x, y, surf->w, surf->h };
         }
+        SDL_Rect size;
+        size.h = surface->h;
+        size.w = surface->w;
+
         SDL_BlitSurface(surface, NULL, surf, &position);
         SDL_FreeSurface(surface);
+
+        return size;
     }
 
     void print ();

@@ -1,6 +1,8 @@
 #pragma once
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
+//#define DEBUG_DRAW_DOM
+
 #include <iostream>
 #include <vector>
 
@@ -75,14 +77,27 @@ namespace browser {
             return font;
         }
     }
+
     namespace parser {
         // TODO: Remove duplicate code ("position +=", "TTF_Font *font", etc)
+
+        /*
+            Warning, this is really ugly!
+            wait for me to implement a real parser,
+            or dont.. I'm not your mom.
+
+            But seriously though, this is something that really
+            needs to happen.
+
+            Currently its extremely messy and a lot of code is repeated.
+        */
         int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, element_data* elementData) {
             // H tags
             if (type.length() == 2 && type.at(0) == 'h') {
                 // Dynamically generate h1-h6
                 if (std::isdigit(type.at(1))) {
                     std::string tag = type;
+                    std::string text = child->GetText();
                     tag.erase(0, 1);
 
                     int h_type = std::stoi(tag); // h[n] where n = h_type
@@ -92,29 +107,55 @@ namespace browser {
                         diff = (h_type * 2);
 
                     int padding = 15 - diff;
-                    int font_size = 32 - diff;
+                    int font_size = 24 - diff;
 
                     if (h_type >= 7)
                         return position; // H6 is the largest heading
 
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", font_size);
                     int text_w, text_h;
-                    TTF_SizeText(font, child->GetText(), &text_w, &text_h);
+                    TTF_SizeText(font, text.c_str(), &text_w, &text_h);
 
                     position += padding;
 
-                    sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
+                    SDL_Rect size;
+
+                    #ifdef DEBUG_DRAW_DOM
+                        size = sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
+                        text_h = size.h;
+
+                        sdl_helper::drawRect(_browser_surface, 0, position - padding, text_w, text_h + (padding*2), position, 55, 255, 255);
+                        sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
+                        console.printf("size.h: " + std::to_string(size.h));
+                    #else
+                        size = sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
+                        text_h = size.h;
+                    #endif
 
                     position += text_h + padding;
                 }
             } else if (type == "p") {
+                std::string text = child->GetText();
+
                 TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
                 int text_w, text_h;
-                TTF_SizeText(font, child->GetText(), &text_w, &text_h);
+                TTF_SizeText(font, text.c_str(), &text_w, &text_h);
 
                 position += 5;
 
-                sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
+                SDL_Rect size;
+
+                #ifdef DEBUG_DRAW_DOM
+                    size = sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
+                    text_h = size.h;
+
+                    sdl_helper::drawRect(_browser_surface, 0, position - 5, text_w, text_h + 10, position, 55, 255, 255);
+                    sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
+                    console.printf("size.h: " + std::to_string(size.h));
+                #else
+                    size = sdl_helper::drawText(_browser_surface, 0, position, text, font, elementData->center);
+                    text_h = size.h;
+                #endif
 
                 position += text_h + 5;
             } else if (true) {} else if (type == "a") {

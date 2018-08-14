@@ -1,5 +1,7 @@
 #pragma once
 
+#define DEBUG
+
 #include <iostream>
 
 #include "sdl_helper.h"

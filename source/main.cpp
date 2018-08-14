@@ -152,6 +152,8 @@ int main(int argc, char **argv) {
             }
         #endif*/
         SDL_RenderPresent(_renderer);
+
+        SDL_PumpEvents();
     }
     
     sdl_helper::exit();

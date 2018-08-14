@@ -36,9 +36,6 @@ bool dom_parser (std::string source) {
         elementData.height = position;
         position = browser::parser::html_parser(child, type, position, &elementData);
     }
-    
-    console.printf("position: " + std::to_string(position));
-    console.printf("browser_height: " + std::to_string(browser_height));
 
     SDL_FreeSurface(browser);
 
@@ -86,6 +83,7 @@ int main(int argc, char **argv) {
     _browser_surface = SDL_CreateRGBSurface(0, DEVICE_WIDTH, browser_height, 32, 0, 0, 0, 255);
 
     bool DOM_UPDATE = true;
+    bool CONSOLE = true;
     int i = 0;
     while(appletMainLoop()) {
         // FIXME: only render on change
@@ -97,7 +95,7 @@ int main(int argc, char **argv) {
         if (kDown & KEY_PLUS) {
             break;
         } else if (kDown & KEY_B) {
-            console.printf("DOM->Current height: " + std::to_string(browser_height));
+            CONSOLE = !CONSOLE;
         }
 
         if (kHeld & KEY_DDOWN) {
@@ -137,8 +135,10 @@ int main(int argc, char **argv) {
 
         #ifdef DEBUG
             // Console log
-            sdl_helper::drawRect(_surface, (DEVICE_WIDTH - 350 - 30) + 15, 15, 350, 720 - 30, 55, 55, 55, 155);
-            sdl_helper::printText(console.getFormattedOutput(), _surface, {(DEVICE_WIDTH - 350 - 30) + 30, 30, 0, 0}, 350, font, {255, 0, 0, 255});
+            if (CONSOLE) {
+                sdl_helper::drawRect(_surface, (DEVICE_WIDTH - DEBUG_CONSOLE_WIDTH - 30) + 15, 15, DEBUG_CONSOLE_WIDTH, 720 - 30, 55, 55, 55, 155);
+                sdl_helper::renderText(console.getFormattedOutput(), _surface, {(DEVICE_WIDTH - DEBUG_CONSOLE_WIDTH - 30) + 30, 30, 0, 0}, DEBUG_CONSOLE_WIDTH, font, {255, 0, 0, 255});
+            }
         #endif
         SDL_RenderPresent(_renderer);
     }

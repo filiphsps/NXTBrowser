@@ -16,10 +16,10 @@ namespace browser {
 
                 GenericElement (browser::elements::properties *props) {
                     //TODO: Merge defaultProperties and props into properties
-                    if(props != nullptr)
+                    /*if(props != nullptr)
                         this->properties = props;
                     else
-                        this->properties = (browser::elements::properties*)this->getDefaultProperties();
+                        this->properties = (browser::elements::properties*)this->getDefaultProperties();*/
                 }
                 ~GenericElement () {
 
@@ -46,7 +46,7 @@ namespace browser {
                     width       += this->properties->margin.right + this->properties->margin.right;
                     height      += this->properties->margin.top + this->properties->margin.bottom;
 
-                    //console.printf("DOM->PARSER->GenericElement->Height: " + std::to_string(height));
+                    console.printf("DOM->PARSER->GenericElement->height: " + std::to_string(height));
 
                     return (browser::elements::renderQueueItem){
                         size: {

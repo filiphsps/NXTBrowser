@@ -46,16 +46,7 @@ namespace sdl_helper {
         SDL_RenderCopy(_renderer, tex, NULL, &position);
     }
 
-    void drawRect(SDL_Surface *surf, int x, int y, int w, int h, int r, int b, int g, int a) {
-        SDL_Rect pos;
-        pos.x = x;
-        pos.y = y;
-        pos.h = h;
-        pos.w = w;
-        SDL_FillRect(surf, &pos, SDL_MapRGBA(surf->format, r, g, b, a));
-    }
-
-    SDL_Rect printText (std::string text, SDL_Surface *surf, SDL_Rect pos, int width,
+    SDL_Rect renderText (std::string text, SDL_Surface *surf, SDL_Rect pos, int width,
                         TTF_Font *font, SDL_Color color) {
 
         SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), color, width);
@@ -72,8 +63,22 @@ namespace sdl_helper {
         return size;
     }
 
+    void renderBackground (SDL_Surface *surf, SDL_Rect pos, SDL_Color color) {
+        SDL_FillRect(surf, &pos, SDL_MapRGBA(surf->format, color.r, color.g, color.b, color.a));
+    }
+
+    // deprecated, remove asap
+    void drawRect(SDL_Surface *surf, int x, int y, int w, int h, int r, int b, int g, int a) {
+        SDL_Rect pos;
+        pos.x = x;
+        pos.y = y;
+        pos.h = h;
+        pos.w = w;
+        SDL_FillRect(surf, &pos, SDL_MapRGBA(surf->format, r, g, b, a));
+    }
+    
     // deprecated, remove asap
     SDL_Rect drawText(SDL_Surface *surf, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
-        return printText(text, surf, {x, y, 0, 0}, DEVICE_WIDTH, font, {(unsigned char)cr, (unsigned char)cg, (unsigned char)cb, (unsigned char)ca});
+        return renderText(text, surf, {x, y, 0, 0}, DEVICE_WIDTH, font, {(unsigned char)cr, (unsigned char)cg, (unsigned char)cb, (unsigned char)ca});
     }
 }

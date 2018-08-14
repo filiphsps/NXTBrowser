@@ -67,7 +67,7 @@ namespace browser {
         TTF_Font* get_font_from_cache(std::string path, int size) {
             for (int i = 0; i < (int)fontCache.size(); i++) {
                 if (fontCache[i].fontSize == size && fontCache[i].fontPath == path) {
-                    console.printf("used a cached font...");
+                    console.printf("DOM->used a cached font...");
                     return fontCache[i].font;
                 }
             }
@@ -81,16 +81,8 @@ namespace browser {
     namespace parser {
         // TODO: Remove duplicate code ("position +=", "TTF_Font *font", etc)
 
-        /*
-            Warning, this is really ugly!
-            wait for me to implement a real parser,
-            or dont.. I'm not your mom.
-
-            But seriously though, this is something that really
-            needs to happen.
-
-            Currently its extremely messy and a lot of code is repeated.
-        */
+        // FIXME: create new rendering system where every element is its own surface
+        // that way we only need to re-draw whatever changes
         int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, element_data* elementData) {
             // H tags
             if (type.length() == 2 && type.at(0) == 'h') {
@@ -137,93 +129,31 @@ namespace browser {
                 std::string text = child->GetText();
                 TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
 
-                // FIXME: create new rendering system where every element is its own surface
-                // that way we only need to re-draw whatever changes
                 browser::elements::P *element = new browser::elements::P((browser::elements::properties*)nullptr, text);
                 element->SetFont(font);
                 browser::elements::renderQueueItem renderItem = element->getRenderQueueItem();
 
                 #ifdef DEBUG_DRAW_DOM
-                    sdl_helper::drawRect(_browser_surface, renderItem.properties->margin.left,
-                        position + renderItem.properties->margin.top, renderItem.properties->width, renderItem.properties->height,
-                        position, 55, 255, 255);
+                    sdl_helper::renderBackground(_browser_surface, {
+                        renderItem.properties->margin.left, //x
+                        position + renderItem.properties->margin.top, //y
+                        renderItem.properties->width + renderItem.properties->padding.left + renderItem.properties->padding.right, //w
+                        renderItem.properties->height + renderItem.properties->padding.top + renderItem.properties->padding.bottom //h
+                    }, {(unsigned char)position, 55, 255, 255});
                 #endif
 
                 position += renderItem.properties->margin.top;
-                sdl_helper::printText(text, _browser_surface,
+                sdl_helper::renderText(text, _browser_surface,
                     {renderItem.properties->margin.left + renderItem.properties->padding.left,
-                    position, 0, 0}, DEVICE_WIDTH, font, {0, 0, 0, 255});
+                    position, 0, 0}, renderItem.properties->width, font, {0, 0, 0, 255});
                 position += renderItem.properties->height;
                 position += renderItem.properties->margin.bottom;
 
-            } else if (true) {} else if (type == "a") {
-                // FIXME: a tag
-                position += 5;
-
-                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
-                int text_w, text_h;
-                TTF_SizeText(font, child->GetText(), &text_w, &text_h);
-
-                sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center, 0, 0, 255, 255);
-
-                position += text_h + 5;
-
-            } else if (type == "code") {
-                // FIXME: code tag
-                position += 5;
-
-                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
-                elementData->background = {
-                    r: 155,
-                    g: 155,
-                    b: 155
-                };
-
-                int text_w, text_h;
-                TTF_SizeText(font, child->GetText(), &text_w, &text_h);
-
-                sdl_helper::drawRect(_browser_surface, 15, position - 5, text_w, text_h + 10, elementData->background.r, elementData->background.g, elementData->background.b, elementData->background.a);
-                sdl_helper::drawText(_browser_surface, 15, position, child->GetText(), font, elementData->center);
-
-                position += 16 + 5;
-            } else if (type == "button") {
-                // FIXME: code tag
-                position += 5;
-
-                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
-                elementData->background = {
-                    r: 155,
-                    g: 155,
-                    b: 155
-                };
-
-                int text_w, text_h;
-                TTF_SizeText(font, child->GetText(), &text_w, &text_h);
-
-                sdl_helper::drawRect(_browser_surface, 0, position - 5, text_w + 20, text_h + 10, elementData->background.r, elementData->background.g, elementData->background.b, elementData->background.a);
-                sdl_helper::drawText(_browser_surface, 0 + 10, position, child->GetText(), font, elementData->center);
-
-                position += 16 + 5;
             } else if (type == "br") {
-                position += 15;
-            } else if (type == "center") {
-                elementData->center = true;
-            } else if (type == "div") {
-                // TODO: handle parent tags
-            } else if (type == "header") {
-                // TODO: handle parent tags
-            } else if (type == "ul") {
+                browser::elements::Br *element = new browser::elements::Br((browser::elements::properties*)nullptr);
+                browser::elements::renderQueueItem renderItem = element->getRenderQueueItem();
 
-            } else if (type == "li") {
-                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
-                int text_w, text_h;
-                TTF_SizeText(font, child->GetText(), &text_w, &text_h);
-
-                position += 5;
-
-                sdl_helper::drawText(_browser_surface, 0, position, child->GetText(), font, elementData->center);
-
-                position += text_h + 5;
+                position += renderItem.size.height;
             } else {
                 console.printf("DOM->Unsupported Tag: " + type);
             }

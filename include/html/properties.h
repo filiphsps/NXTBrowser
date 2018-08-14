@@ -24,6 +24,11 @@ namespace browser {
             bottom = 0, left = 0;
         };
 
+        struct size {
+            int height = 0,
+                width = 0;
+        };
+
         struct properties {
             displayModes display = Block;
             int x = 0, y = 0;
@@ -37,6 +42,11 @@ namespace browser {
 
             browser::elements::color color;
             browser::elements::color background;
+        };
+
+        struct renderQueueItem {
+            browser::elements::size size;
+            browser::elements::properties *properties;
         };
     }
 }

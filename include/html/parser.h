@@ -137,6 +137,9 @@ namespace browser {
             } else if (type == "p") {
                 std::string text = child->GetText();
 
+                // FIXME:
+                browser::elements::P *element = new browser::elements::P((browser::elements::properties*)nullptr, text);
+                
                 TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
                 int text_w, text_h;
                 TTF_SizeText(font, text.c_str(), &text_w, &text_h);

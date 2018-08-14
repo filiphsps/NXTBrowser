@@ -19,11 +19,15 @@ namespace browser {
             // TODO: invalid tags
             for (size_t i = 0; i < new_page_source.size(); i++) {
                 if (new_page_source[i] == '<'  && new_page_source[i+1] == 'b' &&
-                    new_page_source[i+2] == 'r' && new_page_source[i+3] == '>')
+                    new_page_source[i+2] == 'r' && new_page_source[i+3] == '>') {
                     new_page_source.insert(i+3, 1, '/');
-                else if (new_page_source[i] == '<'  && new_page_source[i+1] == 'h' &&
-                    new_page_source[i+2] == 'r' && new_page_source[i+3] == '>')
+                    i--;
+                } else if (new_page_source[i] == '<'  && new_page_source[i+1] == 'h' &&
+                    new_page_source[i+2] == 'r' && new_page_source[i+3] == '>') {
                     new_page_source.insert(i+3, 1, '/');
+                    i--;
+                }
+
             }
 
             tinyxml2::XMLDocument doc;

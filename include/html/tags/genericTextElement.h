@@ -7,9 +7,12 @@
 
 namespace browser {
     namespace elements {
-        class GenericTextElement: browser::elements::GenericElement {
+        class GenericTextElement: public browser::elements::GenericElement {
             private:
             public:
+                GenericTextElement(browser::elements::properties *props, std::string content) : browser::elements::GenericElement(props) {
+                    
+                }
         };
     }
 }

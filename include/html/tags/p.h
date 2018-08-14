@@ -6,7 +6,7 @@
 
 namespace browser {
     namespace elements {
-        class P: browser::elements::GenericTextElement {
+        class P: public browser::elements::GenericTextElement {
             private:
                 const browser::elements::properties defaultProperties = {
                     display: Block,
@@ -22,6 +22,9 @@ namespace browser {
                     background: {255, 255, 255, 0}
                 };
             public:
+                P(browser::elements::properties *props, std::string content) : browser::elements::GenericTextElement(props, content) {
+                    
+                }
         };
     }
 }

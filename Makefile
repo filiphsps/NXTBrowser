@@ -30,7 +30,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 #     - <libnx folder>/default_icon.jpg
 #---------------------------------------------------------------------------------
 
-APP_TITLE := SimpleWeb
+APP_TITLE := SimpleWebNX
 APP_AUTHOR := filiphsandstrom
 APP_VERSION := 1.0.0
 

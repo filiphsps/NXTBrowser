@@ -71,7 +71,6 @@ namespace browser {
         }
     }
     namespace parser {
-
         // TODO: Remove duplicate code ("position +=", "TTF_Font *font", etc)
         int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, element_data* elementData) {
             // H tags

@@ -6,10 +6,10 @@
 
 namespace browser {
     namespace elements {
-        class P: public browser::elements::GenericTextElement {
+        class B: public browser::elements::GenericTextElement {
             private:
                 const browser::elements::properties defaultProperties = {
-                    display: Block,
+                    display: Inline,
                     x: 0, y: 0,
                     height: 0, width: 0,
 
@@ -17,13 +17,13 @@ namespace browser {
                     margin: {16, 0, 16, 0},
 
                     fontSize: 16,
-                    fontStyle: Normal,
+                    fontStyle: Bold,
 
                     color: {55, 55, 55, 255},
                     background: {255, 255, 255, 0}
                 };
             public:
-                P(browser::elements::properties *props, std::string content) : browser::elements::GenericTextElement(props, content) {
+                B(browser::elements::properties *props, std::string content) : browser::elements::GenericTextElement(props, content) {
                     this->properties = (browser::elements::properties*)&this->defaultProperties;
                 }
         };

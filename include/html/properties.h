@@ -17,6 +17,14 @@ namespace browser {
             Table
         };
 
+        enum fontModes {
+            Normal,
+            Bold,
+            Italic,
+            Underline,
+            Strikethrough,
+        };
+
         struct color {
             short r = 0, g = 0, b = 0, a = 0;
         };
@@ -43,6 +51,7 @@ namespace browser {
 
             short lineHeight = 0;
             short fontSize = 0;
+            fontModes fontStyle = Normal;
 
             browser::elements::color color;
             browser::elements::color background;

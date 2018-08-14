@@ -149,6 +149,30 @@ namespace browser {
                 position += renderItem.properties->height;
                 position += renderItem.properties->margin.bottom;
 
+            } else if ((type == "b") || (type == "strong")) {
+                std::string text = child->GetText();
+                TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 16);
+
+                browser::elements::B *element = new browser::elements::B((browser::elements::properties*)nullptr, text);
+                element->SetFont(font);
+                browser::elements::renderQueueItem renderItem = element->getRenderQueueItem();
+
+                #ifdef DEBUG_DRAW_DOM
+                    sdl_helper::renderBackground(_browser_surface, {
+                        renderItem.properties->margin.left, //x
+                        position + renderItem.properties->margin.top, //y
+                        renderItem.properties->width + renderItem.properties->padding.left + renderItem.properties->padding.right, //w
+                        renderItem.properties->height + renderItem.properties->padding.top + renderItem.properties->padding.bottom //h
+                    }, {(unsigned char)position, 55, 255, 255});
+                #endif
+
+                position += renderItem.properties->margin.top;
+                sdl_helper::renderText(text, _browser_surface,
+                    {renderItem.properties->margin.left + renderItem.properties->padding.left,
+                    position, 0, 0}, renderItem.properties->width, font, {0, 0, 0, 255});
+                position += renderItem.properties->height;
+                position += renderItem.properties->margin.bottom;
+
             } else if (type == "br") {
                 browser::elements::Br *element = new browser::elements::Br((browser::elements::properties*)nullptr);
                 browser::elements::renderQueueItem renderItem = element->getRenderQueueItem();

@@ -35,6 +35,17 @@ namespace browser {
                     int width = this->properties->maxWidth - (this->properties->margin.left + this->properties->margin.right +
                         this->properties->padding.left + this->properties->padding.right);
 
+                    // Set font style
+                    switch (this->properties->fontStyle) {
+                        case Bold:
+                            TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
+                            break;
+                        case Normal:
+                        default:
+                            TTF_SetFontStyle(this->font, TTF_STYLE_NORMAL);
+                            break;
+                    }
+
                     // Calculate text width & height
                     // TODO: Separate this into GUI lib
                     SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(this->font, this->content.c_str(), {0, 0, 0, 0}, width);
@@ -45,8 +56,8 @@ namespace browser {
                     
                     SDL_FreeSurface(surface);
 
-                    console.printf("DOM->PARSER->GenericTextElement->width: " + std::to_string((this->properties->margin.left + this->properties->margin.right +
-                        this->properties->padding.left + this->properties->padding.right)));
+                    /*console.printf("DOM->PARSER->GenericTextElement->width: " + std::to_string((this->properties->margin.left + this->properties->margin.right +
+                        this->properties->padding.left + this->properties->padding.right)));*/
 
                     return browser::elements::GenericElement::getRenderQueueItem();
                 }

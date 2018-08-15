@@ -11,9 +11,6 @@
 #include "html/elements.h"
 
 static int browser_height = 720;
-extern SDL_Surface *_browser_surface;
-extern SDL_Rect _browser_position;
-extern SDL_Rect _scroll_position;
 
 extern Console console;
 extern std::string console_output;
@@ -56,7 +53,7 @@ namespace browser {
                 tag = new browser::elements::Br();
             } else {
                 tag = new browser::elements::GenericElement();
-                //console.printf("DOM->Parser->Unsupported Tag: " + type);
+                console.printf("DOM->Parser->Unsupported Tag: " + type);
             }
             
             switch (tag->elementType) {

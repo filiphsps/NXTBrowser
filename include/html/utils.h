@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../main.h"
+#include "../console.h"
 
 struct font {
     TTF_Font* font;
@@ -11,8 +12,9 @@ struct font {
     int fontSize;
 };
 
-static std::vector<font> fontCache;
+extern Console console;
 
+static std::vector<font> fontCache;
 namespace browser {
     namespace utils {
         TTF_Font* get_font_from_cache(std::string path, int size) {
@@ -24,7 +26,7 @@ namespace browser {
 
             for (int i = 0; i < (int)fontCache.size(); i++) {
                 if (fontCache[i].fontSize == size && fontCache[i].fontPath == path) {
-                    console.printf("DOM->used a cached font...");
+                    //console.printf("DOM->used a cached font...");
                     return fontCache[i].font;
                 }
             }

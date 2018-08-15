@@ -31,6 +31,13 @@ namespace browser {
                     if (this->properties.width > 0 && this->properties.height > 0)
                         return browser::elements::GenericElement::getRenderQueueItem(_surface);
                     
+                    // Update maxwidth & maxheight
+                    if(this->properties.maxWidth <= 0)
+                        this->properties.maxWidth = _surface->w;
+                    if(this->properties.maxHeight <= 0)
+                        this->properties.maxHeight = _surface->h;
+                    
+                    // Calculate width 
                     int width = this->properties.maxWidth - (this->properties.margin.left + this->properties.margin.right +
                         this->properties.padding.left + this->properties.padding.right);
 
@@ -57,7 +64,7 @@ namespace browser {
 
                     SDL_FreeSurface(surface);
 
-                    console.printf("DOM->Parser->GenericTextElement->width: " + std::to_string(width));
+                    //console.printf("DOM->Parser->GenericTextElement->width: " + std::to_string(width));
 
                     return browser::elements::GenericElement::getRenderQueueItem(_surface);
                 }

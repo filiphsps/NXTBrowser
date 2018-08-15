@@ -50,7 +50,7 @@ namespace browser {
             displayModes display = Block;
             int x = 0, y = 0;
             int height = 0, width = 0;
-            int maxHeight = DEVICE_HEIGHT, maxWidth = DEVICE_WIDTH;
+            int maxHeight = 0, maxWidth = 0;
             int minHeight = 0, minWidth = 0;
 
             browser::elements::position padding;

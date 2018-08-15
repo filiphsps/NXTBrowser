@@ -15,8 +15,6 @@
 static SDL_Window *_window;
 static SDL_Renderer *_renderer;
 
-extern SDL_Rect _browser_position;
-extern SDL_Rect _scroll_position;
 
 namespace sdl_helper {
     void init() {
@@ -37,7 +35,7 @@ namespace sdl_helper {
         #endif
         SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
         SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
-        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
         IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF);
         TTF_Init();
     }
@@ -92,6 +90,6 @@ namespace sdl_helper {
     
     // deprecated, remove asap
     SDL_Rect drawText(SDL_Surface *_surface, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
-        return renderText(text, _surface, {x, y, _browser_position.w, _browser_position.h}, _browser_position.w, font, {(unsigned char)cr, (unsigned char)cg, (unsigned char)cb, (unsigned char)ca});
+        return renderText(text, _surface, {x, y, 1280, 720}, 1280, font, {(unsigned char)cr, (unsigned char)cg, (unsigned char)cb, (unsigned char)ca});
     }
 }

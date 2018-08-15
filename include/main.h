@@ -4,15 +4,11 @@
 
 // Debug-specific
 #define DEBUG
-#define DEBUG_CONSOLE_WIDTH 400
-#define DEBUG_DRAW_DOM
-//#define DEBUG_DRAW_DOM_UPDATES
-
-// Device-specific
-#define DEVICE_HEIGHT 720
-#define DEVICE_WIDTH 1280
+#define DEBUG_CONSOLE_WIDTH 350
+//#define DEBUG_DRAW_DOM
 
 // Feature-toggles
+#define TODO true
 
 #include <iostream>
 
@@ -21,4 +17,5 @@
 #include "html.h"
 
 extern Console console;
+extern SDL_Rect DEVICE;
 static std::string page = "";

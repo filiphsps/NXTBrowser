@@ -13,7 +13,7 @@ namespace browser {
                     display: Block,
                     x: 0, y: 0,
                     height: 0, width: 0,
-                    maxHeight: DEVICE_HEIGHT, maxWidth: DEVICE_WIDTH,
+                    maxHeight: 0, maxWidth: 0,
 
                     padding: {0, 0, 0, 0},
                     margin: {16, 0, 16, 0},

@@ -43,7 +43,7 @@ SOURCES		:=	source source/html
 DATA		:=	data
 INCLUDES	:=	include include/html include/html/tags
 EXEFS_SRC	:=	exefs_src
-ROMFS		:=	romFS
+ROMFS		:=	resources
 
 #---------------------------------------------------------------------------------
 # options for code generation

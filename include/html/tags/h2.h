@@ -16,7 +16,7 @@ namespace browser {
                     maxHeight: 0, maxWidth: 0,
 
                     padding: {0, 0, 0, 0},
-                    margin: {20, 0, 20, 0},
+                    margin: {14, 0, 14, 0},
 
                     fontSize: 24,
                     fontStyle: Bold,

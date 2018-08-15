@@ -27,18 +27,13 @@ namespace browser {
                 sdl_helper::exit();
             }
 
-            void renderWindow () {
-                #ifdef __SWITCH__
-                    sdl_helper::drawTexture(this->_gui_surface, "romfs:/gui/browser.png", 0, 0);
-                #else
-                    sdl_helper::drawTexture(this->_gui_surface, "../../romFS/gui/browser.png", 0, 0);
-                #endif
-            }
+            void renderWindow () { }
 
             void prepareTick() {
                 // Get Window Size
                 int h, w;
-                SDL_GetWindowSize(_window, &w, &h);
+                SDL_GetRendererOutputSize(_renderer, &w, &h);
+                //SDL_GetWindowSize(_window, &w, &h);
                 DEVICE = {0, 0, w, h};
 
                 SDL_RenderClear(_renderer);
@@ -46,7 +41,7 @@ namespace browser {
                 // Clear surfaces
                 if(this->_gui_surface != NULL)
                     SDL_FreeSurface(this->_gui_surface);
-                this->_gui_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.w, 32, 0, 0, 0, 255);
+                this->_gui_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 255);
 
                 if(this->_overlay_surface != NULL)
                     SDL_FreeSurface(this->_overlay_surface);
@@ -56,19 +51,18 @@ namespace browser {
 
             bool doTick() {
                 SDL_Rect screen_pos = {0, 0, DEVICE.w, DEVICE.h};
-                SDL_Rect browser_pos_src = {0, 0, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
-                SDL_Rect browser_pos_dst = {0, 68, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
+                SDL_Rect browser_pos_dst = {0, 75, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
 
                 SDL_Texture *gui = SDL_CreateTextureFromSurface(_renderer, this->_gui_surface);
                 SDL_RenderCopy(_renderer, gui, &screen_pos, &screen_pos);
                 SDL_DestroyTexture(gui);
 
                 SDL_Texture *browser = SDL_CreateTextureFromSurface(_renderer, this->_browser_surface);
-                SDL_RenderCopy(_renderer, browser, &browser_pos_src, &browser_pos_dst);
+                SDL_RenderCopy(_renderer, browser, &screen_pos, &browser_pos_dst);
                 SDL_DestroyTexture(browser);
 
                 SDL_Texture *overlay = SDL_CreateTextureFromSurface(_renderer, this->_overlay_surface);
-                SDL_RenderCopy(_renderer, overlay, NULL, NULL);
+                SDL_RenderCopy(_renderer, overlay, &screen_pos, &screen_pos);
                 SDL_DestroyTexture(overlay);
 
                 SDL_RenderPresent(_renderer);
@@ -79,24 +73,47 @@ namespace browser {
         namespace AddressBar {
             void Render (browser::GUI *GUI) {
                 #ifdef __SWITCH__
-                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 14);
+                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 22);
                 #else
-                    TTF_Font *font = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", 14);
+                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 22);
                 #endif
 
-                sdl_helper::renderText("http://www.example.com", GUI->_gui_surface, {25, 27, 250, 25}, 450, font, {0, 0, 0, 255});
+                sdl_helper::renderBackground (GUI->_gui_surface, {
+                    0,
+                    0,
+                    DEVICE.w,
+                    75 //TODO: Scaling
+                }, {235, 235, 235, 255});
+                sdl_helper::renderBackground (GUI->_gui_surface, {
+                    100,
+                    10,
+                    DEVICE.w - 125,
+                    55 //TODO: Scaling
+                }, {255, 255, 255, 255});
+
+                sdl_helper::renderText("http://www.example.com", GUI->_gui_surface, {115, 26, 250, 25}, 450, font, {0, 0, 0, 255});
+
+                // Home Icon
+                sdl_helper::renderBackground (GUI->_gui_surface, {
+                    20,
+                    10,
+                    60,
+                    55 //TODO: Scaling
+                }, {255, 255, 255, 255});
             }
         }
         namespace Console {
             void Render (browser::GUI *GUI) {
                 #ifdef __SWITCH__
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 14);
+                #elif __MACOS__
+                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", 14);
                 #else
-                    TTF_Font *font = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", 14);
+                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 14);
                 #endif
 
                 sdl_helper::renderBackground (GUI->_overlay_surface, {
-                    (DEVICE.w - DEBUG_CONSOLE_WIDTH - 30) + 15,
+                    (DEVICE.w - (DEBUG_CONSOLE_WIDTH + 30)) + 15,
                     15,
                     DEBUG_CONSOLE_WIDTH,
                     DEVICE.h - 30
@@ -107,20 +124,22 @@ namespace browser {
             }
             void RenderStat (browser::GUI *GUI, short pos, std::string text) {
                 #ifdef __SWITCH__
-                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 14);
+                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 28);
+                #elif __MACOS__
+                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", 28);
                 #else
-                    TTF_Font *font = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", 14);
+                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 28);
                 #endif
 
                 sdl_helper::renderBackground (GUI->_overlay_surface, {
-                    15,
-                    DEVICE.h - (14+(15*pos)),
-                    300,
-                    14
+                    40,
+                    DEVICE.h - (30+(40*pos)),
+                    500,
+                    35
                 }, {180, 180, 180, 55});
 
                 sdl_helper::renderText(text, GUI->_overlay_surface,
-                    {15, DEVICE.h - (14+(15*pos)), DEVICE.w, 14}, DEVICE.w, font, {0, 255, 0, 255});
+                    {40, DEVICE.h - (30+(40*pos)), DEVICE.w, 30}, DEVICE.w, font, {0, 255, 0, 255});
             }
         }
     }

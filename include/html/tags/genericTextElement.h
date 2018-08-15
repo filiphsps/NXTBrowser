@@ -42,14 +42,27 @@ namespace browser {
                         this->properties.padding.left + this->properties.padding.right);
 
                     // Set font style
-                    this->font = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
-
                     switch (this->properties.fontStyle) {
                         case Bold:
-                            TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
+                            #ifdef __SWITCH__
+                                this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+                                TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
+                            #elif __MACOS__
+                                this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial Bold.ttf", (int)this->properties.fontSize);
+                            #else
+                                this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+                                TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
+                            #endif
                             break;
                         case Normal:
                         default:
+                            #ifdef __SWITCH__
+                                this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+                            #elif __MACOS__
+                                this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", (int)this->properties.fontSize);
+                            #else
+                                this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+                            #endif
                             TTF_SetFontStyle(this->font, TTF_STYLE_NORMAL);
                             break;
                     }
@@ -66,7 +79,7 @@ namespace browser {
                     SDL_FreeSurface(surface);
 
                     //console.printf("DOM->Parser->GenericTextElement->width: " + std::to_string(width));
-
+                    
                     return browser::elements::GenericElement::getRenderQueueItem(_surface);
                 }
         };

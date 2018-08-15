@@ -10,7 +10,7 @@
 
 #include "html/elements.h"
 
-static int browser_height = 720;
+static int browser_height = 0;
 
 extern Console console;
 extern std::string console_output;

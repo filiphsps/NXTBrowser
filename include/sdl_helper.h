@@ -21,7 +21,7 @@ extern Console console;
 namespace sdl_helper {
     void init() {
         SDL_Init(SDL_INIT_EVERYTHING);
-        
+
         #ifdef __SWITCH__
         SDL_CreateWindowAndRenderer(1280, 720, 0, &_window, &_renderer);
         #else
@@ -31,10 +31,13 @@ namespace sdl_helper {
             SDL_WINDOWPOS_UNDEFINED,
             1280,
             720,
-            0
+            SDL_WINDOW_ALLOW_HIGHDPI
         );
         SDL_SetWindowResizable(_window, SDL_TRUE);
-        _renderer = SDL_CreateRenderer(_window, -1, 0);
+        _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
+        //SDL_RenderSetLogicalSize(_renderer, 1920, 1080);
+        //SDL_RenderSetIntegerScale(_renderer, SDL_TRUE);
+        //SDL_RenderSetScale(_renderer, 2, 2); //TODO: res based
         #endif
         SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
         SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
@@ -44,10 +47,11 @@ namespace sdl_helper {
     }
 
     void exit() {
-        TTF_Quit();
-        IMG_Quit();
         SDL_DestroyRenderer(_renderer);
         SDL_DestroyWindow(_window);
+        
+        TTF_Quit();
+        IMG_Quit();
         SDL_Quit();
     }
 
@@ -58,7 +62,7 @@ namespace sdl_helper {
         SDL_Rect src = {0, 0, surface->w, surface->h};
         SDL_Rect dst = {x, y, surface->w, surface->h};
 
-        SDL_BlitSurface(surface, &src, _surface, &dst);
+        SDL_BlitSurface(surface, NULL, _surface, NULL);
         SDL_FreeSurface(surface);
     }
 

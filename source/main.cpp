@@ -75,6 +75,9 @@ int main(int argc, char **argv) {
                     getMemoryUsage()) + "/" +
                     std::to_string(SDL_GetSystemRAM())
                     + " MB"));
+            browser::UIElements::Console::RenderStat(GUI, 3,
+                std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
+                + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: 1"));
 
             //INPUT->doTick();
             //NET->doTick();

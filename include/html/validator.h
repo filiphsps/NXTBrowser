@@ -18,11 +18,14 @@ namespace browser {
             // TODO: unclosed tags
             // TODO: invalid tags
             for (size_t i = 0; i < new_page_source.size(); i++) {
+
                 if (new_page_source[i] == '<'  && new_page_source[i+1] == 'b' &&
                     new_page_source[i+2] == 'r' && new_page_source[i+3] == '>') {
                     new_page_source.insert(i+3, 1, '/');
                     i--;
-                } else if (new_page_source[i] == '<'  && new_page_source[i+1] == 'h' &&
+                }
+
+                if (new_page_source[i] == '<'  && new_page_source[i+1] == 'h' &&
                     new_page_source[i+2] == 'r' && new_page_source[i+3] == '>') {
                     new_page_source.insert(i+3, 1, '/');
                     i--;
@@ -30,8 +33,14 @@ namespace browser {
 
             }
 
-            tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument();
-            doc->Parse((const char*)new_page_source.c_str(), new_page_source.size());
+            tinyxml2::XMLDocument *doc;
+            try {
+                doc = new tinyxml2::XMLDocument();
+                doc->Parse((const char*)new_page_source.c_str(), new_page_source.size());
+            } catch(int ex) {
+                console.printf("DOM->Validator->tinyxml2 exception: " + std::to_string(ex));
+                return validate_and_fix(new_page_source, tick);
+            }
 
             // Recursivly fix till there aren't any errors
             if(doc->ErrorID()) {

@@ -29,8 +29,8 @@ namespace browser {
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 14);
                     ifs = std::ifstream("romfs:/pages/test.html");
                 #else
-                    TTF_Font *font = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", 14);
-                    ifs = std::ifstream("/Users/filiphsandstrom/Desktop/simpleweb/romFS/pages/test.html");
+                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 14);
+                    ifs = std::ifstream("/Users/filiphsandstrom/Desktop/simpleweb/resources/pages/test.html");
                 #endif
 
                 this->source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));

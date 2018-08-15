@@ -72,9 +72,6 @@ namespace browser {
                 SDL_DestroyTexture(overlay);
 
                 SDL_RenderPresent(_renderer);
-
-                SDL_PumpEvents(); //TODO: move to input class
-                SDL_Delay(15); //TODO: Limit based on refresh-rate
             }
     };
 
@@ -103,7 +100,7 @@ namespace browser {
                     15,
                     DEBUG_CONSOLE_WIDTH,
                     DEVICE.h - 30
-                }, {180, 180, 180, 55});
+                }, {180, 180, 180, 255});
 
                 sdl_helper::renderText(console.getFormattedOutput(), GUI->_overlay_surface,
                     {((DEVICE.w - DEBUG_CONSOLE_WIDTH) - 30) + 30, 30, 0, 0}, DEBUG_CONSOLE_WIDTH, font, {66, 66, 66, 255});

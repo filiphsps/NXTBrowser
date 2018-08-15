@@ -21,6 +21,7 @@ extern Console console;
 namespace sdl_helper {
     void init() {
         SDL_Init(SDL_INIT_EVERYTHING);
+        
         #ifdef __SWITCH__
         SDL_CreateWindowAndRenderer(1280, 720, 0, &_window, &_renderer);
         #else

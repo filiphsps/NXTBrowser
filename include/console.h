@@ -17,7 +17,10 @@ class Console {
         bool hidden = false;
         
         Console() {
-
+            // TODO: log to file
+        }
+        ~Console() {
+            // FIXME: close log file
         }
 
         int printf (std::string message) {

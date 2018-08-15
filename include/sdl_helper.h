@@ -11,10 +11,12 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "main.h"
+#include "console.h"
 
 static SDL_Window *_window;
 static SDL_Renderer *_renderer;
 
+extern Console console;
 
 namespace sdl_helper {
     void init() {
@@ -61,8 +63,10 @@ namespace sdl_helper {
 
     SDL_Rect renderText (std::string text, SDL_Surface *_surface, SDL_Rect pos, int width,
                         TTF_Font *font, SDL_Color color) {
-        if(text.empty())
+        if(text.empty() || font == NULL) {
+            console.printf("SDL_HELPER->Failed to render text");
             return {0, 0, 0, 0};
+        }
 
         SDL_Surface *surface = TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, width);
 

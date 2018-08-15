@@ -35,8 +35,14 @@ namespace browser {
             }
 
             void prepareTick() {
+                // Get Window Size
+                int h, w;
+                SDL_GetWindowSize(_window, &w, &h);
+                DEVICE = {0, 0, w, h};
+
                 SDL_RenderClear(_renderer);
 
+                // Clear surfaces
                 if(this->_gui_surface != NULL)
                     SDL_FreeSurface(this->_gui_surface);
                 this->_gui_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.w, 32, 0, 0, 0, 255);

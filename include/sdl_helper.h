@@ -59,14 +59,12 @@ namespace sdl_helper {
 
         SDL_BlitSurface(surface, &src, _surface, &dst);
         SDL_FreeSurface(surface);
-
-        delete &position, &src, &dst;
     }
 
     SDL_Rect renderText (std::string text, SDL_Surface *_surface, SDL_Rect pos, int width,
                         TTF_Font *font, SDL_Color color) {
         if(text.empty() || font == NULL) {
-            console.printf("SDL_HELPER->Failed to render text");
+            console.printf("SDL->Failed to render text");
             return {0, 0, 0, 0};
         }
 
@@ -77,8 +75,6 @@ namespace sdl_helper {
         
         SDL_BlitSurface(surface, &src, _surface, &dst);
         SDL_FreeSurface(surface);
-
-        delete &dst;
         return src;
     }
 
@@ -94,11 +90,5 @@ namespace sdl_helper {
         pos.h = h;
         pos.w = w;
         SDL_FillRect(_surface, &pos, SDL_MapRGBA(_surface->format, r, g, b, a));
-        delete &pos;
-    }
-    
-    // deprecated, remove asap
-    SDL_Rect drawText(SDL_Surface *_surface, int x, int y, std::string text, TTF_Font *font, bool center = false, int cr = 0, int cg = 0, int cb = 0, int ca = 255) {
-        return renderText(text, _surface, {x, y, 1280, 720}, 1280, font, {(unsigned char)cr, (unsigned char)cg, (unsigned char)cb, (unsigned char)ca});
     }
 }

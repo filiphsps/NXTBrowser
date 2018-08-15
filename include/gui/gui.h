@@ -41,8 +41,6 @@ namespace browser {
                 SDL_GetWindowSize(_window, &w, &h);
                 DEVICE = {0, 0, w, h};
 
-                delete &w, &h;
-
                 SDL_RenderClear(_renderer);
 
                 // Clear surfaces
@@ -61,15 +59,22 @@ namespace browser {
                 SDL_Rect browser_pos_src = {0, 0, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
                 SDL_Rect browser_pos_dst = {0, 68, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
 
-                SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, this->_gui_surface), &screen_pos, &screen_pos);
-                SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, this->_browser_surface), &browser_pos_src, &browser_pos_dst);
-                SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, this->_overlay_surface), NULL, NULL);
+                SDL_Texture *gui = SDL_CreateTextureFromSurface(_renderer, this->_gui_surface);
+                SDL_RenderCopy(_renderer, gui, &screen_pos, &screen_pos);
+                SDL_DestroyTexture(gui);
+
+                SDL_Texture *browser = SDL_CreateTextureFromSurface(_renderer, this->_browser_surface);
+                SDL_RenderCopy(_renderer, browser, &browser_pos_src, &browser_pos_dst);
+                SDL_DestroyTexture(browser);
+
+                SDL_Texture *overlay = SDL_CreateTextureFromSurface(_renderer, this->_overlay_surface);
+                SDL_RenderCopy(_renderer, overlay, NULL, NULL);
+                SDL_DestroyTexture(overlay);
+
                 SDL_RenderPresent(_renderer);
 
-                delete &screen_pos, &browser_pos_src, &browser_pos_dst;
-
                 SDL_PumpEvents(); //TODO: move to input class
-                SDL_Delay(25);
+                SDL_Delay(15); //TODO: Limit based on refresh-rate
             }
     };
 

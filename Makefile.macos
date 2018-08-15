@@ -38,17 +38,17 @@ LIBDIRS	:= /usr/local/include/SDL
 #---------------------------------------------------------------------------------
 # source file finding
 #---------------------------------------------------------------------------------
-SRCEXT := cpp
-SOURCES := $(shell find $(SOURCES) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SOURCES)/%,$(BUILD)/%,$(SOURCES:.$(SRCEXT)=.o))
+SRCEXT 		:= cpp
+SRC_FILES 	:= $(shell find $(SOURCES) -type f -name *.$(SRCEXT))
+OBJECTS 	:= $(patsubst $(SOURCES)/%,$(BUILD)/%,$(SRC_FILES:.$(SRCEXT)=.o))
 
-INCDIRS := $(shell find $(INCLUDES)/**/* -name '*.h' -exec dirname {} \; | sort | uniq)
-INCLIST := $(patsubst $(INCLUDES)/%,-I $(INCLUDES)/%,$(INCDIRS))
+INCDIRS 	:= $(shell find $(INCLUDES)/**/* -name '*.h' -exec dirname {} \; | sort | uniq)
+INCLIST 	:= $(patsubst $(INCLUDES)/%,-I $(INCLUDES)/%,$(INCDIRS))
 
-INCLUDE := -I $(INCLUDES) $(INCLIST) -I /usr/local/include \
+INCLUDE 	:= -I $(INCLUDES) $(INCLIST) -I /usr/local/include \
 	$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
 	-D_GNU_SOURCE=1 -D_THREAD_SAFE
-BUILDLIST := $(patsubst $(INCLUDES)/%,$(BUILD)/%,$(INCDIRS))
+BUILDLIST 	:= $(patsubst $(INCLUDES)/%,$(BUILD)/%,$(INCDIRS))
 
 
 #---------------------------------------------------------------------------------
@@ -66,11 +66,9 @@ LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g -Wl,-Map,$(notdir $*.map)
 LIBS	:= -lfreetype -lSDL2_mixer -lmodplug -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
 
 #---------------------------------------------------------------------------------
-all: $(TARGET)
-
 $(TARGET): $(OBJECTS)
 	@clear
-	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(BUILD)
 	@echo "Linking..."
 	@echo "  Linking $(TARGET)"; $(CC) $^ -o $(TARGET) $(LIBS)
 

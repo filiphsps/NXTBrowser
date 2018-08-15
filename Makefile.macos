@@ -30,7 +30,7 @@ BUILDLIST := $(patsubst include/%,$(BUILDDIR)/%,$(INCDIRS))
 #---------------------------------------------------------------------------------
 CFLAGS	:=	-g -W -O2 -fpermissive -ffunction-sections $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -Wmissing-field-initializers -D__MACOS__
+CFLAGS	+=	$(INCLUDE) -Wmissing-field-initializers -Wno-gnu-designator -D__MACOS__
 
 CXXFLAGS	:= $(CFLAGS) -Wno-missing-field-initializers -Wno-implicit-fallthrough -std=c++17
 
@@ -54,8 +54,5 @@ clean:
 
 install:
 	@echo "Installing $(EXECUTABLE)..."; cp $(TARGET) $(INSTALLBINDIR)
-
-distclean:
-	@echo "Removing $(EXECUTABLE)"; rm $(INSTALLBINDIR)/$(EXECUTABLE)
 
 .PHONY: clean

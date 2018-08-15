@@ -4,8 +4,8 @@
 
 // Debug-specific
 #define DEBUG
-#define DEBUG_DRAW_DOM
 #define DEBUG_CONSOLE_WIDTH 400
+#define DEBUG_DRAW_DOM
 //#define DEBUG_DRAW_DOM_UPDATES
 
 // Device-specific

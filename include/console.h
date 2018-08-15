@@ -14,6 +14,8 @@ class Console {
     private:
         std::vector<console_log> consoleLog;
     public:
+        bool hidden = false;
+        
         Console() {
 
         }

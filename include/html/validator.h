@@ -30,7 +30,7 @@ namespace browser {
 
             }
 
-            /*tinyxml2::XMLDocument doc;
+            tinyxml2::XMLDocument doc;
             doc.Parse((const char*)new_page_source.c_str(), new_page_source.size());
 
             // Recursivly fix till there aren't any errors
@@ -46,7 +46,7 @@ namespace browser {
                 new_page_source = validate_and_fix(new_page_source, tick);
             } else {
                 console.printf("DOM->Validator->Fixed the document!");
-            }*/
+            }
 
             return new_page_source;
         }

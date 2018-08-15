@@ -29,9 +29,9 @@ namespace browser {
                     this->font = font;
                 }
 
-                virtual browser::elements::renderQueueItem getRenderQueueItem () {
-                    //if (this->properties.width > 0 && this->properties.height > 0)
-                    //    return browser::elements::GenericElement::getRenderQueueItem();
+                browser::elements::renderQueueItem getRenderQueueItem () {
+                    if (this->properties.width > 0 && this->properties.height > 0)
+                        return browser::elements::GenericElement::getRenderQueueItem();
                     
                     int width = this->properties.maxWidth - (this->properties.margin.left + this->properties.margin.right +
                         this->properties.padding.left + this->properties.padding.right);
@@ -51,14 +51,14 @@ namespace browser {
                     // TODO: Separate this into GUI lib
                     SDL_Surface *surface = TTF_RenderUTF8_Blended_Wrapped(this->font, this->content.c_str(), {0, 0, 0, 0}, width);
 
-                    if (!this->properties.height <= 0)
+                    if (this->properties.height <= 0)
                         this->properties.height = surface->h;
                     if (this->properties.width <= 0)
                         this->properties.width = surface->w;
 
                     SDL_FreeSurface(surface);
 
-                    console.printf("DOM->Parser->GenericTextElement->h: " + std::to_string(this->properties.fontSize));
+                    //console.printf("DOM->Parser->GenericTextElement->h: " + std::to_string(this->properties.fontSize));
 
                     return browser::elements::GenericElement::getRenderQueueItem();
                 }

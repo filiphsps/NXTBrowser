@@ -28,7 +28,7 @@ namespace browser {
 
                 void SetFont(TTF_Font *font) {};
 
-                virtual browser::elements::renderQueueItem getRenderQueueItem () {
+                browser::elements::renderQueueItem getRenderQueueItem () {
                     // Get element height and width
                     int width = this->properties.width, height = this->properties.height;
                     
@@ -40,8 +40,8 @@ namespace browser {
                     width       += this->properties.margin.right + this->properties.margin.right;
                     height      += this->properties.margin.top + this->properties.margin.bottom;
 
-                    console.printf("DOM->PARSER->GenericElement->height: " + std::to_string(height));
-                    console.printf("DOM->PARSER->GenericElement->width: " + std::to_string(width));
+                    //console.printf("DOM->Parser->GenericElement->height: " + std::to_string(height));
+                    //console.printf("DOM->Parser->GenericElement->width: " + std::to_string(width));
 
                     return (browser::elements::renderQueueItem){
                         size: {

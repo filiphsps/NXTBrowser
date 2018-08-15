@@ -37,7 +37,8 @@ APP_VERSION := 1.0.0
 ICON 		:= 	Icon.jpg
 TARGET		:=	NXTBrowser
 TARGETDIR	:=	bin/switch
-BUILD		:=	build/switch
+# TODO: build/switch
+BUILD		:=	build
 SOURCES		:=	source source/html
 DATA		:=	data
 INCLUDES	:=	include include/html include/html/tags
@@ -153,7 +154,7 @@ $(BUILD):
 	@clear
 	@mkdir -p $(TARGETDIR)
 	@[ -d $@ ] || mkdir -p $@
-	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile.switch
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(TOPDIR)/Makefile.switch
 
 #---------------------------------------------------------------------------------
 clean:
@@ -161,7 +162,7 @@ clean:
 	@rm -fr $(BUILD) $(TARGETDIR) $(TARGET).pfs0 $(TARGET).nso $(TARGET).nro $(TARGET).nacp $(TARGET).elf
 
 run:
-	@/Users/filiphsandstrom/Downloads/publish/Ryujinx $(TARGET).nro
+	@/Users/filiphsandstrom/Downloads/publish/Ryujinx "$(TARGETDIR)/$(TARGET).nro"
 
 #---------------------------------------------------------------------------------
 else

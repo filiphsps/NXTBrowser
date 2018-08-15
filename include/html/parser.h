@@ -90,7 +90,7 @@ namespace browser {
             TTF_Font *fontFamily;
             switch (tag->elementType) {
                 case browser::elements::elementTypes::Text:
-                    fontFamily = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)tag->properties.fontSize);
+                    fontFamily = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", (int)tag->properties.fontSize);
                     tag->SetFont(fontFamily);
                     renderItem = tag->getRenderQueueItem();
 
@@ -119,7 +119,7 @@ namespace browser {
                     break;
             }
 
-            delete tag, renderItem;
+            //delete tag, renderItem;
             for(const tinyxml2::XMLElement* c = child->FirstChildElement(); c != NULL; c = c->NextSiblingElement()) {
                 std::string type = c->Value();
                 position = browser::parser::html_parser(c, type, position);

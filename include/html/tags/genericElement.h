@@ -11,6 +11,9 @@ namespace browser {
         class GenericElement {
             private:
             public:
+                TTF_Font *font;
+                std::string content;
+
                 browser::elements::elementTypes elementType = browser::elements::elementTypes::Container;
                 const browser::elements::properties defaultProperties;
                 browser::elements::properties properties;
@@ -28,7 +31,8 @@ namespace browser {
 
                 void SetFont(TTF_Font *font) {};
 
-                browser::elements::renderQueueItem getRenderQueueItem () {
+                virtual TTF_Font* getFont() { return this->font; };
+                virtual browser::elements::renderQueueItem getRenderQueueItem (SDL_Surface* _surface) {
                     // Get element height and width
                     int width = this->properties.width, height = this->properties.height;
                     

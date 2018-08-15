@@ -6,6 +6,7 @@
 
 #include "../main.h"
 #include "../console.h"
+#include "utils.h"
 
 #include "html/elements.h"
 
@@ -17,40 +18,11 @@ extern SDL_Rect _scroll_position;
 extern Console console;
 extern std::string console_output;
 
-struct font {
-    TTF_Font* font;
-    std::string fontPath;
-    int fontSize;
-};
-
-static std::vector<font> fontCache;
-
 namespace browser {
-    namespace utils {
-        TTF_Font* get_font_from_cache(std::string path, int size) {
-            // cache at most 5 fonts (need to figure out a good limit)
-            /*if ((int)fontCache.size() > 5) {
-                TTF_CloseFont(fontCache.begin()->font);
-                fontCache.erase(fontCache.begin());
-            }*/
-
-            for (int i = 0; i < (int)fontCache.size(); i++) {
-                if (fontCache[i].fontSize == size && fontCache[i].fontPath == path) {
-                    console.printf("DOM->used a cached font...");
-                    return fontCache[i].font;
-                }
-            }
-
-            TTF_Font *font = TTF_OpenFont(path.c_str(), size);
-            fontCache.push_back({ font, path, size });
-            return font;
-        }
-    }
-
     namespace parser {
         // FIXME: create new rendering system where every element is its own surface
         // that way we only need to re-draw whatever changes
-        int html_parser (const tinyxml2::XMLElement* child, std::string type, int position) {
+        int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, SDL_Surface* _browser_surface) {
             browser::elements::GenericElement *tag;
             browser::elements::renderQueueItem renderItem;
 
@@ -87,12 +59,9 @@ namespace browser {
                 //console.printf("DOM->Parser->Unsupported Tag: " + type);
             }
             
-            TTF_Font *fontFamily;
             switch (tag->elementType) {
                 case browser::elements::elementTypes::Text:
-                    fontFamily = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", (int)tag->properties.fontSize);
-                    tag->SetFont(fontFamily);
-                    renderItem = tag->getRenderQueueItem();
+                    renderItem = tag->getRenderQueueItem(_browser_surface);
 
                     #ifdef DEBUG_DRAW_DOM
                         sdl_helper::renderBackground(_browser_surface, {
@@ -106,12 +75,12 @@ namespace browser {
                     position += renderItem.properties.margin.top;
                     sdl_helper::renderText(text, _browser_surface,
                         {renderItem.properties.margin.left + renderItem.properties.padding.left,
-                        position, 0, 0}, renderItem.properties.width, fontFamily, {0, 0, 0, 255});
+                        position, 0, 0}, renderItem.properties.width, tag->getFont(), {0, 0, 0, 255});
                     position += renderItem.properties.height;
                     position += renderItem.properties.margin.bottom;
                     break;
                 case browser::elements::elementTypes::Container:
-                    renderItem = tag->getRenderQueueItem();
+                    renderItem = tag->getRenderQueueItem(_browser_surface);
                     position += renderItem.size.height;
                     break;
                 default:
@@ -122,7 +91,7 @@ namespace browser {
             //delete tag, renderItem;
             for(const tinyxml2::XMLElement* c = child->FirstChildElement(); c != NULL; c = c->NextSiblingElement()) {
                 std::string type = c->Value();
-                position = browser::parser::html_parser(c, type, position);
+                position = browser::parser::html_parser(c, type, position, _browser_surface);
             }
 
             return position;

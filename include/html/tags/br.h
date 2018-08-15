@@ -30,10 +30,6 @@ namespace browser {
                 Br() : browser::elements::GenericElement() {
                     this->properties = this->defaultProperties;
                 }
-
-                virtual browser::elements::renderQueueItem getRenderQueueItem () {
-                    return browser::elements::GenericElement::getRenderQueueItem();
-                }
         };
     }
 }

@@ -16,12 +16,13 @@
 using namespace std;
 
 Console console;
-SDL_Surface *_browser_surface;
 SDL_Rect _browser_position = { 0, 68, DEVICE_WIDTH, DEVICE_HEIGHT };
 SDL_Rect _scroll_position = { 0, 0, DEVICE_WIDTH, browser_height };
 
+SDL_Rect DEVICE = {0, 0, 0, 0};
+
 tinyxml2::XMLDocument doc;
-bool dom_parser (std::string source) {
+bool dom_parser (std::string source, SDL_Surface* _browser_surface) {
     int position = 0; // TODO: good scroll
     
     doc.Parse((const char*)source.c_str(), source.size());
@@ -34,7 +35,7 @@ bool dom_parser (std::string source) {
     for(const tinyxml2::XMLElement* child = element->FirstChildElement(); child != NULL; child=child->NextSiblingElement()) {
         // TODO: Do this properly
         std::string type = child->Value();
-        position = browser::parser::html_parser(child, type, position);
+        position = browser::parser::html_parser(child, type, position, _browser_surface);
     }
 
     SDL_FreeSurface(browser);
@@ -56,6 +57,8 @@ bool dom_parser (std::string source) {
 void update_window_size () {
     int h, w;
     SDL_GetWindowSize(_window, &w, &h);
+
+    DEVICE = {0, 0, w, h};
 
     _browser_position.w = w;
     _scroll_position.w = w;
@@ -91,6 +94,10 @@ int main(int argc, char **argv) {
         title = doc.FirstChildElement("html")->FirstChildElement("head")->FirstChildElement("title")->GetText();
     }
 
+    SDL_Surface *_gui_surface = NULL;
+    SDL_Surface *_browser_surface = NULL;
+    SDL_Surface *_overlay_surface = NULL;
+
     #ifdef __SWITCH__
     while(appletMainLoop()) {
     #else
@@ -125,37 +132,48 @@ int main(int argc, char **argv) {
         update_window_size();
         SDL_RenderClear(_renderer);
 
-        if(_surface != NULL)
-            SDL_FreeSurface(_surface);
-        _surface = SDL_CreateRGBSurface(0, _browser_position.w, _browser_position.h, 32, 0, 0, 0, 255);
+        if(_gui_surface != NULL)
+            SDL_FreeSurface(_gui_surface);
+        _gui_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.w, 32, 0, 0, 0, 255);
 
         if(_browser_surface != NULL)
             SDL_FreeSurface(_browser_surface);
-        _browser_surface = SDL_CreateRGBSurface(0, _browser_position.w, _browser_position.h, 32, 0, 0, 0, 255);
+        _browser_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 255);
+
+        if(_overlay_surface != NULL)
+            SDL_FreeSurface(_overlay_surface);
+        _overlay_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 0);
+        SDL_SetColorKey(_overlay_surface, SDL_TRUE, SDL_MapRGB(_overlay_surface->format, 0, 0, 0));
 
         #ifdef __SWITCH__
-        sdl_helper::drawTexture(_surface, "romfs:/gui/browser.png", 0, 0);
+        sdl_helper::drawTexture(_gui_surface, "romfs:/gui/browser.png", 0, 0);
         #else
-        sdl_helper::drawTexture(_surface, "../../romFS/gui/browser.png", 0, 0);
+        sdl_helper::drawTexture(_gui_surface, "../../romFS/gui/browser.png", 0, 0);
         #endif
 
         // UI
-        sdl_helper::renderText(title, _surface, {25, 27, 250, 25}, 450, font, {0, 0, 0, 255});
+        sdl_helper::renderText(title, _gui_surface, {25, 27, 250, 25}, 450, font, {0, 0, 0, 255});
 
         // DOM
-        dom_parser(page);
+        dom_parser(page, _browser_surface);
 
         #ifdef DEBUG
             // Console log
             if (!console.hidden) {
-                //sdl_helper::drawRect(_surface, (_browser_position.w - DEBUG_CONSOLE_WIDTH - 30) + 15, 15, DEBUG_CONSOLE_WIDTH, 720 - 30, 55, 55, 55, 155);
-                sdl_helper::renderText(console.getFormattedOutput(), _surface, {((_browser_position.w - DEBUG_CONSOLE_WIDTH) - 30) + 30, 30, 0, 0}, DEBUG_CONSOLE_WIDTH, font, {255, 0, 0, 255});
+                sdl_helper::renderBackground (_overlay_surface, {
+                    (DEVICE.w - DEBUG_CONSOLE_WIDTH - 30) + 15,
+                    15,
+                    DEBUG_CONSOLE_WIDTH,
+                    DEVICE.h - 30
+                }, {55, 55, 55, 155});
+                sdl_helper::renderText(console.getFormattedOutput(), _overlay_surface, {((DEVICE.w - DEBUG_CONSOLE_WIDTH) - 30) + 30, 30, 0, 0}, DEBUG_CONSOLE_WIDTH, font, {255, 0, 0, 255});
             }
         #endif
 
         SDL_Rect pos = {0, 0, _browser_position.w, _browser_position.h};
-        SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, _surface), &pos, &pos);
+        SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, _gui_surface), &pos, &pos);
         SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, _browser_surface), &pos, &_browser_position);
+        SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, _overlay_surface), NULL, NULL);
         SDL_RenderPresent(_renderer);
         SDL_PumpEvents();
         SDL_Delay(150);

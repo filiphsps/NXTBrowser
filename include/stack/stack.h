@@ -48,7 +48,7 @@ namespace browser {
             }
 
             void prepareTick() { }
-            void doTick() {
+            bool doTick() {
                 this->doc->Parse((const char*)this->source.c_str(), this->source.size());
             }
     };

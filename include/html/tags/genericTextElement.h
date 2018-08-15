@@ -43,6 +43,7 @@ namespace browser {
 
                     // Set font style
                     this->font = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+
                     switch (this->properties.fontStyle) {
                         case Bold:
                             TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);

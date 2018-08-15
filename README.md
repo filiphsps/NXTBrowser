@@ -12,4 +12,4 @@ Doesn't even render a simple website.
 * CSS? who needs that, do I look like a fucking hipster to you
 
 ## License
-MIT
+The "Anyone but Richard M Stallman" License, cause fuck that communist

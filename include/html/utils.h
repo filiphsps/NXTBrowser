@@ -27,6 +27,12 @@ namespace browser {
             for (int i = 0; i < (int)fontCache.size(); i++) {
                 if (fontCache[i].fontSize == size && fontCache[i].fontPath == path) {
                     //console.printf("DOM->used a cached font...");
+
+                    if (fontCache[i].font == NULL) {
+                        fontCache.erase(fontCache.begin() + i);
+                        continue;
+                    }
+
                     return fontCache[i].font;
                 }
             }

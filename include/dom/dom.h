@@ -14,12 +14,17 @@ extern SDL_Rect DEVICE;
 namespace browser {
     class DOM {
         public:
+            bool SHOULD_UPDATE = true;
+
             DOM() { }
             ~DOM() { }
 
             void prepareTick() { }
 
-            void doTick(browser::STACK *STACK, browser::GUI *GUI) {
+            bool doTick(browser::STACK *STACK, browser::GUI *GUI) {
+                if(!this->SHOULD_UPDATE)
+                    return false;
+
                 int position = 0; // TODO: good scroll
                 auto doc = STACK->getCurrentPage()->xmlParser;
 
@@ -48,6 +53,7 @@ namespace browser {
                     browser_height = DEVICE.h;
                     // _scroll_position.h = browser_height;
                 }
+                this->SHOULD_UPDATE = false;
             }
     };
 }

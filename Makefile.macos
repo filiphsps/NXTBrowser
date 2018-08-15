@@ -11,9 +11,6 @@ TARGETDIR := bin/macos
 EXECUTABLE := NXTBrowser
 TARGET := $(TARGETDIR)/$(EXECUTABLE)
 
-# Final Paths
-INSTALLBINDIR := /usr/local/bin
-
 # Code Lists
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -51,8 +48,5 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 
 clean:
 	@echo "Cleaning $(TARGET)..."; $(RM) -r $(BUILDDIR) $(TARGET)
-
-install:
-	@echo "Installing $(EXECUTABLE)..."; cp $(TARGET) $(INSTALLBINDIR)
 
 .PHONY: clean

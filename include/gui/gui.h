@@ -3,6 +3,7 @@
 
 #include "../main.h"
 #include "../sdl_helper.h"
+#include "../html/utils.h"
 #include "../console.h"
 
 extern Console console;
@@ -53,7 +54,7 @@ namespace browser {
                 SDL_SetColorKey(this->_overlay_surface, SDL_TRUE, SDL_MapRGB(this->_overlay_surface->format, 0, 0, 0));
             }
 
-            void doTick() {
+            bool doTick() {
                 SDL_Rect screen_pos = {0, 0, DEVICE.w, DEVICE.h};
                 SDL_Rect browser_pos_src = {0, 0, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
                 SDL_Rect browser_pos_dst = {0, 68, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
@@ -63,8 +64,8 @@ namespace browser {
                 SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, this->_overlay_surface), NULL, NULL);
                 SDL_RenderPresent(_renderer);
 
-                SDL_PumpEvents();
-                SDL_Delay(150);
+                SDL_PumpEvents(); //TODO: move to input class
+                SDL_Delay(25);
             }
     };
 
@@ -97,6 +98,23 @@ namespace browser {
 
                 sdl_helper::renderText(console.getFormattedOutput(), GUI->_overlay_surface,
                     {((DEVICE.w - DEBUG_CONSOLE_WIDTH) - 30) + 30, 30, 0, 0}, DEBUG_CONSOLE_WIDTH, font, {66, 66, 66, 255});
+            }
+            void RenderStat (browser::GUI *GUI, short pos, std::string text) {
+                #ifdef __SWITCH__
+                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 14);
+                #else
+                    TTF_Font *font = browser::utils::get_font_from_cache("../../romFS/fonts/NintendoStandard.ttf", 14);
+                #endif
+
+                sdl_helper::renderBackground (GUI->_overlay_surface, {
+                    15,
+                    DEVICE.h - (14+(15*pos)),
+                    300,
+                    14
+                }, {180, 180, 180, 55});
+
+                sdl_helper::renderText(text, GUI->_overlay_surface,
+                    {15, DEVICE.h - (14+(15*pos)), DEVICE.w, 14}, DEVICE.w, font, {0, 255, 0, 255});
             }
         }
     }

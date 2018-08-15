@@ -1,0 +1,50 @@
+CC := clang++ -arch x86_64
+
+# Folders
+SRCDIR := source
+BUILDDIR := build/win32
+TARGETDIR := bin/win32
+
+# Targets
+EXECUTABLE := NXTBrowser
+TARGET := $(TARGETDIR)/$(EXECUTABLE)
+
+# Code Lists
+SRCEXT := cpp
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+
+# Folder Lists
+INCDIRS := $(shell find include/**/* -name '*.h' -exec dirname {} \; | sort | uniq)
+INCLIST := $(patsubst include/%,-I include/%,$(INCDIRS))
+INCLUDE := -I include $(INCLIST) -I /usr/local/include -I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+BUILDLIST := $(patsubst include/%,$(BUILDDIR)/%,$(INCDIRS))
+
+#---------------------------------------------------------------------------------
+# options for code generation
+#---------------------------------------------------------------------------------
+CFLAGS	:=	-g -W -O0 -fpermissive -ffunction-sections $(DEFINES)
+
+CFLAGS	+=	$(INCLUDE) -Wmissing-field-initializers -Wno-gnu-designator -D__win32__
+
+CXXFLAGS	:= $(CFLAGS) -Wno-missing-field-initializers -Wno-implicit-fallthrough -std=c++17
+
+ASFLAGS	:=	-g $(ARCH)
+LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g -Wl,-Map,$(notdir $*.map)
+
+LIBS	:= -lfreetype -lSDL2_mixer -lmodplug -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
+
+$(TARGET): $(OBJECTS)
+	@clear
+	@mkdir -p $(TARGETDIR)
+	@echo "Linking..."
+	@echo "  Linking $(TARGET)"; $(CC) $^ -o $(TARGET) $(LIBS)
+
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(BUILDLIST)
+	@echo "Compiling $<..."; $(CC) $(CXXFLAGS) $(INC) -c -o $@ $<
+
+clean:
+	@echo "Cleaning $(TARGET)..."; $(RM) -r $(BUILDDIR) $(TARGET)
+
+.PHONY: clean

@@ -42,9 +42,9 @@ namespace browser {
                 #endif
             }
 
-            stack* getCurrentPage() {
+            stack getCurrentPage() {
                 stack Stack = {this->doc, this->source};
-                return &Stack;
+                return Stack;
             }
 
             void prepareTick() { }

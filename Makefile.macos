@@ -1,26 +1,55 @@
-UNAME_S := $(shell uname -s)
+#---------------------------------------------------------------------------------
+.SUFFIXES:
+#---------------------------------------------------------------------------------
+TOPDIR ?= $(CURDIR)
 
 CC := clang++ -arch x86_64
 
-# Folders
-SRCDIR := source
-BUILDDIR := build/macos
-TARGETDIR := bin/macos
 
-# Targets
-EXECUTABLE := NXTBrowser
-TARGET := $(TARGETDIR)/$(EXECUTABLE)
+#---------------------------------------------------------------------------------
+# NO_ICON: if set to anything, do not use icon.
+# NO_NACP: if set to anything, no .nacp file is generated.
+# APP_TITLE is the name of the app stored in the .nacp file (Optional)
+# APP_AUTHOR is the author of the app stored in the .nacp file (Optional)
+# APP_VERSION is the version of the app stored in the .nacp file (Optional)
+# APP_TITLEID is the titleID of the app stored in the .nacp file (Optional)
+#
+# TARGET is the name of the output
+# BUILD is the directory where object files & intermediate files will be placed
+# SOURCES is a list of directories containing source code
+# INCLUDES is a list of directories containing header files
+#---------------------------------------------------------------------------------
 
-# Code Lists
+APP_TITLE := NXTBrowser
+
+TARGET 		:= bin/macos/$(APP_TITLE)
+BUILD 		:= build/macos
+SOURCES 	:= source
+INCLUDES 	:= include
+
+
+#---------------------------------------------------------------------------------
+# list of directories containing libraries, this must be the top level containing
+# include and lib
+#---------------------------------------------------------------------------------
+LIBDIRS	:= /usr/local/include/SDL
+
+
+#---------------------------------------------------------------------------------
+# source file finding
+#---------------------------------------------------------------------------------
 SRCEXT := cpp
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+SOURCES := $(shell find $(SOURCES) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SOURCES)/%,$(BUILD)/%,$(SOURCES:.$(SRCEXT)=.o))
 
-# Folder Lists
-INCDIRS := $(shell find include/**/* -name '*.h' -exec dirname {} \; | sort | uniq)
-INCLIST := $(patsubst include/%,-I include/%,$(INCDIRS))
-INCLUDE := -I include $(INCLIST) -I /usr/local/include -I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
-BUILDLIST := $(patsubst include/%,$(BUILDDIR)/%,$(INCDIRS))
+INCDIRS := $(shell find $(INCLUDES)/**/* -name '*.h' -exec dirname {} \; | sort | uniq)
+INCLIST := $(patsubst $(INCLUDES)/%,-I $(INCLUDES)/%,$(INCDIRS))
+
+INCLUDE := -I $(INCLUDES) $(INCLIST) -I /usr/local/include \
+	$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+	-D_GNU_SOURCE=1 -D_THREAD_SAFE
+BUILDLIST := $(patsubst $(INCLUDES)/%,$(BUILD)/%,$(INCDIRS))
+
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -36,17 +65,20 @@ LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g -Wl,-Map,$(notdir $*.map)
 
 LIBS	:= -lfreetype -lSDL2_mixer -lmodplug -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
 
+#---------------------------------------------------------------------------------
+all: $(TARGET)
+
 $(TARGET): $(OBJECTS)
 	@clear
 	@mkdir -p $(TARGETDIR)
 	@echo "Linking..."
 	@echo "  Linking $(TARGET)"; $(CC) $^ -o $(TARGET) $(LIBS)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+$(BUILD)/%.o: $(SOURCES)/%.$(SRCEXT)
 	@mkdir -p $(BUILDLIST)
 	@echo "Compiling $<..."; $(CC) $(CXXFLAGS) $(INC) -c -o $@ $<
 
 clean:
-	@echo "Cleaning $(TARGET)..."; $(RM) -r $(BUILDDIR) $(TARGET)
+	@echo "Cleaning $(TARGET)..."; $(RM) -r $(BUILD) $(TARGET)
 
 .PHONY: clean

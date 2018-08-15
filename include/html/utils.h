@@ -18,7 +18,6 @@ static std::vector<font> fontCache;
 namespace browser {
     namespace utils {
         TTF_Font* get_font_from_cache(std::string path, int size) {
-            // cache at most 5 fonts (need to figure out a good limit)
             /*if ((int)fontCache.size() > 5) {
                 TTF_CloseFont(fontCache.begin()->font);
                 fontCache.erase(fontCache.begin());
@@ -26,8 +25,6 @@ namespace browser {
 
             for (int i = 0; i < (int)fontCache.size(); i++) {
                 if (fontCache[i].fontSize == size && fontCache[i].fontPath == path) {
-                    //console.printf("DOM->used a cached font...");
-
                     if (fontCache[i].font == NULL) {
                         fontCache.erase(fontCache.begin() + i);
                         continue;

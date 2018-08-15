@@ -8,6 +8,7 @@
 #elif __MACOS__
     #include <sys/time.h>
     #include <sys/resource.h>
+#elif __WIN32__
 #endif
 
 #include "main.h"
@@ -56,8 +57,13 @@ int main(int argc, char **argv) {
 
         browser::UIElements::AddressBar::Render(GUI);
         browser::UIElements::Console::Render(GUI);
-        browser::UIElements::Console::RenderStat(GUI, 1, std::string("FPS: " + std::to_string(1000 / delta)));
-        browser::UIElements::Console::RenderStat(GUI, 2, std::string("Memory: " + std::to_string(getMemoryUsage()) + "/" + std::to_string(SDL_GetSystemRAM()) + " MB"));
+        browser::UIElements::Console::RenderStat(GUI, 1,
+            std::string("FPS: " + std::to_string(1000 / delta)));
+        browser::UIElements::Console::RenderStat(GUI, 2,
+            std::string("Memory: " + std::to_string(
+                getMemoryUsage()) + "/" +
+                std::to_string(SDL_GetSystemRAM())
+                + " MB"));
 
         //INPUT->doTick();
         //NET->doTick();
@@ -67,5 +73,7 @@ int main(int argc, char **argv) {
 
         lastTick = currentTick;
     }
+
+    delete GUI, DOM, STACK/*, NET, INPUT*/;
     return 0;
 }

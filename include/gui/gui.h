@@ -41,6 +41,8 @@ namespace browser {
                 SDL_GetWindowSize(_window, &w, &h);
                 DEVICE = {0, 0, w, h};
 
+                delete &w, &h;
+
                 SDL_RenderClear(_renderer);
 
                 // Clear surfaces
@@ -63,6 +65,8 @@ namespace browser {
                 SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, this->_browser_surface), &browser_pos_src, &browser_pos_dst);
                 SDL_RenderCopy(_renderer, SDL_CreateTextureFromSurface(_renderer, this->_overlay_surface), NULL, NULL);
                 SDL_RenderPresent(_renderer);
+
+                delete &screen_pos, &browser_pos_src, &browser_pos_dst;
 
                 SDL_PumpEvents(); //TODO: move to input class
                 SDL_Delay(25);

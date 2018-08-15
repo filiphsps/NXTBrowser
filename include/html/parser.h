@@ -85,7 +85,7 @@ namespace browser {
                     break;
             }
 
-            //delete tag, renderItem;
+            delete tag, renderItem;
             for(const tinyxml2::XMLElement* c = child->FirstChildElement(); c != NULL; c = c->NextSiblingElement()) {
                 std::string type = c->Value();
                 position = browser::parser::html_parser(c, type, position, _browser_surface);

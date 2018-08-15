@@ -26,7 +26,7 @@ namespace browser {
                     return false;
 
                 int position = 0; // TODO: good scroll
-                auto doc = STACK->getCurrentPage()->xmlParser;
+                auto doc = STACK->getCurrentPage().xmlParser;
 
                 if(GUI->_browser_surface != NULL)
                     SDL_FreeSurface(GUI->_browser_surface);

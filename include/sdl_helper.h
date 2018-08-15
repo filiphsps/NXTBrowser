@@ -23,7 +23,7 @@ namespace sdl_helper {
         SDL_Init(SDL_INIT_EVERYTHING);
         #ifdef __SWITCH__
         SDL_CreateWindowAndRenderer(1280, 720, 0, &_window, &_renderer);
-        #elif __MACOS__
+        #else
         _window = SDL_CreateWindow(
             "NXTBrowser",
             SDL_WINDOWPOS_UNDEFINED,
@@ -59,6 +59,8 @@ namespace sdl_helper {
 
         SDL_BlitSurface(surface, &src, _surface, &dst);
         SDL_FreeSurface(surface);
+
+        delete &position, &src, &dst;
     }
 
     SDL_Rect renderText (std::string text, SDL_Surface *_surface, SDL_Rect pos, int width,
@@ -75,6 +77,8 @@ namespace sdl_helper {
         
         SDL_BlitSurface(surface, &src, _surface, &dst);
         SDL_FreeSurface(surface);
+
+        delete &dst;
         return src;
     }
 
@@ -90,6 +94,7 @@ namespace sdl_helper {
         pos.h = h;
         pos.w = w;
         SDL_FillRect(_surface, &pos, SDL_MapRGBA(_surface->format, r, g, b, a));
+        delete &pos;
     }
     
     // deprecated, remove asap

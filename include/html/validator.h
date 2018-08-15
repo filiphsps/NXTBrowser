@@ -30,25 +30,24 @@ namespace browser {
 
             }
 
-            tinyxml2::XMLDocument doc;
-            doc.Parse((const char*)new_page_source.c_str(), new_page_source.size());
+            tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument();
+            doc->Parse((const char*)new_page_source.c_str(), new_page_source.size());
 
             // Recursivly fix till there aren't any errors
-            if(doc.ErrorID()) {
+            if(doc->ErrorID()) {
                 tick += 1;
 
                 // Only try to fix the document 20 times
                 if (tick > 20) {
-                    console.printf("DOM->Validator->Failed to fix the document. Error ID:" + std::to_string(doc.ErrorID()));
-                    return page_source;
+                    console.printf("DOM->Validator->Failed to fix the document. Error ID:" + std::to_string(doc->ErrorID()));
                 }
 
-                new_page_source = validate_and_fix(new_page_source, tick);
+                delete doc;
+                return validate_and_fix(new_page_source, tick);
             } else {
                 console.printf("DOM->Validator->Fixed the document!");
+                return new_page_source;
             }
-
-            return new_page_source;
         }
     }
 }

@@ -39,9 +39,9 @@ TARGET		:=	NXTBrowser
 TARGETDIR	:=	bin/switch
 # TODO: build/switch
 BUILD		:=	build
-SOURCES		:=	source source/html
+SOURCES		:=	source source/html source/libs
 DATA		:=	data
-INCLUDES	:=	include include/html include/html/tags
+INCLUDES	:=	include include/html include/html/tags include/libs
 EXEFS_SRC	:=	exefs_src
 ROMFS		:=	resources
 
@@ -50,7 +50,7 @@ ROMFS		:=	resources
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE
 
-CFLAGS	:=	-g -W -O2 -fpermissive -ffunction-sections \
+CFLAGS	:=	-g -W -O0 -fpermissive -ffunction-sections \
 			$(ARCH) $(DEFINES)
 
 CFLAGS	+=	$(INCLUDE) -Wmissing-field-initializers -D__SWITCH__

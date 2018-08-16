@@ -28,7 +28,7 @@
 //     span     = 0:1:0
 //       i      = 0:1:0:0
 // main         = 1:0
-// footer       = 1:0
+// footer       = 2:0
 //
 // Each branch should be rendered into it's own surface.
 // Which would give use the ability to only update the branch that changed.

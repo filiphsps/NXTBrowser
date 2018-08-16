@@ -23,12 +23,12 @@
 // tree/branch index:
 //    
 // header       = 0:0
-//   h1         = 1:0
-//   h2         = 1:1
-//     span     = 1:1:0
-//       i      = 1:1:0:0
-// main         = 0:1
-// footer       = 0:2
+//   h1         = 0:0
+//   h2         = 0:1
+//     span     = 0:1:0
+//       i      = 0:1:0:0
+// main         = 1:0
+// footer       = 1:0
 //
 // Each branch should be rendered into it's own surface.
 // Which would give use the ability to only update the branch that changed.

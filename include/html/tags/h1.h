@@ -17,7 +17,7 @@ namespace browser {
 
                     padding: {0, 0, 0, 0},
                     margin: {18, 0, 18, 0},
-
+                    
                     fontSize: 32,
                     fontStyle: Bold,
 

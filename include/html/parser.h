@@ -1,3 +1,46 @@
+// TODO:
+// --------------------------------------------------------------------------
+// 
+//                  New branch-based rendering/parse system
+//
+// --------------------------------------------------------------------------
+// Every branch should be able to live in its own thread spawning another
+// branch thread for every child
+//
+// body -> header -> h1
+//      |         └> h2 -> span -> i
+//      |
+//      ├> main -> ...
+//      |       |
+//      |       ├> ...
+//      |       |
+//      |       └> ...
+//      |
+//      └> footer
+//
+// --------------------------------------------------------------------------
+// Then we keep track of the relative index where n is the relative
+// tree/branch index:
+//    
+// header       = 0:0
+//   h1         = 1:0
+//   h2         = 1:1
+//     span     = 1:1:0
+//       i      = 1:1:0:0
+// main         = 0:1
+// footer       = 0:2
+//
+// Each branch should be rendered into it's own surface.
+// Which would give use the ability to only update the branch that changed.
+// In this example that would be "h2", "main" and "footer"
+//
+// It would oossible even re-use surfaces that are identical, provided
+// ofcourse that it saves more performance thank it takes to compare
+// each branch with eachother.
+//
+// --------------------------------------------------------------------------
+//
+
 #pragma once
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
@@ -17,8 +60,6 @@ extern std::string console_output;
 
 namespace browser {
     namespace parser {
-        // FIXME: create new rendering system where every element is its own surface
-        // that way we only need to re-draw whatever changes
         int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, SDL_Surface* _browser_surface) {
             browser::elements::GenericElement *tag;
             browser::elements::renderQueueItem renderItem;
@@ -74,7 +115,7 @@ namespace browser {
                 tag = new browser::elements::GenericElement();
                 console.printf("DOM->Parser->Unsupported Tag: " + type);
             }
-            
+
             switch (tag->elementType) {
                 case browser::elements::elementTypes::Text:
                     renderItem = tag->getRenderQueueItem(_browser_surface);

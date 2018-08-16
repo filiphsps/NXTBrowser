@@ -38,9 +38,9 @@ namespace browser {
                         }
                         break;
 
-                    case SDL_MOUSEWHEEL:
+                    /*case SDL_MOUSEWHEEL:
                         GUI->scroll(this->Events->wheel.x, this->Events->wheel.y);
-                        break;
+                        break;*/
                 }
             }
     };

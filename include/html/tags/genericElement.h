@@ -1,5 +1,7 @@
 #pragma once
 
+#include "libs/SDL_FontCache.h"
+
 #include "../../console.h"
 
 #include "../properties.h"

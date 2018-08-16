@@ -40,12 +40,6 @@ int main(int argc, char* argv[]) {
     browser::DOM *DOM = new browser::DOM();
     browser::GUI *GUI = new browser::GUI();
 
-    /*SDL_Thread *input_thread;
-    SDL_Thread *net_thread;
-    SDL_Thread *stack_thread;
-    SDL_Thread *dom_thread;
-    SDL_Thread *gui_thread;*/
-
     if (argc > 1)
         STACK->setSource(argv[1], true);
 

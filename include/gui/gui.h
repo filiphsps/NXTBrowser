@@ -46,6 +46,13 @@ namespace browser {
                 console.printf("Scroll");
             }
 
+            int thread (void *data) {
+                while (1) {
+                    this->prepareTick();
+                    this->doTick();
+                }
+            }
+
             void prepareTick() {
                 // Get Window Size
                 int w, h, window_w, window_h;

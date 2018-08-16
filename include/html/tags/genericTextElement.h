@@ -4,6 +4,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include "SDL_FontCache.h"
 
 #include "../../console.h"
 
@@ -19,8 +20,6 @@ namespace browser {
         class GenericTextElement: public browser::elements::GenericElement {
             private:
             public:
-                TTF_Font *font;
-                std::string content;
 
                 GenericTextElement(std::string content, std::string prepend = "", std::string append = "") : browser::elements::GenericElement() {
                     this->elementType = browser::elements::elementTypes::Text;

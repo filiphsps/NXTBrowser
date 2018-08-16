@@ -9,9 +9,11 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
+#include "libs/SDL_FontCache.h"
 
 #include "main.h"
 #include "console.h"
+#include "html/utils.h"
 
 static SDL_Window *_window;
 static SDL_Renderer *_renderer;
@@ -72,8 +74,9 @@ namespace sdl_helper {
             console.printf("SDL->Failed to render text");
             return {0, 0, 0, 0};
         }
-
+        
         SDL_Surface *surface = TTF_RenderUTF8_Blended_Wrapped(font, text.c_str(), color, width);
+        
 
         SDL_Rect src = {0, 0, surface->w, surface->h};
         SDL_Rect dst = {pos.x, pos.y, surface->w, surface->h};

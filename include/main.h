@@ -5,7 +5,7 @@
 // Debug-specific
 #define DEBUG
 #define DEBUG_CONSOLE_WIDTH 350
-//#define DEBUG_DRAW_DOM
+#define DEBUG_DRAW_DOM
 
 // Feature-toggles
 #define TODO true
@@ -17,5 +17,5 @@
 #include "html.h"
 
 extern Console console;
-extern SDL_Rect DEVICE;
+extern device_aspect DEVICE;
 static std::string page = "";

@@ -7,10 +7,11 @@
 #include "../console.h"
 
 extern Console console;
-extern SDL_Rect DEVICE;
+extern device_aspect DEVICE;
 
 //#define SCROLLBAR_WIDTH 25
 #define SCROLLBAR_WIDTH 0 //TODO
+#define ADDRESS_BAR_HEIGHT 35
 
 namespace browser {
     class GUI {
@@ -31,10 +32,15 @@ namespace browser {
 
             void prepareTick() {
                 // Get Window Size
-                int h, w;
+                int w, h, window_w, window_h;
                 SDL_GetRendererOutputSize(_renderer, &w, &h);
-                //SDL_GetWindowSize(_window, &w, &h);
-                DEVICE = {0, 0, w, h};
+                SDL_GetWindowSize(_window, &window_w, &window_h);
+                
+                short scaling;
+                if (w/window_w > 1) scaling = (short)w/window_w;
+                else scaling = 1;
+
+                DEVICE = {scaling, w, h};
 
                 SDL_RenderClear(_renderer);
 
@@ -51,7 +57,7 @@ namespace browser {
 
             bool doTick() {
                 SDL_Rect screen_pos = {0, 0, DEVICE.w, DEVICE.h};
-                SDL_Rect browser_pos_dst = {0, 75, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
+                SDL_Rect browser_pos_dst = {0, ADDRESS_BAR_HEIGHT*DEVICE.scaling, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
 
                 SDL_Texture *gui = SDL_CreateTextureFromSurface(_renderer, this->_gui_surface);
                 SDL_RenderCopy(_renderer, gui, &screen_pos, &screen_pos);
@@ -72,76 +78,82 @@ namespace browser {
     namespace UIElements {
         namespace AddressBar {
             void Render (browser::GUI *GUI) {
+                short height = ADDRESS_BAR_HEIGHT;
+
                 #ifdef __SWITCH__
-                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 22);
+                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (height/2-2) * DEVICE.scaling);
                 #elif __MACOS__
-                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Microsoft Sans Serif.ttf", 22);
+                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Microsoft Sans Serif.ttf", (height/2-2) * DEVICE.scaling);
                 #else
-                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 22);
+                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (height/2-2) * DEVICE.scaling);
                 #endif
 
                 sdl_helper::renderBackground (GUI->_gui_surface, {
                     0,
                     0,
                     DEVICE.w,
-                    75 //TODO: Scaling
+                    height * DEVICE.scaling
                 }, {235, 235, 235, 255});
                 sdl_helper::renderBackground (GUI->_gui_surface, {
-                    100,
-                    10,
-                    DEVICE.w - 125,
-                    55 //TODO: Scaling
+                    (height + height/2) * DEVICE.scaling,
+                    5 * DEVICE.scaling,
+                    DEVICE.w - ((height*2) * DEVICE.scaling),
+                    (height - 10) * DEVICE.scaling
                 }, {255, 255, 255, 255});
 
-                sdl_helper::renderText("http://www.example.com", GUI->_gui_surface, {115, 26, 250, 25}, 450, font, {0, 0, 0, 255});
+                sdl_helper::renderText("http://www.example.com", GUI->_gui_surface, {(height + height/2 + 10) * DEVICE.scaling, ((height - height/2-2)/2) * DEVICE.scaling, DEVICE.w , 25 * DEVICE.scaling}, DEVICE.w, font, {0, 0, 0, 255});
 
                 // Home Icon
                 sdl_helper::renderBackground (GUI->_gui_surface, {
-                    20,
-                    10,
-                    60,
-                    55 //TODO: Scaling
+                    10 * DEVICE.scaling,
+                    5 * DEVICE.scaling,
+                    (height - 5) * DEVICE.scaling,
+                    (height - 10) * DEVICE.scaling
                 }, {255, 255, 255, 255});
             }
         }
         namespace Console {
             void Render (browser::GUI *GUI) {
                 #ifdef __SWITCH__
-                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 14);
+                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #elif __MACOS__
-                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", 14);
+                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", 18 * DEVICE.scaling);
                 #else
-                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 14);
+                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #endif
 
                 sdl_helper::renderBackground (GUI->_overlay_surface, {
-                    (DEVICE.w - (DEBUG_CONSOLE_WIDTH + 30)) + 15,
+                    (DEVICE.w - (DEBUG_CONSOLE_WIDTH * DEVICE.scaling + 30)) + 15,
                     15,
-                    DEBUG_CONSOLE_WIDTH,
+                    DEBUG_CONSOLE_WIDTH * DEVICE.scaling,
                     DEVICE.h - 30
                 }, {180, 180, 180, 255});
 
-                sdl_helper::renderText(console.getFormattedOutput(), GUI->_overlay_surface,
-                    {((DEVICE.w - DEBUG_CONSOLE_WIDTH) - 30) + 30, 30, 0, 0}, DEBUG_CONSOLE_WIDTH, font, {66, 66, 66, 255});
+                sdl_helper::renderText(console.getFormattedOutput(), GUI->_overlay_surface, {
+                    (DEVICE.w - (DEBUG_CONSOLE_WIDTH * DEVICE.scaling + 30)) + 30,
+                    30,
+                    DEVICE.h,
+                    DEBUG_CONSOLE_WIDTH * DEVICE.scaling},
+                    DEBUG_CONSOLE_WIDTH * DEVICE.scaling, font, {55, 55, 55, 255});
             }
             void RenderStat (browser::GUI *GUI, short pos, std::string text) {
                 #ifdef __SWITCH__
-                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 28);
+                    TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #elif __MACOS__
-                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", 28);
+                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", 18 * DEVICE.scaling);
                 #else
-                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 28);
+                    TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #endif
 
                 sdl_helper::renderBackground (GUI->_overlay_surface, {
-                    40,
-                    DEVICE.h - (30+(40*pos)),
-                    500,
-                    35
+                    15,
+                    DEVICE.h - (15 + ((28*DEVICE.scaling)*pos)),
+                    500*DEVICE.scaling,
+                    25*DEVICE.scaling
                 }, {180, 180, 180, 55});
 
                 sdl_helper::renderText(text, GUI->_overlay_surface,
-                    {40, DEVICE.h - (30+(40*pos)), DEVICE.w, 30}, DEVICE.w, font, {0, 255, 0, 255});
+                    {20, DEVICE.h - (15 + ((28*DEVICE.scaling)*pos)), DEVICE.w, 30}, DEVICE.w, font, {0, 255, 0, 255});
             }
         }
     }

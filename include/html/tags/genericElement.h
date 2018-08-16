@@ -5,6 +5,7 @@
 #include "../properties.h"
 
 extern Console console;
+extern device_aspect DEVICE;
 
 namespace browser {
     namespace elements {
@@ -43,20 +44,20 @@ namespace browser {
                     int width = this->properties.width, height = this->properties.height;
                     
                     // Add Padding
-                    width       += this->properties.padding.right + this->properties.padding.right,
-                    height      += this->properties.padding.top + this->properties.padding.bottom;
+                    width       += (this->properties.padding.right + this->properties.padding.right) * DEVICE.scaling,
+                    height      += (this->properties.padding.top + this->properties.padding.bottom)  * DEVICE.scaling;
 
                     // Add Margin
-                    width       += this->properties.margin.right + this->properties.margin.right;
-                    height      += this->properties.margin.top + this->properties.margin.bottom;
+                    width       += (this->properties.margin.right + this->properties.margin.right) * DEVICE.scaling;
+                    height      += (this->properties.margin.top + this->properties.margin.bottom) * DEVICE.scaling;
 
                     //console.printf("DOM->Parser->GenericElement->height: " + std::to_string(height));
                     //console.printf("DOM->Parser->GenericElement->width: " + std::to_string(width));
 
                     return (browser::elements::renderQueueItem){
                         size: {
-                            height: height,
-                            width: width
+                            height: height * DEVICE.scaling,
+                            width: width * DEVICE.scaling
                         },
                         properties: this->properties
                     };

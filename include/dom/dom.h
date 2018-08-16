@@ -8,7 +8,7 @@
 #include "../stack/stack.h"
 
 extern Console console;
-extern SDL_Rect DEVICE;
+extern device_aspect DEVICE;
 
 
 namespace browser {
@@ -22,7 +22,7 @@ namespace browser {
             void prepareTick() { }
 
             bool doTick(browser::STACK *STACK, browser::GUI *GUI) {
-                if(false && !this->SHOULD_UPDATE) //TODO
+                if(!this->SHOULD_UPDATE) //TODO
                     return false;
                 
                 if (browser_height < DEVICE.h) {
@@ -40,7 +40,7 @@ namespace browser {
                 SDL_FillRect(browser, NULL, SDL_MapRGBA(browser->format, 255, 255, 255, 255));
                 SDL_BlitSurface(browser, NULL, GUI->_browser_surface, NULL);
                 SDL_FreeSurface(browser);
-
+                
                 auto element = doc->FirstChildElement("html")->FirstChildElement("body");
                 for(const tinyxml2::XMLElement* child = element->FirstChildElement(); child != NULL; child=child->NextSiblingElement()) {
                     // TODO: Do this properly

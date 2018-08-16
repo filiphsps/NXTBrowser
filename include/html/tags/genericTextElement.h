@@ -12,6 +12,7 @@
 #include "genericElement.h"
 
 extern Console console;
+extern device_aspect DEVICE;
 
 namespace browser {
     namespace elements {
@@ -39,29 +40,29 @@ namespace browser {
                     
                     // Calculate width 
                     int width = this->properties.maxWidth - (this->properties.margin.left + this->properties.margin.right +
-                        this->properties.padding.left + this->properties.padding.right);
+                        this->properties.padding.left + this->properties.padding.right) * DEVICE.scaling;
 
                     // Set font style
                     switch (this->properties.fontStyle) {
                         case Bold:
                             #ifdef __SWITCH__
-                                this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+                                this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
                                 TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
                             #elif __MACOS__
-                                this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial Bold.ttf", (int)this->properties.fontSize);
+                                this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial Bold.ttf", (int)this->properties.fontSize * DEVICE.scaling);
                             #else
-                                this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+                                this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
                                 TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
                             #endif
                             break;
                         case Normal:
                         default:
                             #ifdef __SWITCH__
-                                this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+                                this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
                             #elif __MACOS__
-                                this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", (int)this->properties.fontSize);
+                                this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", (int)this->properties.fontSize * DEVICE.scaling);
                             #else
-                                this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize);
+                                this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
                             #endif
                             TTF_SetFontStyle(this->font, TTF_STYLE_NORMAL);
                             break;

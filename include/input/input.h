@@ -5,7 +5,7 @@
 #include "../console.h"
 
 extern Console console;
-extern SDL_Rect DEVICE;
+extern device_aspect DEVICE;
 
 
 namespace browser {

@@ -14,12 +14,13 @@
 #include "main.h"
 #include "html/html.h"
 #include "gui/gui.h"
+#include "input/input.h"
 #include "stack/stack.h"
 #include "dom/dom.h"
 #include "console.h"
 
 Console console;
-SDL_Rect DEVICE = {0, 0, 0, 0};
+device_aspect DEVICE;
 
 long getMemoryUsage() {
     #ifdef __MACOS__
@@ -32,7 +33,7 @@ long getMemoryUsage() {
 }
 
 bool running = true;
-int main(int argc, char **argv) {
+int main(int argc, char* argv[]) {
     browser::INPUT *INPUT = new browser::INPUT();
     //browser::NET *NET = new browser::NET();
     browser::STACK *STACK = new browser::STACK();
@@ -40,6 +41,9 @@ int main(int argc, char **argv) {
     browser::GUI *GUI = new browser::GUI();
 
     //INPUT->subscribe(SDL_MOUSEWHEEL, [](SDL_Event event) {});
+
+    if (argc > 1)
+        STACK->setSource(argv[1], true);
 
     SDL_Event events;
     unsigned int currentTick = 0, lastTick = 0, delta = 0;
@@ -79,7 +83,7 @@ int main(int argc, char **argv) {
                     + " MB"));
             browser::UIElements::Console::RenderStat(GUI, 3,
                 std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
-                + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: 1"));
+                + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: " + std::to_string(DEVICE.scaling)));
 
             INPUT->doTick();
             //NET->doTick();

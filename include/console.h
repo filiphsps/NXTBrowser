@@ -1,14 +1,20 @@
 #pragma once
 
-#define MAX_CONSOLE_OUTPUT 35
-
 #include <iostream>
 #include <vector>
+
+struct device_aspect {
+    short scaling = 1;
+    int w = 0;
+    int h = 0;
+};
 
 struct console_log {
     std::string message;
     int num;
 };
+
+extern device_aspect DEVICE;
 
 class Console {
     private:
@@ -24,7 +30,10 @@ class Console {
         }
 
         int printf (std::string message) {
-            if ((int)this->consoleLog.size() > MAX_CONSOLE_OUTPUT)
+            if(DEVICE.h <= 0)
+                return -1;
+            
+            if ((int)this->consoleLog.size() > ((DEVICE.h-30)/20*DEVICE.scaling))
                 this->consoleLog.erase(this->consoleLog.begin());
 
             // Group duplicated messages

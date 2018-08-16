@@ -10,6 +10,7 @@ extern device_aspect DEVICE;
 struct stack {
     tinyxml2::XMLDocument *xmlParser;
     std::string source;
+    std::string path;
 };
 
 namespace browser {
@@ -17,6 +18,8 @@ namespace browser {
         private:
             tinyxml2::XMLDocument *doc;
             std::string source = "";
+            std::string path = "";
+
         public:
             STACK() {
                 #ifdef __SWITCH__
@@ -45,7 +48,7 @@ namespace browser {
             }
 
             stack getCurrentPage() {
-                stack Stack = {this->doc, this->source};
+                stack Stack = {this->doc, this->source, this->path};
                 return Stack;
             }
 
@@ -59,6 +62,7 @@ namespace browser {
                 
                 std::ifstream ifs = std::ifstream(page);
                 this->source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
+                this->path = "file://" + page;
             }
 
             void prepareTick() { }

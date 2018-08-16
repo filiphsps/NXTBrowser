@@ -61,4 +61,8 @@ class Console {
 
             return console_output;
         }
+
+        void toggleConsole () {
+            this->hidden = !this->hidden;
+        }
 };

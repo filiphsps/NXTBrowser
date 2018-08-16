@@ -6,6 +6,8 @@
 #include "../html/utils.h"
 #include "../console.h"
 
+#include "../stack/stack.h"
+
 extern Console console;
 extern device_aspect DEVICE;
 
@@ -16,6 +18,7 @@ extern device_aspect DEVICE;
 namespace browser {
     class GUI {
         public:
+            int x = 0, y = 0;
             SDL_Surface *_gui_surface = NULL;
             SDL_Surface *_browser_surface = NULL;
             SDL_Surface *_overlay_surface = NULL;
@@ -28,7 +31,20 @@ namespace browser {
                 sdl_helper::exit();
             }
 
-            void renderWindow () { }
+            void scroll (int x, int y, int accel = 15) {
+                if (y > 0)
+                    this->y += 1 * accel;
+                else if (y < 0)
+                    this->y -= 1 * accel;
+
+                if (this->y >= 0) {
+                    this->y = 0;
+                    console.printf("border");
+                };
+                
+                
+                console.printf("Scroll");
+            }
 
             void prepareTick() {
                 // Get Window Size
@@ -48,24 +64,26 @@ namespace browser {
                 if(this->_gui_surface != NULL)
                     SDL_FreeSurface(this->_gui_surface);
                 this->_gui_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 255);
+                SDL_FillRect(_gui_surface, NULL, SDL_MapRGBA(_gui_surface->format, 102, 51, 153, 255));
+                SDL_SetColorKey(this->_gui_surface, SDL_TRUE, SDL_MapRGBA(this->_gui_surface->format, 102, 51, 153, 255));
 
                 if(this->_overlay_surface != NULL)
                     SDL_FreeSurface(this->_overlay_surface);
                 this->_overlay_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 0);
-                SDL_SetColorKey(this->_overlay_surface, SDL_TRUE, SDL_MapRGB(this->_overlay_surface->format, 0, 0, 0));
+                SDL_SetColorKey(this->_overlay_surface, SDL_TRUE, SDL_MapRGBA(this->_overlay_surface->format, 0, 0, 0, 255));
             }
 
             bool doTick() {
                 SDL_Rect screen_pos = {0, 0, DEVICE.w, DEVICE.h};
-                SDL_Rect browser_pos_dst = {0, ADDRESS_BAR_HEIGHT*DEVICE.scaling, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
-
-                SDL_Texture *gui = SDL_CreateTextureFromSurface(_renderer, this->_gui_surface);
-                SDL_RenderCopy(_renderer, gui, &screen_pos, &screen_pos);
-                SDL_DestroyTexture(gui);
+                SDL_Rect browser_pos_dst = {0, (ADDRESS_BAR_HEIGHT * DEVICE.scaling) + this->y, DEVICE.w - SCROLLBAR_WIDTH, DEVICE.h};
 
                 SDL_Texture *browser = SDL_CreateTextureFromSurface(_renderer, this->_browser_surface);
                 SDL_RenderCopy(_renderer, browser, &screen_pos, &browser_pos_dst);
                 SDL_DestroyTexture(browser);
+
+                SDL_Texture *gui = SDL_CreateTextureFromSurface(_renderer, this->_gui_surface);
+                SDL_RenderCopy(_renderer, gui, &screen_pos, &screen_pos);
+                SDL_DestroyTexture(gui);
 
                 SDL_Texture *overlay = SDL_CreateTextureFromSurface(_renderer, this->_overlay_surface);
                 SDL_RenderCopy(_renderer, overlay, &screen_pos, &screen_pos);
@@ -77,7 +95,7 @@ namespace browser {
 
     namespace UIElements {
         namespace AddressBar {
-            void Render (browser::GUI *GUI) {
+            void Render (browser::GUI *GUI, browser::STACK *STACK) {
                 short height = ADDRESS_BAR_HEIGHT;
 
                 #ifdef __SWITCH__
@@ -101,7 +119,7 @@ namespace browser {
                     (height - 10) * DEVICE.scaling
                 }, {255, 255, 255, 255});
 
-                sdl_helper::renderText("http://www.example.com", GUI->_gui_surface, {(height + height/2 + 10) * DEVICE.scaling, ((height - height/2-2)/2) * DEVICE.scaling, DEVICE.w , 25 * DEVICE.scaling}, DEVICE.w, font, {0, 0, 0, 255});
+                sdl_helper::renderText(STACK->getCurrentPage().path, GUI->_gui_surface, {(height + height/2 + 10) * DEVICE.scaling, ((height - height/2-2)/2) * DEVICE.scaling, DEVICE.w , 25 * DEVICE.scaling}, DEVICE.w, font, {0, 0, 0, 255});
 
                 // Home Icon
                 sdl_helper::renderBackground (GUI->_gui_surface, {
@@ -114,6 +132,9 @@ namespace browser {
         }
         namespace Console {
             void Render (browser::GUI *GUI) {
+                if(console.hidden)
+                    return;
+                    
                 #ifdef __SWITCH__
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #elif __MACOS__
@@ -137,6 +158,9 @@ namespace browser {
                     DEBUG_CONSOLE_WIDTH * DEVICE.scaling, font, {55, 55, 55, 255});
             }
             void RenderStat (browser::GUI *GUI, short pos, std::string text) {
+                if(console.hidden)
+                    return;
+
                 #ifdef __SWITCH__
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #elif __MACOS__

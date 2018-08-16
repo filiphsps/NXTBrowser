@@ -22,9 +22,16 @@ namespace browser {
                 TTF_Font *font;
                 std::string content;
 
-                GenericTextElement(std::string content) : browser::elements::GenericElement() {
+                GenericTextElement(std::string content, std::string prepend = "", std::string append = "") : browser::elements::GenericElement() {
                     this->elementType = browser::elements::elementTypes::Text;
                     this->content = content;
+
+                    if(!prepend.empty()) {
+                        this->content = std::string(prepend) + this->content;
+                        console.printf(this->content);
+                    }
+                    if(!append.empty())
+                        this->content.append(append);
                 }
 
                 virtual TTF_Font* getFont() { return this->font; };

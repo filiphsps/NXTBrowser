@@ -4,8 +4,10 @@
 #include "tags/genericElement.h"
 #include "tags/genericTextElement.h"
 
+#include "tags/aside.h"
 #include "tags/b.h"
 #include "tags/br.h"
+#include "tags/li.h"
 #include "tags/h1.h"
 #include "tags/h2.h"
 #include "tags/h3.h"

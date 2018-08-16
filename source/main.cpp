@@ -40,13 +40,17 @@ int main(int argc, char* argv[]) {
     browser::DOM *DOM = new browser::DOM();
     browser::GUI *GUI = new browser::GUI();
 
-    //INPUT->subscribe(SDL_MOUSEWHEEL, [](SDL_Event event) {});
+    /*SDL_Thread *input_thread;
+    SDL_Thread *net_thread;
+    SDL_Thread *stack_thread;
+    SDL_Thread *dom_thread;
+    SDL_Thread *gui_thread;*/
 
     if (argc > 1)
         STACK->setSource(argv[1], true);
 
     SDL_Event events;
-    unsigned int currentTick = 0, lastTick = 0, delta = 0;
+    unsigned int currentTick = 0, lastTick = 0, delta = 0, lastSize = DEVICE.h + DEVICE.w;
     #ifdef __SWITCH__
     while(appletMainLoop() && running) {
     #else
@@ -55,7 +59,6 @@ int main(int argc, char* argv[]) {
         currentTick = SDL_GetTicks();
         delta = currentTick - lastTick;
 
-        SDL_PumpEvents();
         if (SDL_WaitEvent(&events) != 0) {
             //TODO: move to input class
             switch (events.type) {
@@ -63,16 +66,14 @@ int main(int argc, char* argv[]) {
                     running = false;
                     break;
             }
-
+            
             INPUT->prepareTick(&events);
             //NET->prepareTick();
             STACK->prepareTick();
             DOM->prepareTick();
             GUI->prepareTick();
 
-            GUI->renderWindow();
-
-            browser::UIElements::AddressBar::Render(GUI);
+            browser::UIElements::AddressBar::Render(GUI, STACK);
             browser::UIElements::Console::Render(GUI);
             browser::UIElements::Console::RenderStat(GUI, 1,
                 std::string("FPS: " + std::to_string(1000 / delta)));
@@ -85,17 +86,24 @@ int main(int argc, char* argv[]) {
                 std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
                 + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: " + std::to_string(DEVICE.scaling)));
 
-            INPUT->doTick();
+            if (lastSize != (DEVICE.h + DEVICE.w)) {
+                lastSize = DEVICE.h + DEVICE.w;
+                DOM->SHOULD_UPDATE = true;
+            }
+
+            INPUT->doTick(STACK, DOM, GUI);
             //NET->doTick();
             STACK->doTick();
             DOM->doTick(STACK, GUI);
             GUI->doTick();
 
+            lastSize = DEVICE.h + DEVICE.w;
         }
 
+        SDL_PumpEvents();
         lastTick = currentTick;
     }
 
-    delete GUI, DOM, STACK/*, NET, INPUT*/;
+    delete GUI, DOM, STACK/*, NET*/, INPUT;
     return 0;
 }

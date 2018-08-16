@@ -5,7 +5,7 @@
 // Debug-specific
 #define DEBUG
 #define DEBUG_CONSOLE_WIDTH 350
-#define DEBUG_DRAW_DOM
+//#define DEBUG_DRAW_DOM
 
 // Feature-toggles
 #define TODO true

@@ -43,15 +43,34 @@ namespace browser {
             } else if (type == "h6") {
                 text = child->GetText();
                 tag = new browser::elements::H6(text);
-            } else if (type == "p") {
+            }
+            
+            else if (type == "p") {
                 text = child->GetText();
                 tag = new browser::elements::P(text);
-            } else if ((type == "b") || (type == "strong")) {
+            } else if (type == "aside") {
                 text = child->GetText();
-                tag = new browser::elements::B(text);
-            } else if (type == "br") {
+                tag = new browser::elements::P(text);
+            }
+            
+            else if (type == "b") {
+                text = child->GetText();
+                tag = new browser::elements::Aside(text);
+            } else if (type == "strong") {
+                text = child->GetText();
+                tag = new browser::elements::Strong(text);
+            }
+
+            else if (type == "li") {
+                text = std::string("• ") + child->GetText(); // FIXME: let tag handle list icon
+                tag = new browser::elements::Li(text);
+            }
+            
+            else if (type == "br") {
                 tag = new browser::elements::Br();
-            } else {
+            }
+            
+            else {
                 tag = new browser::elements::GenericElement();
                 console.printf("DOM->Parser->Unsupported Tag: " + type);
             }

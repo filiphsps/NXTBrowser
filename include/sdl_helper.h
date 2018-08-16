@@ -36,7 +36,7 @@ namespace sdl_helper {
         SDL_SetWindowResizable(_window, SDL_TRUE);
         _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
         //SDL_RenderSetLogicalSize(_renderer, 1920, 1080);
-        //SDL_RenderSetIntegerScale(_renderer, SDL_TRUE);
+        SDL_RenderSetIntegerScale(_renderer, SDL_TRUE);
         //SDL_RenderSetScale(_renderer, 2, 2); //TODO: res based
         #endif
         SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);

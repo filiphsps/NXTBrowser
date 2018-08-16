@@ -35,7 +35,7 @@
 // In this example that would be "h2", "main" and "footer"
 //
 // It would oossible even re-use surfaces that are identical, provided
-// ofcourse that it saves more performance thank it takes to compare
+// ofcourse that it saves more performance than it takes to compare
 // each branch with eachother.
 //
 // --------------------------------------------------------------------------

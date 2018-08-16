@@ -74,6 +74,8 @@ namespace browser {
             void Render (browser::GUI *GUI) {
                 #ifdef __SWITCH__
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 22);
+                #elif __MACOS__
+                    TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Microsoft Sans Serif.ttf", 22);
                 #else
                     TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 22);
                 #endif

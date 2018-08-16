@@ -22,7 +22,7 @@ namespace browser {
             void prepareTick() { }
 
             bool doTick(browser::STACK *STACK, browser::GUI *GUI) {
-                if(!this->SHOULD_UPDATE)
+                if(false && !this->SHOULD_UPDATE) //TODO
                     return false;
                 
                 if (browser_height < DEVICE.h) {

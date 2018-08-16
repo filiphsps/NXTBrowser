@@ -33,18 +33,20 @@ long getMemoryUsage() {
 
 bool running = true;
 int main(int argc, char **argv) {
-    //browser::INPUT *INPUT = new browser::INPUT();
+    browser::INPUT *INPUT = new browser::INPUT();
     //browser::NET *NET = new browser::NET();
     browser::STACK *STACK = new browser::STACK();
     browser::DOM *DOM = new browser::DOM();
     browser::GUI *GUI = new browser::GUI();
+
+    //INPUT->subscribe(SDL_MOUSEWHEEL, [](SDL_Event event) {});
 
     SDL_Event events;
     unsigned int currentTick = 0, lastTick = 0, delta = 0;
     #ifdef __SWITCH__
     while(appletMainLoop() && running) {
     #else
-    while(true && running) {
+    while(running) {
     #endif
         currentTick = SDL_GetTicks();
         delta = currentTick - lastTick;
@@ -58,7 +60,7 @@ int main(int argc, char **argv) {
                     break;
             }
 
-            //INPUT->prepareTick(events);
+            INPUT->prepareTick(&events);
             //NET->prepareTick();
             STACK->prepareTick();
             DOM->prepareTick();
@@ -79,7 +81,7 @@ int main(int argc, char **argv) {
                 std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
                 + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: 1"));
 
-            //INPUT->doTick();
+            INPUT->doTick();
             //NET->doTick();
             STACK->doTick();
             DOM->doTick(STACK, GUI);

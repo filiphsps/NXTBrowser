@@ -18,7 +18,7 @@ namespace browser {
         private:
             tinyxml2::XMLDocument *doc;
             std::string source = "";
-            std::string path = "";
+            std::string path = "ram://";
 
         public:
             STACK() {

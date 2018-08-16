@@ -39,11 +39,7 @@ namespace browser {
 
                 if (this->y >= 0) {
                     this->y = 0;
-                    console.printf("border");
                 };
-                
-                
-                console.printf("Scroll");
             }
 
             int thread (void *data) {

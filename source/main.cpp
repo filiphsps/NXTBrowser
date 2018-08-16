@@ -53,7 +53,9 @@ int main(int argc, char* argv[]) {
         currentTick = SDL_GetTicks();
         delta = currentTick - lastTick;
 
+        #ifndef __SWITCH__
         if (SDL_WaitEvent(&events) != 0) {
+        #endif
             //TODO: move to input class
             switch (events.type) {
                 case SDL_QUIT:
@@ -92,9 +94,11 @@ int main(int argc, char* argv[]) {
             GUI->doTick();
 
             lastSize = DEVICE.h + DEVICE.w;
+        #ifndef __SWITCH__
         }
-
         SDL_PumpEvents();
+        #endif
+        
         lastTick = currentTick;
     }
 

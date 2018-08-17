@@ -24,9 +24,5 @@ Doesn't even render a simple website.
 * SDL_mixer
 * SDL_ttf
 
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
-
 ## License
 The "Anyone but Richard M Stallman" License, cause fuck that communist

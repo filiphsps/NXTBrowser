@@ -1,9 +1,7 @@
 #pragma once
-
-#include "libs/SDL_FontCache.h"
+#include <SDL2/SDL.h>
 
 #include "../../console.h"
-
 #include "../properties.h"
 
 extern Console console;

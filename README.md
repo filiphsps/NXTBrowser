@@ -4,7 +4,7 @@ Don't use this.. like really, just use the built-in applet instead.
 
 Doesn't even render a simple website.
 
-![scr](https://i.imgur.com/rrJ9jTP.jpg)
+![scr](https://i.imgur.com/0cFrkUB.png)
 
 
 ## Dependencies

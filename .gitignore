@@ -1,4 +1,4 @@
 .vscode/
-build/
-bin/
+src/build/
+src/bin/
 *.elf

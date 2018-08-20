@@ -15,6 +15,7 @@
 #include "html/html.h"
 #include "gui/gui.h"
 #include "input/input.h"
+#include "net/net.h"
 #include "stack/stack.h"
 #include "dom/dom.h"
 #include "console.h"
@@ -35,7 +36,7 @@ long getMemoryUsage() {
 bool running = true;
 int main(int argc, char* argv[]) {
     browser::INPUT *INPUT = new browser::INPUT();
-    //browser::NET *NET = new browser::NET();
+    browser::NET *NET = new browser::NET();
     browser::STACK *STACK = new browser::STACK();
     browser::DOM *DOM = new browser::DOM();
     browser::GUI *GUI = new browser::GUI();
@@ -54,7 +55,8 @@ int main(int argc, char* argv[]) {
         delta = currentTick - lastTick;
 
         #ifndef __SWITCH__
-        if (SDL_WaitEvent(&events) != 0) {
+        SDL_StartTextInput();
+        while ((SDL_PollEvent(&events) != 0) && running) {
         #endif
             //TODO: move to input class
             switch (events.type) {
@@ -64,15 +66,15 @@ int main(int argc, char* argv[]) {
             }
             
             INPUT->prepareTick(&events);
-            //NET->prepareTick();
+            NET->prepareTick();
             STACK->prepareTick();
             DOM->prepareTick();
             GUI->prepareTick();
 
             browser::UIElements::AddressBar::Render(GUI, STACK);
             browser::UIElements::Console::Render(GUI);
-            browser::UIElements::Console::RenderStat(GUI, 1,
-                std::string("FPS: " + std::to_string(1000 / delta)));
+            //browser::UIElements::Console::RenderStat(GUI, 1,
+            //    std::string("FPS: " + std::to_string(1000 / delta)));
             browser::UIElements::Console::RenderStat(GUI, 2,
                 std::string("Memory: " + std::to_string(
                     getMemoryUsage()) + "/" +
@@ -88,7 +90,7 @@ int main(int argc, char* argv[]) {
             }
 
             INPUT->doTick(STACK, DOM, GUI);
-            //NET->doTick();
+            NET->doTick(STACK, DOM);
             STACK->doTick();
             DOM->doTick(STACK, GUI);
             GUI->doTick();
@@ -98,7 +100,7 @@ int main(int argc, char* argv[]) {
         }
         SDL_PumpEvents();
         #endif
-        
+
         lastTick = currentTick;
     }
 

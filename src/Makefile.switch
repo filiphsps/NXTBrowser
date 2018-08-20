@@ -39,7 +39,7 @@ TARGET		:=	NXTBrowser
 TARGETDIR	:=	bin/switch
 # TODO: build/switch
 BUILD		:=	build
-SOURCES		:=	source source/html source/libs
+SOURCES		:=	source source/html source/libs source/net
 DATA		:=	data
 INCLUDES	:=	include include/html include/html/tags include/libs
 EXEFS_SRC	:=	exefs_src
@@ -60,7 +60,7 @@ CXXFLAGS	:= $(CFLAGS) -Wno-missing-field-initializers -Wno-implicit-fallthrough 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lfreetype -lSDL2_mixer -lmodplug -lmpg123 -lvorbisidec -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs` -lnx
+LIBS	:= -lcurl -lfreetype -lmodplug -lmpg123 -lvorbisidec -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs` -lnx
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

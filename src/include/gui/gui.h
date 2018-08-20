@@ -15,10 +15,15 @@ extern device_aspect DEVICE;
 #define SCROLLBAR_WIDTH 0 //TODO
 #define ADDRESS_BAR_HEIGHT 35
 
+struct browser_state {
+    std::string action = "SELECTED_ADDRESSBAR";
+};
+
 namespace browser {
     class GUI {
         public:
             int x = 0, y = 0;
+            browser_state State;
             SDL_Surface *_gui_surface = NULL;
             SDL_Surface *_browser_surface = NULL;
             SDL_Surface *_overlay_surface = NULL;
@@ -114,6 +119,7 @@ namespace browser {
         namespace AddressBar {
             void Render (browser::GUI *GUI, browser::STACK *STACK) {
                 short height = ADDRESS_BAR_HEIGHT;
+                stack Stack = STACK->getCurrentPage();
 
                 #ifdef __SWITCH__
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (height/2-2) * DEVICE.scaling);
@@ -136,7 +142,7 @@ namespace browser {
                     (height - 10) * DEVICE.scaling
                 }, {255, 255, 255, 255});
 
-                sdl_helper::renderText(STACK->getCurrentPage().path, GUI->_gui_surface, {(height + height/2 + 10) * DEVICE.scaling, ((height - height/2-2)/2) * DEVICE.scaling, DEVICE.w , 25 * DEVICE.scaling}, DEVICE.w, font, {0, 0, 0, 255});
+                sdl_helper::renderText(Stack.path, GUI->_gui_surface, {(height + height/2 + 10) * DEVICE.scaling, ((height - height/2-2)/2) * DEVICE.scaling, DEVICE.w , 25 * DEVICE.scaling}, DEVICE.w, font, {0, 0, 0, 255});
 
                 // Home Icon
                 sdl_helper::renderBackground (GUI->_gui_surface, {
@@ -145,6 +151,13 @@ namespace browser {
                     (height - 5) * DEVICE.scaling,
                     (height - 10) * DEVICE.scaling
                 }, {255, 255, 255, 255});
+
+                sdl_helper::renderBackground (GUI->_overlay_surface, {
+                    0,
+                    height * DEVICE.scaling,
+                    (int)(DEVICE.w * (Stack.loaded/100)),
+                    2 * DEVICE.scaling
+                }, {0, 255, 0, 255});
             }
         }
         namespace Console {

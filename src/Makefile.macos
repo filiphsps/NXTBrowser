@@ -56,7 +56,7 @@ CXXFLAGS	:= $(CFLAGS) -Wno-missing-field-initializers -Wno-implicit-fallthrough 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lfreetype -lSDL2_mixer -lmodplug -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
+LIBS	:=  -lcurl -lfreetype -lmodplug -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
 
 #---------------------------------------------------------------------------------
 $(TARGET): $(OBJECTS)

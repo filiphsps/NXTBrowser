@@ -22,6 +22,9 @@ namespace browser {
             void prepareTick() { }
 
             bool doTick(browser::STACK *STACK, browser::GUI *GUI) {
+                //if (GUI->State.action == "SELECTED_ADDRESSBAR") 
+                //    return false;
+
                 if(!this->SHOULD_UPDATE) //TODO
                     return false;
                 

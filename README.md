@@ -8,13 +8,11 @@ Don't use this.. like really, just use the built-in applet instead.
 ### Win32 & MacOS
 * SDL2
 * SDL_image
-* SDL_mixer
 * SDL_ttf
 ### Switch
 * SDL2
 * SDL_gfxPrimitive
 * SDL_image
-* SDL_mixer
 * SDL_ttf
 
 ## License

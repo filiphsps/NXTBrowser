@@ -32,6 +32,30 @@ namespace browser {
             }
 
             bool doTick(browser::STACK *STACK, browser::DOM *DOM, browser::GUI *GUI) {
+                bool go = false;
+
+                if (GUI->State.action == "SELECTED_ADDRESSBAR") {
+                    if(this->Events->type == SDL_KEYDOWN || this->Events->type == SDL_TEXTINPUT) {
+                        std::string path = STACK->getCurrentPage().path;
+
+                        if (this->Events->key.keysym.sym == SDLK_BACKSPACE && path.length() > 0)
+                            path.pop_back();
+
+                        if (this->Events->type == SDL_TEXTINPUT)
+                            if( !( ( this->Events->text.text[ 0 ] == 'c' || this->Events->text.text[ 0 ] == 'C' ) &&
+                                ( this->Events->text.text[ 0 ] == 'v' || this->Events->text.text[ 0 ] == 'V' )
+                                && SDL_GetModState() & KMOD_CTRL ) ) {
+                                path += this->Events->text.text;
+                            }
+                        
+                        if (this->Events->key.keysym.sym == SDLK_RETURN)
+                            go = true;
+
+                        
+                        STACK->setPath(path, go);
+                    }
+                }
+
                 #ifdef __SWITCH__
                     u64 kDown   = hidKeysDown(CONTROLLER_P1_AUTO);
                     u64 kHeld   = hidKeysHeld(CONTROLLER_P1_AUTO);

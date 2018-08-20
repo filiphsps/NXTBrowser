@@ -11,17 +11,23 @@ struct stack {
     tinyxml2::XMLDocument *xmlParser;
     std::string source;
     std::string path;
+
+    double loaded = 75;
+    bool go = false;
 };
 
 namespace browser {
     class STACK {
         private:
-            tinyxml2::XMLDocument *doc;
-            std::string source = "";
-            std::string path = "ram://";
+            stack Stack;
 
         public:
             STACK() {
+                this->Stack.source = "";
+                this->Stack.path = "ram://";
+                this->Stack.loaded = 0;
+                this->Stack.go = false;
+
                 #ifdef __SWITCH__
                     romfsInit();
                 #endif
@@ -34,12 +40,9 @@ namespace browser {
                     ifs = std::ifstream("../../resources/pages/test.html");
                 #endif
 
-                if(this->source.empty())
-                    this->source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
-                this->doc = new tinyxml2::XMLDocument();
-
-                if(this->source.empty())
-                    this->source = "<html><head>404</head><body><h1>Error</h1><p>We couldn't find the requested file :(</p></body></html>"; // TODO: Embedd error page
+                if(this->Stack.source.empty())
+                    this->Stack.source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
+                this->Stack.xmlParser = new tinyxml2::XMLDocument();
             }
             ~STACK() {
                 #ifdef __SWITCH__
@@ -48,26 +51,38 @@ namespace browser {
             }
 
             stack getCurrentPage() {
-                stack Stack = {this->doc, this->source, this->path};
-                return Stack;
+                return this->Stack;
             }
 
+            void setPath (std::string path, bool go) {
+                this->Stack.path = path;
+
+                if (go) {
+                    this->Stack.go = true;
+                    this->Stack.loaded = 0;
+                }
+            }
             void setSource (std::string page, bool file = false) {
-                if (!file) {
-                    this->source = browser::validator::validate_and_fix(std::string(page));
-                    return;
+                this->Stack.go = false;
+                
+                if (file) {
+                    console.printf(std::string("STACK->Loading file: " + page));
+                    std::ifstream ifs = std::ifstream(page);
+                    this->Stack.source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
+                    this->Stack.path = "file://" + page;
+                } else {
+                    this->Stack.source = browser::validator::validate_and_fix(std::string(page, {}));
+                    
                 }
 
-                console.printf(std::string("STACK->Loading file: " + page));
-                
-                std::ifstream ifs = std::ifstream(page);
-                this->source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
-                this->path = "file://" + page;
             }
 
-            void prepareTick() { }
+            void prepareTick() {
+                if(this->Stack.source.empty())
+                    this->Stack.source = "<html><head>404</head><body><h1>Error</h1><p>We couldn't find the requested file :(</p></body></html>"; // TODO: Embedd error page
+            }
             bool doTick() {
-                this->doc->Parse((const char*)this->source.c_str(), this->source.size());
+                this->Stack.xmlParser->Parse((const char*)this->Stack.source.c_str(), this->Stack.source.size());
             }
     };
 }

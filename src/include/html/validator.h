@@ -18,7 +18,6 @@ namespace browser {
             // TODO: unclosed tags
             // TODO: invalid tags
             for (size_t i = 0; i < new_page_source.size(); i++) {
-
                 if (new_page_source[i] == '<'  && new_page_source[i+1] == 'b' &&
                     new_page_source[i+2] == 'r' && new_page_source[i+3] == '>') {
                     new_page_source.insert(i+3, 1, '/');
@@ -30,7 +29,6 @@ namespace browser {
                     new_page_source.insert(i+3, 1, '/');
                     i--;
                 }
-
             }
 
             tinyxml2::XMLDocument *doc;
@@ -55,6 +53,7 @@ namespace browser {
 
                 if (tick > 5) {
                     console.printf("DOM->Validator->Failed to fix the document. Error ID:" + std::to_string(doc->ErrorID()));
+                    console.printf(std::string(doc->ErrorName()));
                     return new_page_source;
                 }
 

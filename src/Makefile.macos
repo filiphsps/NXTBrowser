@@ -61,7 +61,8 @@ LIBS	:=  -lcurl -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2
 #---------------------------------------------------------------------------------
 $(TARGET): $(OBJECTS)
 	@clear
-	@mkdir -p $(BUILD)
+	@mkdir bin
+	@mkdir macos
 	@echo "Linking..."
 	@echo "  Linking $(TARGET)"; $(CC) $^ -o $(TARGET) $(LIBS)
 

@@ -9,4 +9,4 @@ before_install:
 
 script:
   - cd src
-  - make clean && make macos
+  - make -f Makefile.macos clean && make macos

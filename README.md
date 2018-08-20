@@ -5,15 +5,11 @@ Don't use this.. like really, just use the built-in applet instead.
 ![scr](https://i.imgur.com/0cFrkUB.png)
 
 ## Dependencies
-### Win32 & MacOS
 * SDL2
+* SDL_gfxPrimitive (Switch only)
 * SDL_image
 * SDL_ttf
-### Switch
-* SDL2
-* SDL_gfxPrimitive
-* SDL_image
-* SDL_ttf
+* libcurl
 
 ## License
 The "Anyone but Richard M Stallman" License. We're supporters of actual freedom, not communism.

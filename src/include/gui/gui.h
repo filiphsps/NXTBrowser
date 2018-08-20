@@ -8,6 +8,8 @@
 
 #include "../stack/stack.h"
 
+#include "libs/imgui/imgui.h"
+
 extern Console console;
 extern device_aspect DEVICE;
 

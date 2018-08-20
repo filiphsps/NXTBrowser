@@ -1,0 +1,8 @@
+os: osx
+language: cpp
+
+compiler:
+  - clang
+
+before_install:
+  - brew update && brew bundle

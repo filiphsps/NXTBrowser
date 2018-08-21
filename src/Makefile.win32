@@ -25,7 +25,7 @@ INCLUDES 	:= include
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= C:/Libraries/include/SDL2
+LIBDIRS	:= C:/Libraries/include/SDL2 C:/Libraries/include/curl
 
 
 #---------------------------------------------------------------------------------
@@ -56,14 +56,14 @@ CXXFLAGS	:= $(CFLAGS) -Wno-missing-field-initializers -Wno-implicit-fallthrough 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lfreetype -lSDL2_mixer -lmodplug -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
+LIBS	:=  -lcurl -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg
 
 #---------------------------------------------------------------------------------
 $(TARGET): $(OBJECTS)
 	@clear
 	@mkdir -p $(BUILD)
 	@echo "Linking..."
-	@echo "  Linking $(TARGET)"; $(CC) $^ -o $(TARGET) $(LIBS)
+	@echo "  Linking $(TARGET)"; $(CC) $^ -o $(TARGET)  $(LIBS)
 
 $(BUILD)/%.o: $(SOURCES)/%.$(SRCEXT)
 	@mkdir -p $(BUILDLIST)

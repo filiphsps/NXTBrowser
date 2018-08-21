@@ -49,7 +49,7 @@ BUILDLIST 	:= $(patsubst $(INCLUDES)/%,$(BUILD)/%,$(INCDIRS))
 #---------------------------------------------------------------------------------
 CFLAGS	:=	-g -W -O0 -fpermissive -ffunction-sections $(DEFINES)
 
-CFLAGS	+=	$(INCLUDE) -Wmissing-field-initializers -Wno-gnu-designator -D__MACOS__
+CFLAGS	+=	$(INCLUDE) -Wmissing-field-initializers -Wno-gnu-designator -Wno-unused-value -D__MACOS__
 
 CXXFLAGS	:= $(CFLAGS) -Wno-missing-field-initializers -Wno-implicit-fallthrough -std=c++17
 
@@ -59,12 +59,12 @@ LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g -Wl,-Map,$(notdir $*.map)
 LIBS	:=  -lcurl -ltidy -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
 
 #---------------------------------------------------------------------------------
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJECTS) %.h
 	@clear
 	@mkdir -p bin
 	@mkdir -p macos
 	@echo "Linking..."
-	@echo "  Linking $(APP_TITLE)"; $(CC) $^ -o $(TARGET) $(LIBS)
+	@echo "  Linking $(APP_TITLE)"; $(CC) $< -o $(TARGET) $(LIBS)
 
 $(BUILD)/%.o: $(SOURCES)/%.$(SRCEXT)
 	@mkdir -p $(BUILDLIST)

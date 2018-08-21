@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
             std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
             + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: " + std::to_string(DEVICE.scaling)));
 
-        if (lastSize != (DEVICE.h + DEVICE.w)) {
+        if (lastSize != (unsigned int)(DEVICE.h + DEVICE.w)) {
             lastSize = DEVICE.h + DEVICE.w;
             DOM->SHOULD_UPDATE = true;
         }

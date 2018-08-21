@@ -52,6 +52,7 @@ namespace browser {
                     //std::cout << res << std::endl;
                     //std::cout << source << std::endl;
                 }
+                return DOM->SHOULD_UPDATE;
             };
     };
 }

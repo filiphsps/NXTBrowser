@@ -7,11 +7,7 @@ Don't use this.. like really, just use the built-in applet instead.
 ![scr](https://i.imgur.com/0cFrkUB.png)
 
 ## Dependencies
-* SDL2
-* SDL_gfxPrimitive (Switch only)
-* SDL_image
-* SDL_ttf
-* libcurl
+See `Brewfile`.
 
 ## License
 The "Anyone but Richard M Stallman" License. We're supporters of actual freedom, not communism.

@@ -49,8 +49,8 @@ namespace browser {
                     STACK->setSource(source, false);
                     DOM->SHOULD_UPDATE = true;
                 
-                    std::cout << res << std::endl;
-                    std::cout << source << std::endl;
+                    //std::cout << res << std::endl;
+                    //std::cout << source << std::endl;
                 }
             };
     };

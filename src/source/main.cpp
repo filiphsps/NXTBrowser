@@ -44,7 +44,6 @@ int main(int argc, char* argv[]) {
     if (argc > 1)
         STACK->setSource(argv[1], true);
 
-    SDL_Event events;
     unsigned int currentTick = 0, lastTick = 0, delta = 0, lastSize = DEVICE.h + DEVICE.w;
     #ifdef __SWITCH__
     while(appletMainLoop() && running) {
@@ -53,57 +52,45 @@ int main(int argc, char* argv[]) {
     #endif
         currentTick = SDL_GetTicks();
         delta = currentTick - lastTick;
-
-        #ifndef __SWITCH__
-        SDL_StartTextInput();
-        while ((SDL_PollEvent(&events) != 0) && running) {
-        #endif
-            //TODO: move to input class
-            switch (events.type) {
-                case SDL_QUIT:
-                    running = false;
-                    break;
-            }
             
-            INPUT->prepareTick(&events);
-            NET->prepareTick();
-            STACK->prepareTick();
-            DOM->prepareTick();
-            GUI->prepareTick();
+        INPUT->prepareTick();
+        NET->prepareTick();
+        STACK->prepareTick();
+        DOM->prepareTick();
+        GUI->prepareTick();
 
-            browser::UIElements::AddressBar::Render(GUI, STACK);
-            browser::UIElements::Console::Render(GUI);
-            //browser::UIElements::Console::RenderStat(GUI, 1,
-            //    std::string("FPS: " + std::to_string(1000 / delta)));
-            browser::UIElements::Console::RenderStat(GUI, 2,
-                std::string("Memory: " + std::to_string(
-                    getMemoryUsage()) + "/" +
-                    std::to_string(SDL_GetSystemRAM())
-                    + " MB"));
-            browser::UIElements::Console::RenderStat(GUI, 3,
-                std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
-                + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: " + std::to_string(DEVICE.scaling)));
+        browser::UIElements::AddressBar::Render(GUI, STACK);
+        browser::UIElements::Console::Render(GUI);
+        browser::UIElements::Console::RenderStat(GUI, 1,
+            std::string("FPS: " + std::to_string(1000 / delta)));
+        browser::UIElements::Console::RenderStat(GUI, 2,
+            std::string("Memory: " + std::to_string(
+                getMemoryUsage()) + "/" +
+                std::to_string(SDL_GetSystemRAM())
+                + " MB"));
+        browser::UIElements::Console::RenderStat(GUI, 3,
+            std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
+            + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: " + std::to_string(DEVICE.scaling)));
 
-            if (lastSize != (DEVICE.h + DEVICE.w)) {
-                lastSize = DEVICE.h + DEVICE.w;
-                DOM->SHOULD_UPDATE = true;
-            }
-
-            INPUT->doTick(STACK, DOM, GUI);
-            NET->doTick(STACK, DOM);
-            STACK->doTick();
-            DOM->doTick(STACK, GUI);
-            GUI->doTick();
-
+        if (lastSize != (DEVICE.h + DEVICE.w)) {
             lastSize = DEVICE.h + DEVICE.w;
-        #ifndef __SWITCH__
+            DOM->SHOULD_UPDATE = true;
         }
+
+        INPUT->doTick(STACK, DOM, GUI);
+        NET->doTick(STACK, DOM);
+        STACK->doTick();
+        DOM->doTick(STACK, GUI);
+        GUI->doTick();
+
+        lastSize = DEVICE.h + DEVICE.w;
+        #ifndef __SWITCH__
         SDL_PumpEvents();
         #endif
 
         lastTick = currentTick;
     }
 
-    delete GUI, DOM, STACK/*, NET*/, INPUT;
+    delete GUI, DOM, STACK, NET, INPUT;
     return 0;
 }

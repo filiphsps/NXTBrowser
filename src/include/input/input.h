@@ -41,6 +41,9 @@ namespace browser {
                     const Uint8 *state = SDL_GetKeyboardState(NULL);
                     bool go = false;
 
+                    if (state[SDL_SCANCODE_ESCAPE])
+                        exit(0); //FIXME: BAD
+
                     if (state[SDL_SCANCODE_DOWN])
                         GUI->scroll(0, -1);
                     else if (state[SDL_SCANCODE_UP])

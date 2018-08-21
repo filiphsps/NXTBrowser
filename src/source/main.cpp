@@ -88,6 +88,7 @@ int main(int argc, char* argv[]) {
         SDL_PumpEvents();
         #endif
 
+        SDL_Delay(10);
         lastTick = currentTick;
     }
 

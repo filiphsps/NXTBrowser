@@ -28,7 +28,6 @@ namespace browser {
                 if(!this->SHOULD_UPDATE) //TODO
                     return false;
                 
-                std::cout << browser_height << std::endl;
                 if (browser_height < DEVICE.h) {
                     browser_height = DEVICE.h  - SCROLLBAR_WIDTH;
                 }
@@ -38,7 +37,7 @@ namespace browser {
 
                 if(GUI->_browser_surface != NULL)
                     SDL_FreeSurface(GUI->_browser_surface);
-                GUI->_browser_surface = SDL_CreateRGBSurface(0, DEVICE.h, browser_height, 32, 0, 0, 0, 255);
+                GUI->_browser_surface = SDL_CreateRGBSurface(0, DEVICE.w, browser_height, 32, 0, 0, 0, 255);
 
                 SDL_Surface* browser = SDL_CreateRGBSurface(0, DEVICE.w, browser_height, 32, 0, 0, 0, 0);
                 SDL_FillRect(browser, NULL, SDL_MapRGBA(browser->format, 255, 255, 255, 255));

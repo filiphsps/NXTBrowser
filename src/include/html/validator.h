@@ -22,12 +22,16 @@ namespace browser {
             try {
                 TidyDoc tdoc = tidyCreate();
                 tidyOptSetBool(tdoc, TidyShowInfo, yes);
+                tidyOptSetBool(tdoc, TidyAsciiChars, yes); //FIXME: no
+                tidyOptSetBool(tdoc, TidyEncloseBodyText, yes);
+                tidyOptSetBool(tdoc, TidyEncloseBlockText, yes);
+                tidyOptSetBool(tdoc, TidyMakeBare, yes);
                 tidyOptSetBool(tdoc, TidyXhtmlOut, yes);
 
                 int rc = tidySetErrorBuffer(tdoc, &errbuf);
                 rc = tidyParseString(tdoc, (const char*)page_source.c_str());
                 rc = tidyCleanAndRepair(tdoc);
-                //rc = tidyRunDiagnostics(tdoc);
+                rc = tidyRunDiagnostics(tdoc);
                 rc = (tidyOptSetBool(tdoc, TidyForceOutput, yes) ? rc : -1);
                 rc = tidySaveString(tdoc, output, &size);
                 free(output);
@@ -40,13 +44,11 @@ namespace browser {
                 for (size_t i = 0; i < new_page_source.size(); i++) {
                     if (new_page_source[i] == ' '  && new_page_source[i+1] == '/' && new_page_source[i+2] == '>') {
                         new_page_source.erase(i, 1);
-                        if (i >= 1)
-                            i--;
+                        continue;
                     }
                     if (new_page_source[i] == '\n') {
                         new_page_source.erase(i, 1);
-                        if (i >= 1)
-                            i--;
+                        continue;
                     }
                 }
             } catch (int ex) {
@@ -62,7 +64,8 @@ namespace browser {
                 std::cout << doc->ErrorName() << std::endl;
             }
 
-            std::cout <<  new_page_source << std::endl;
+            std::cout <<  output << std::endl;
+            //std::cout <<  new_page_source << std::endl;
             return new_page_source;
         }
     }

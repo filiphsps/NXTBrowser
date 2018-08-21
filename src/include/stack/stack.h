@@ -24,9 +24,9 @@ namespace browser {
         public:
             STACK() {
                 this->Stack.source = "";
-                this->Stack.path = "ram://";
+                this->Stack.path = "http://www.motherfuckingwebsite.com";
                 this->Stack.loaded = 0;
-                this->Stack.go = false;
+                this->Stack.go = true;
 
                 #ifdef __SWITCH__
                     romfsInit();

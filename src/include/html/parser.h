@@ -65,45 +65,39 @@ namespace browser {
             browser::elements::renderQueueItem renderItem;
 
             std::string text = "";
+            if (child && child->GetText())
+                text = child->GetText();
 
             if (type == "h1") {
-                text = child->GetText();
                 tag = new browser::elements::H1(text);
             } else if (type == "h2") {
-                text = child->GetText();
                 tag = new browser::elements::H2(text);
             } else if (type == "h3") {
-                text = child->GetText();
                 tag = new browser::elements::H3(text);
             } else if (type == "h4") {
-                text = child->GetText();
                 tag = new browser::elements::H4(text);
             } else if (type == "h5") {
-                text = child->GetText();
                 tag = new browser::elements::H5(text);
             } else if (type == "h6") {
-                text = child->GetText();
                 tag = new browser::elements::H6(text);
             }
             
             else if (type == "p") {
-                text = child->GetText();
                 tag = new browser::elements::P(text);
             } else if (type == "aside") {
-                text = child->GetText();
+                tag = new browser::elements::P(text);
+            } else if (type == "pre") {
                 tag = new browser::elements::P(text);
             }
             
             else if (type == "b") {
-                text = child->GetText();
                 tag = new browser::elements::Aside(text);
             } else if (type == "strong") {
-                text = child->GetText();
                 tag = new browser::elements::Strong(text);
             }
 
             else if (type == "li") {
-                text = std::string("• ") + child->GetText(); // FIXME: let tag handle list icon
+                text = std::string("• ") + text; // FIXME: let tag handle list icon
                 tag = new browser::elements::Li(text);
             }
             

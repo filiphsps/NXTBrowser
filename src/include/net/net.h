@@ -17,7 +17,7 @@ size_t write_data(void *contents, size_t size, size_t nmemb, std::string *s) {
     size_t oldLength = s->size();
     s->resize(oldLength + newLength);
 
-    std::copy((char*)contents, (char*)contents+newLength, s->begin()+oldLength);
+    std::copy((char*)contents, (char*)contents+newLength, s->begin() + oldLength);
 }
 
 namespace browser {

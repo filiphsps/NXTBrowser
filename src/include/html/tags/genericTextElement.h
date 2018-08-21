@@ -73,18 +73,18 @@ namespace browser {
                             break;
                     }
 
-                    // Calculate text width & height
-                    // TODO: Separate this into GUI lib
-                    SDL_Surface *surface = TTF_RenderUTF8_Blended_Wrapped(this->font, this->content.c_str(), {0, 0, 0, 0}, width);
+                    if (!this->content.empty()) {
+                        // Calculate text width & height
+                        // TODO: Separate this into GUI lib
+                        SDL_Surface *surface = TTF_RenderUTF8_Blended_Wrapped(this->font, this->content.c_str(), {0, 0, 0, 0}, width);
 
-                    if (this->properties.height <= 0)
-                        this->properties.height = surface->h;
-                    if (this->properties.width <= 0)
-                        this->properties.width = surface->w;
+                        if (this->properties.height <= 0)
+                            this->properties.height = surface->h;
+                        if (this->properties.width <= 0)
+                            this->properties.width = surface->w;
 
-                    SDL_FreeSurface(surface);
-
-                    //console.printf("DOM->Parser->GenericTextElement->width: " + std::to_string(width));
+                        SDL_FreeSurface(surface);
+                    }
                     
                     return browser::elements::GenericElement::getRenderQueueItem(_surface);
                 }

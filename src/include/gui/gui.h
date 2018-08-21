@@ -8,8 +8,6 @@
 
 #include "../stack/stack.h"
 
-#include "libs/imgui/imgui.h"
-
 extern Console console;
 extern device_aspect DEVICE;
 
@@ -57,7 +55,7 @@ namespace browser {
                 SDL_GetRendererOutputSize(_renderer, &w, &h);
                 SDL_GetWindowSize(_window, &window_w, &window_h);
                 #ifndef __SWITCH__
-                SDL_SetWindowSize(_debugger_window, window_w, window_h);
+                    SDL_SetWindowSize(_debugger_window, window_w, window_h);
                 #endif
                 
                 short scaling;
@@ -81,9 +79,9 @@ namespace browser {
                 SDL_SetColorKey(this->_overlay_surface, SDL_TRUE, SDL_MapRGBA(this->_overlay_surface->format, 0, 0, 0, 255));
 
                 #ifndef __SWITCH__
-                if(this->_debugger_surface != NULL)
-                    SDL_FreeSurface(this->_debugger_surface);
-                this->_debugger_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 0);
+                    if(this->_debugger_surface != NULL)
+                        SDL_FreeSurface(this->_debugger_surface);
+                    this->_debugger_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 0);
                 #endif
             }
 
@@ -104,15 +102,15 @@ namespace browser {
                 SDL_DestroyTexture(overlay);
 
                 #ifndef __SWITCH__
-                SDL_Texture *debugger = SDL_CreateTextureFromSurface(_debugger_renderer, this->_debugger_surface);
-                SDL_RenderCopy(_debugger_renderer, debugger, NULL, NULL);
-                SDL_DestroyTexture(debugger);
+                    SDL_Texture *debugger = SDL_CreateTextureFromSurface(_debugger_renderer, this->_debugger_surface);
+                    SDL_RenderCopy(_debugger_renderer, debugger, NULL, NULL);
+                    SDL_DestroyTexture(debugger);
                 #endif
 
                 SDL_RenderPresent(_renderer);
 
                 #ifndef __SWITCH__
-                SDL_RenderPresent(_debugger_renderer);
+                    SDL_RenderPresent(_debugger_renderer);
                 #endif
             }
     };

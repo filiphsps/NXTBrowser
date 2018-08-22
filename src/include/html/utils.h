@@ -2,6 +2,8 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 #include <iostream>
+#include "../sdl_helper.h"
+#include "../libs/tinyxml2/tinyxml2.h"
 
 #include "../main.h"
 #include "../console.h"

@@ -11,9 +11,7 @@
 #define TODO true
 
 #include <iostream>
-
-#include "sdl_helper.h"
-#include "libs/tinyxml2/tinyxml2.h"
+#include "console.h"
 
 extern Console console;
 extern device_aspect DEVICE;

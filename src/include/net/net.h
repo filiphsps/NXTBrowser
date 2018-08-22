@@ -12,12 +12,12 @@
 extern Console console;
 extern device_aspect DEVICE;
 
-size_t write_data(void *contents, size_t size, size_t nmemb, std::string *s) {
-    size_t newLength = size * nmemb;
-    size_t oldLength = s->size();
-    s->resize(oldLength + newLength);
+std::string data;
+size_t write_data(void *contents, size_t size, size_t nmemb, void *userp) {
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
 
-    std::copy((char*)contents, (char*)contents+newLength, s->begin() + oldLength);
+    data = ((std::string*)userp)->c_str();
+    return size * nmemb;
 }
 
 namespace browser {
@@ -45,13 +45,14 @@ namespace browser {
                 CURLcode res = curl_easy_perform(curl);
                 curl_easy_cleanup(curl);
 
-                if (res == 23) {
-                    STACK->setSource(source, false);
+                //if (res == 23) {
+                    STACK->setSource(data, false);
                     DOM->SHOULD_UPDATE = true;
                 
-                    //std::cout << res << std::endl;
-                    //std::cout << source << std::endl;
-                }
+                    std::cout << "res: " << res << std::endl;
+                    std::cout << "length: " << data.length() << std::endl;
+                    std::cout << "source: " << data.c_str() << std::endl;
+                //}
                 return DOM->SHOULD_UPDATE;
             };
     };

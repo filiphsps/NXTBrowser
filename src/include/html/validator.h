@@ -35,13 +35,13 @@ namespace browser {
                 rc = (tidyOptSetBool(tdoc, TidyForceOutput, yes) ? rc : -1);
                 rc = tidySaveString(tdoc, output, &size);
                 free(output);
-                output = (char *)malloc(size+1);
+                output = (char *)malloc(size);
                 rc = tidySaveString(tdoc, output, &size);
                 tidyRelease(tdoc);
 
                 new_page_source = output;
 
-                for (size_t i = 0; i < new_page_source.size(); i++) {
+                /*for (size_t i = 0; i < new_page_source.size(); i++) {
                     if (new_page_source[i] == ' '  && new_page_source[i+1] == '/' && new_page_source[i+2] == '>') {
                         new_page_source.erase(i, 1);
                         continue;
@@ -50,7 +50,7 @@ namespace browser {
                         new_page_source.erase(i, 1);
                         continue;
                     }
-                }
+                }*/
             } catch (int ex) {
                 std::cout << "couldnt fix the document" << std::endl;
             }
@@ -63,9 +63,7 @@ namespace browser {
                 std::cout << doc->ErrorID() << std::endl;
                 std::cout << doc->ErrorName() << std::endl;
             }
-
-            std::cout <<  output << std::endl;
-            //std::cout <<  new_page_source << std::endl;
+            
             return new_page_source;
         }
     }

@@ -104,7 +104,8 @@ namespace sdl_helper {
     SDL_Rect _renderText (std::string text, SDL_Surface *_surface, SDL_Rect pos, int width,
                         TTF_Font *font, SDL_Color color) {
         if(text.empty() || font == NULL) {
-            console.printf("SDL->Failed to render text");
+            if(!text.empty())
+                console.printf("SDL->Failed to render text");
             return {0, 0, 0, 0};
         }
         

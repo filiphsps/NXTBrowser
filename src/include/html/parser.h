@@ -84,6 +84,8 @@ namespace browser {
             
             else if (type == "p") {
                 tag = new browser::elements::P(text);
+            } else if (type == "font") {
+                tag = new browser::elements::P(text);
             } else if (type == "aside") {
                 tag = new browser::elements::P(text);
             } else if (type == "pre") {
@@ -99,6 +101,10 @@ namespace browser {
             else if (type == "li") {
                 text = std::string("• ") + text; // FIXME: let tag handle list icon
                 tag = new browser::elements::Li(text);
+            }
+
+            else if (type == "a") {
+                tag = new browser::elements::P(text);
             }
             
             else if (type == "br") {

@@ -32,16 +32,6 @@ namespace browser {
                     romfsInit();
                 #endif
 
-                std::ifstream ifs;
-    
-                #ifdef __SWITCH__
-                    ifs = std::ifstream("romfs:/pages/test.html");
-                #else
-                    ifs = std::ifstream("../../resources/pages/test.html");
-                #endif
-
-                if(this->Stack.source.empty())
-                    this->Stack.source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
                 this->Stack.xmlParser = new tinyxml2::XMLDocument();
             }
             ~STACK() {
@@ -67,8 +57,8 @@ namespace browser {
                 
                 if (file) {
                     console.printf(std::string("STACK->Loading file: " + page));
-                    std::ifstream ifs = std::ifstream(page);
-                    this->Stack.source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
+                    //std::ifstream ifs = std::ifstream(page);
+                    //this->Stack.source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
                     this->Stack.path = "file://" + page;
                 } else {
                     this->Stack.source = browser::validator::validate_and_fix(std::string(page, {}));

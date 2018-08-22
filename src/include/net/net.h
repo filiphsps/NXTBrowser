@@ -31,7 +31,7 @@ namespace browser {
             bool doTick(browser::STACK *STACK, browser::DOM *DOM) {
                 auto curl = curl_easy_init();
                 stack Stack = STACK->getCurrentPage();
-                std::string source
+                std::string source;
 
                 if (!Stack.go)
                     return false;

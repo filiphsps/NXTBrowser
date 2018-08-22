@@ -28,8 +28,6 @@ namespace browser {
             SDL_Surface *_browser_surface = NULL;
             SDL_Surface *_overlay_surface = NULL;
 
-            SDL_Surface *_debugger_surface = NULL;
-
             GUI() {
                 sdl_helper::init();
                 console = Console();
@@ -54,9 +52,6 @@ namespace browser {
                 int w, h, window_w, window_h;
                 SDL_GetRendererOutputSize(_renderer, &w, &h);
                 SDL_GetWindowSize(_window, &window_w, &window_h);
-                #ifndef __SWITCH__
-                    SDL_SetWindowSize(_debugger_window, window_w, window_h);
-                #endif
                 
                 short scaling;
                 if (w/window_w > 1) scaling = (short)w/window_w;
@@ -77,12 +72,6 @@ namespace browser {
                     SDL_FreeSurface(this->_overlay_surface);
                 this->_overlay_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 0);
                 SDL_SetColorKey(this->_overlay_surface, SDL_TRUE, SDL_MapRGBA(this->_overlay_surface->format, 0, 0, 0, 255));
-
-                #ifndef __SWITCH__
-                    if(this->_debugger_surface != NULL)
-                        SDL_FreeSurface(this->_debugger_surface);
-                    this->_debugger_surface = SDL_CreateRGBSurface(0, DEVICE.w, DEVICE.h, 32, 0, 0, 0, 0);
-                #endif
             }
 
             bool doTick() {
@@ -101,17 +90,7 @@ namespace browser {
                 SDL_RenderCopy(_renderer, overlay, &screen_pos, &screen_pos);
                 SDL_DestroyTexture(overlay);
 
-                #ifndef __SWITCH__
-                    SDL_Texture *debugger = SDL_CreateTextureFromSurface(_debugger_renderer, this->_debugger_surface);
-                    SDL_RenderCopy(_debugger_renderer, debugger, NULL, NULL);
-                    SDL_DestroyTexture(debugger);
-                #endif
-
                 SDL_RenderPresent(_renderer);
-
-                #ifndef __SWITCH__
-                    SDL_RenderPresent(_debugger_renderer);
-                #endif
             }
     };
 
@@ -162,6 +141,9 @@ namespace browser {
         }
         namespace Console {
             void Render (browser::GUI *GUI) {
+                #ifndef __SWITCH__
+                    return;
+                #endif
                 //if(console.hidden)
                 //    return;
 
@@ -173,14 +155,14 @@ namespace browser {
                     TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #endif
 
-                sdl_helper::renderBackground (GUI->_debugger_surface, {
+                sdl_helper::renderBackground (GUI->_overlay_surface, {
                     (DEVICE.w - (DEBUG_CONSOLE_WIDTH * DEVICE.scaling + 30)) + 15,
                     15,
                     DEBUG_CONSOLE_WIDTH * DEVICE.scaling,
                     DEVICE.h - 30
                 }, {180, 180, 180, 255});
 
-                sdl_helper::renderText(console.getFormattedOutput(), GUI->_debugger_surface, {
+                sdl_helper::renderText(console.getFormattedOutput(), GUI->_overlay_surface, {
                     (DEVICE.w - (DEBUG_CONSOLE_WIDTH * DEVICE.scaling + 30)) + 30,
                     30,
                     DEVICE.h,
@@ -199,14 +181,14 @@ namespace browser {
                     TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #endif
 
-                sdl_helper::renderBackground (GUI->_debugger_surface, {
+                sdl_helper::renderBackground (GUI->_overlay_surface, {
                     15,
                     DEVICE.h - (15 + ((28*DEVICE.scaling)*pos)),
                     500*DEVICE.scaling,
                     25*DEVICE.scaling
                 }, {180, 180, 180, 55});
 
-                sdl_helper::renderText(text, GUI->_debugger_surface,
+                sdl_helper::renderText(text, GUI->_overlay_surface,
                     {20, DEVICE.h - (15 + ((28*DEVICE.scaling)*pos)), DEVICE.w, 30}, DEVICE.w, font, {0, 255, 0, 255});
             }
         }

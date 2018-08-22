@@ -30,6 +30,11 @@ class Console {
         }
 
         int printf (std::string message) {
+            #ifndef __SWITCH__
+                std::cout << message << std::endl;
+                return 0;
+            #endif
+
             if(DEVICE.h <= 0)
                 return -1;
             

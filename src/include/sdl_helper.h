@@ -16,9 +16,6 @@
 static SDL_Window *_window;
 static SDL_Renderer *_renderer;
 
-static SDL_Window *_debugger_window;
-static SDL_Renderer *_debugger_renderer;
-
 extern Console console;
 
 namespace sdl_helper {
@@ -39,18 +36,6 @@ namespace sdl_helper {
         SDL_SetWindowResizable(_window, SDL_TRUE);
         _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
         SDL_RenderSetIntegerScale(_renderer, SDL_TRUE);
-
-        _debugger_window = SDL_CreateWindow(
-            "NXTBrowser - Debugger",
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
-            1280,
-            720,
-            SDL_WINDOW_ALLOW_HIGHDPI
-        );
-        _debugger_renderer = SDL_CreateRenderer(_debugger_window, -1, SDL_RENDERER_ACCELERATED);
-        SDL_RenderSetIntegerScale(_debugger_renderer, SDL_TRUE);
-        //SDL_HideWindow(_debugger_window);
         #endif
         SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
         SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
@@ -62,10 +47,6 @@ namespace sdl_helper {
     void exit() {
         SDL_DestroyRenderer(_renderer);
         SDL_DestroyWindow(_window);
-        #ifndef __SWITCH__
-        SDL_DestroyRenderer(_debugger_renderer);
-        SDL_DestroyWindow(_debugger_window);
-        #endif
         
         TTF_Quit();
         IMG_Quit();

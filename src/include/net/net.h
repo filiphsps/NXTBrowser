@@ -22,21 +22,22 @@ size_t write_data(void *contents, size_t size, size_t nmemb, void *userp) {
 
 namespace browser {
     class NET {
-
         public:
             NET() {};
             ~NET() {};
 
-            void prepareTick() {};
+            void prepareTick() {}
 
             bool doTick(browser::STACK *STACK, browser::DOM *DOM) {
                 auto curl = curl_easy_init();
                 stack Stack = STACK->getCurrentPage();
-                std::string source;
+                std::string source
 
                 if (!Stack.go)
                     return false;
-                
+
+                console.printf("NET->Started Download Of: " + Stack.path);
+
                 curl_easy_setopt(curl, CURLOPT_URL, Stack.path.c_str());
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
@@ -45,14 +46,14 @@ namespace browser {
                 CURLcode res = curl_easy_perform(curl);
                 curl_easy_cleanup(curl);
 
-                //if (res == 23) {
+                if (res == 23 || !data.empty()) {
                     STACK->setSource(data, false);
                     DOM->SHOULD_UPDATE = true;
-                
-                    std::cout << "res: " << res << std::endl;
-                    std::cout << "length: " << data.length() << std::endl;
-                    std::cout << "source: " << data.c_str() << std::endl;
-                //}
+
+                    console.printf("NET->Completed Download Of: " + Stack.path);
+                } else {
+                    console.printf("NET->Failed To Completed Download Of: " + Stack.path);
+                }
                 return DOM->SHOULD_UPDATE;
             };
     };

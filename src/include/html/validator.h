@@ -51,17 +51,17 @@ namespace browser {
                         continue;
                     }
                 }*/
-            } catch (int ex) {
-                std::cout << "couldnt fix the document" << std::endl;
+            } catch (...) {
+                console.printf("DOM->Validator->Tidy->Failed to fix the element");
             }
 
             tinyxml2::XMLDocument *doc;
             try {
                 doc = new tinyxml2::XMLDocument();
                 doc->Parse((const char*)new_page_source.c_str(), new_page_source.size());
-            } catch (int ex) {
-                std::cout << doc->ErrorID() << std::endl;
-                std::cout << doc->ErrorName() << std::endl;
+            } catch (...) {
+                console.printf("DOM->Validator->tinyxml2->ErrorName" + std::string(doc->ErrorName()));
+                console.printf("DOM->Validator->tinyxml2->ErrorId" + std::to_string(doc->ErrorID()));
             }
             
             return new_page_source;

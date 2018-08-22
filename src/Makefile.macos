@@ -62,7 +62,7 @@ LIBS	:=  -lcurl -ltidy -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpe
 $(TARGET): $(OBJECTS)
 	@clear
 	@mkdir -p bin
-	@mkdir -p macos
+	@mkdir -p bin/macos
 	@echo "Linking..."
 	@echo "  Linking $(APP_TITLE)"; $(CC) $^ -o $(TARGET) $(LIBS)
 

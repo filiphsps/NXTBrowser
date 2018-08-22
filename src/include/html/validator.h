@@ -6,7 +6,7 @@
 
 #include "../main.h"
 #include "../console.h"
-#include "../tinyxml2.h"
+#include "../libs/tinyxml2/tinyxml2.h"
 
 extern Console console;
 

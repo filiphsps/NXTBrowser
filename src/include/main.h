@@ -13,8 +13,7 @@
 #include <iostream>
 
 #include "sdl_helper.h"
-#include "tinyxml2.h"
-#include "html.h"
+#include "libs/tinyxml2/tinyxml2.h"
 
 extern Console console;
 extern device_aspect DEVICE;

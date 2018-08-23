@@ -29,6 +29,8 @@ namespace browser {
                     if(!this->SHOULD_UPDATE) //TODO
                         return false;
                     
+                    console.printf("DOM->Started drawing the DOM...");
+                    
                     if (browser_height < DEVICE.h) {
                         browser_height = DEVICE.h  - SCROLLBAR_WIDTH;
                     }
@@ -45,12 +47,14 @@ namespace browser {
                     SDL_BlitSurface(browser, NULL, GUI->_browser_surface, NULL);
                     SDL_FreeSurface(browser);
                     
+                    console.printf("DOM->Draw->Parsing Document...");
                     auto element = doc->FirstChildElement("html")->FirstChildElement("body");
                     for(const tinyxml2::XMLElement* child = element->FirstChildElement(); child != NULL; child=child->NextSiblingElement()) {
                         // TODO: Do this properly
                         std::string type = child->Value();
                         position = browser::parser::html_parser(child, type, position, GUI->_browser_surface);
                     }
+                    console.printf("DOM->Draw->Done Parsing Document");
 
                     if (position > browser_height) {
                         browser_height = position * DEVICE.scaling;
@@ -63,8 +67,10 @@ namespace browser {
                         browser_height = DEVICE.h;
                         // _scroll_position.h = browser_height;
                     }
+
+                    console.printf("DOM->Successfully drew the DOM");
                 } catch(...) {
-                    console.printf("DOM->Failed to draw dom");
+                    console.printf("DOM->Failed to draw DOM");
                 }
                 this->SHOULD_UPDATE = false;
             }

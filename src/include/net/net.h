@@ -36,7 +36,7 @@ namespace browser {
                 if (!Stack.go)
                     return false;
 
-                console.printf("NET->Started Download Of: " + Stack.path);
+                console.printf("NET->Downloading: " + Stack.path + "...");
 
                 curl_easy_setopt(curl, CURLOPT_URL, Stack.path.c_str());
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
@@ -50,9 +50,9 @@ namespace browser {
                     STACK->setSource(data, false);
                     DOM->SHOULD_UPDATE = true;
 
-                    console.printf("NET->Completed Download Of: " + Stack.path);
+                    console.printf("NET->Download Completed: " + Stack.path);
                 } else {
-                    console.printf("NET->Failed To Completed Download Of: " + Stack.path);
+                    console.printf("NET->Failed To Download: " + Stack.path);
                 }
                 return DOM->SHOULD_UPDATE;
             };

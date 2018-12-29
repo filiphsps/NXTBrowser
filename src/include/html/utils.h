@@ -45,8 +45,10 @@ namespace browser {
                 }
             }
 
+            printf("APP->Loading font...");
             TTF_Font *font = TTF_OpenFont(path.c_str(), size);
             fontCache.push_back({ font, path, size });
+            printf(" Done!\n");
             return font;
         }
 

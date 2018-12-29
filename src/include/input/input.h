@@ -65,6 +65,7 @@ namespace browser {
                         STACK->setPath(path, go);
                     }
                 #endif
+                return true;
             }
     };
 }

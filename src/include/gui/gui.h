@@ -91,6 +91,8 @@ namespace browser {
                 SDL_DestroyTexture(overlay);
 
                 SDL_RenderPresent(_renderer);
+
+                return true;
             }
     };
 
@@ -104,6 +106,8 @@ namespace browser {
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (height/2-2) * DEVICE.scaling);
                 #elif __MACOS__
                     TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Microsoft Sans Serif.ttf", (height/2-2) * DEVICE.scaling);
+                #elif __LINUX__
+                    TTF_Font *font = browser::utils::get_font_from_cache("/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf", (height/2-2) * DEVICE.scaling);
                 #else
                     TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (height/2-2) * DEVICE.scaling);
                 #endif
@@ -151,6 +155,8 @@ namespace browser {
                     TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #elif __MACOS__
                     TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", 18 * DEVICE.scaling);
+                #elif __LINUX__
+                    TTF_Font *font = browser::utils::get_font_from_cache("/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf", 18 * DEVICE.scaling);
                 #else
                     TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", 18 * DEVICE.scaling);
                 #endif

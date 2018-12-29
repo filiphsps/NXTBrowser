@@ -73,6 +73,7 @@ namespace browser {
             }
             bool doTick() {
                 this->Stack.xmlParser->Parse((const char*)this->Stack.source.c_str(), this->Stack.source.size());
+                return true;
             }
     };
 }

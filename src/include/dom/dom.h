@@ -73,6 +73,8 @@ namespace browser {
                     console.printf("DOM->Failed to draw DOM");
                 }
                 this->SHOULD_UPDATE = false;
+
+                return true;
             }
     };
 }

@@ -1,6 +1,11 @@
 #include <iostream>
-#include <tidy.h>
-#include <tidybuffio.h>
+#ifdef __LINUX__
+    #include <tidy/tidy.h>
+    #include <tidy/tidybuffio.h>
+#else
+    #include <tidy.h>
+    #include <tidybuffio.h>
+#endif
 
 #include "main.h"
 #include "html/validator.h"

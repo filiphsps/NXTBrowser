@@ -35,11 +35,13 @@ long getMemoryUsage() {
 
 bool running = true;
 int main(int argc, char* argv[]) {
+    printf("APP->Init\n");
     browser::INPUT *INPUT = new browser::INPUT();
     browser::NET *NET = new browser::NET();
     browser::STACK *STACK = new browser::STACK();
     browser::DOM *DOM = new browser::DOM();
     browser::GUI *GUI = new browser::GUI();
+    printf("APP->Init done\n");
 
     if (argc > 1)
         STACK->setSource(argv[1], true);

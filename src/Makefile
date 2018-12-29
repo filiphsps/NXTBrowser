@@ -19,3 +19,6 @@ switch:
 
 win32:
 	make -f Makefile.win32
+
+linux:
+	make -f Makefile.linux

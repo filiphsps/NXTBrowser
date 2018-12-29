@@ -4,6 +4,7 @@
 #include "tags/genericElement.h"
 #include "tags/genericTextElement.h"
 
+#include "tags/a.h"
 #include "tags/aside.h"
 #include "tags/b.h"
 #include "tags/br.h"

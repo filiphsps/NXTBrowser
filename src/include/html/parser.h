@@ -93,7 +93,7 @@ namespace browser {
             }
             
             else if (type == "b") {
-                tag = new browser::elements::Aside(text);
+                tag = new browser::elements::B(text);
             } else if (type == "strong") {
                 tag = new browser::elements::Strong(text);
             }
@@ -104,7 +104,7 @@ namespace browser {
             }
 
             else if (type == "a") {
-                tag = new browser::elements::P(text);
+                tag = new browser::elements::A(text);
             }
             
             else if (type == "br") {

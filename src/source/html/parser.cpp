@@ -61,33 +61,22 @@ namespace browser {
 
             else {
                 tag = new browser::elements::GenericElement();
-                printf("DOM->Parser->Unsupported Tag: "); printf(type.c_str()); printf("\n");
+                printf("DOM->Parser->Unsupported Tag: %s\n", type.c_str());
             }
         } catch(...) {
-            printf("DOM->Parser->Error!");
+            printf("DOM->Parser->Error!\n");
         }
 
         switch (tag->elementType) {
             case browser::elements::elementTypes::Text:
                 renderItem = tag->getRenderQueueItem(_browser_surface);
 
-                #ifdef DEBUG_DRAW_DOM
-                    sdl_helper::renderBackground(_browser_surface, {
-                        renderItem.properties.margin.left, //x
-                        position + renderItem.properties.margin.top, //y
-                        renderItem.properties.width + renderItem.properties.padding.left + renderItem.properties.padding.right, //w
-                        renderItem.properties.height + renderItem.properties.padding.top + renderItem.properties.padding.bottom //h
-                    }, {(unsigned char)position, 55, 255, 255});
-                #endif
-
                 position += renderItem.properties.margin.top;
-
                 #ifndef ___NATIVE_GUI___
                     sdl_helper::renderText(text, _browser_surface,
                         {renderItem.properties.margin.left + renderItem.properties.padding.left,
                         position, 0, 0}, renderItem.properties.width, tag->getFont(), {0, 0, 0, 255});
                 #endif
-
                 position += renderItem.properties.height;
                 position += renderItem.properties.margin.bottom;
                 break;

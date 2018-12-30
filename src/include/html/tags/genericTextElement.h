@@ -34,10 +34,12 @@ namespace browser {
                         return browser::elements::GenericElement::getRenderQueueItem(_surface);
                     
                     // Update maxwidth & maxheight
-                    if(this->properties.maxWidth <= 0)
-                        this->properties.maxWidth = _surface->w;
-                    if(this->properties.maxHeight <= 0)
-                        this->properties.maxHeight = _surface->h;
+                    #ifndef ___NATIVE_GUI___
+                        if(this->properties.maxWidth <= 0)
+                            this->properties.maxWidth = _surface->w;
+                        if(this->properties.maxHeight <= 0)
+                            this->properties.maxHeight = _surface->h;
+                    #endif
                     
                     // Calculate width 
                     int width = this->properties.maxWidth - (this->properties.margin.left + this->properties.margin.right +
@@ -76,10 +78,12 @@ namespace browser {
                         // TODO: Separate this into GUI lib
                         SDL_Surface *surface = TTF_RenderUTF8_Blended_Wrapped(this->font, this->content.c_str(), {0, 0, 0, 0}, width);
 
-                        if (this->properties.height <= 0)
-                            this->properties.height = surface->h;
-                        if (this->properties.width <= 0)
-                            this->properties.width = surface->w;
+                        #ifndef ___NATIVE_GUI___
+                            if (this->properties.height <= 0)
+                                this->properties.height = surface->h;
+                            if (this->properties.width <= 0)
+                                this->properties.width = surface->w;
+                        #endif
 
                         SDL_FreeSurface(surface);
                     }

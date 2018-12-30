@@ -33,10 +33,12 @@ namespace browser {
                 virtual TTF_Font* getFont() { return this->font; };
                 virtual browser::elements::renderQueueItem getRenderQueueItem (SDL_Surface* _surface) {
                     // Update maxwidth & maxheight
-                    if(this->properties.maxWidth <= 0)
-                        this->properties.maxWidth = _surface->w;
-                    if(this->properties.maxHeight <= 0)
-                        this->properties.maxHeight = _surface->h;
+                    #ifndef ___NATIVE_GUI___
+                        if(this->properties.maxWidth <= 0)
+                            this->properties.maxWidth = _surface->w;
+                        if(this->properties.maxHeight <= 0)
+                            this->properties.maxHeight = _surface->h;
+                    #endif
 
                     // Get element height and width
                     int width = this->properties.width, height = this->properties.height;

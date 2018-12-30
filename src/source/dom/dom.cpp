@@ -23,14 +23,16 @@ namespace browser {
             int position = 0; // TODO: good scroll
             auto doc = STACK->getCurrentPage().xmlParser;
 
-            if(GUI->_browser_surface != NULL)
-                SDL_FreeSurface(GUI->_browser_surface);
-            GUI->_browser_surface = SDL_CreateRGBSurface(0, DEVICE.w, browser_height, 32, 0, 0, 0, 255);
+            #ifndef ___NATIVE_GUI___
+                if(GUI->_browser_surface != NULL)
+                    SDL_FreeSurface(GUI->_browser_surface);
+                GUI->_browser_surface = SDL_CreateRGBSurface(0, DEVICE.w, browser_height, 32, 0, 0, 0, 255);
 
-            SDL_Surface* browser = SDL_CreateRGBSurface(0, DEVICE.w, browser_height, 32, 0, 0, 0, 0);
-            SDL_FillRect(browser, NULL, SDL_MapRGBA(browser->format, 255, 255, 255, 255));
-            SDL_BlitSurface(browser, NULL, GUI->_browser_surface, NULL);
-            SDL_FreeSurface(browser);
+                SDL_Surface* browser = SDL_CreateRGBSurface(0, DEVICE.w, browser_height, 32, 0, 0, 0, 0);
+                SDL_FillRect(browser, NULL, SDL_MapRGBA(browser->format, 255, 255, 255, 255));
+                SDL_BlitSurface(browser, NULL, GUI->_browser_surface, NULL);
+                SDL_FreeSurface(browser);
+            #endif
             
             printf("DOM->Draw->Parsing Document...\n");
             auto element = doc->FirstChildElement("html")->FirstChildElement("body");

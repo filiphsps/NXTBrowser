@@ -55,7 +55,6 @@
 
 static int browser_height = 0;
 
-extern Console console;
 extern std::string console_output;
 
 namespace browser {
@@ -113,7 +112,7 @@ namespace browser {
             
             else {
                 tag = new browser::elements::GenericElement();
-                console.printf("DOM->Parser->Unsupported Tag: " + type);
+                printf("DOM->Parser->Unsupported Tag: "); printf(type.c_str()); printf("\n");
             }
 
             switch (tag->elementType) {

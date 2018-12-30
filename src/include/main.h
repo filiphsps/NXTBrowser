@@ -13,6 +13,5 @@
 #include <iostream>
 #include "console.h"
 
-extern Console console;
 extern device_aspect DEVICE;
 static std::string page = "";

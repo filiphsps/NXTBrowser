@@ -11,7 +11,6 @@
 #include "../stack/stack.h"
 #include "../dom/dom.h"
 
-extern Console console;
 extern device_aspect DEVICE;
 
 namespace browser {
@@ -38,32 +37,34 @@ namespace browser {
                     if (kHeld & KEY_DDOWN)  GUI->scroll(0, -1);
 
                 #else
-                    const Uint8 *state = SDL_GetKeyboardState(NULL);
-                    bool go = false;
+                    #ifndef ___NATIVE_GUI___
+                        const Uint8 *state = SDL_GetKeyboardState(NULL);
+                        bool go = false;
 
-                    if (state[SDL_SCANCODE_ESCAPE])
-                        exit(0); //FIXME: BAD
+                        if (state[SDL_SCANCODE_ESCAPE])
+                            exit(0); //FIXME: BAD
 
-                    if (state[SDL_SCANCODE_DOWN])
-                        GUI->scroll(0, -1);
-                    else if (state[SDL_SCANCODE_UP])
-                        GUI->scroll(0, 1);
+                        if (state[SDL_SCANCODE_DOWN])
+                            GUI->scroll(0, -1);
+                        else if (state[SDL_SCANCODE_UP])
+                            GUI->scroll(0, 1);
 
-                    if (state[SDL_SCANCODE_F12])
-                        console.toggleConsole();
-                    
-                    if (GUI->State.action == "SELECTED_ADDRESSBAR") {
-                        std::string path = STACK->getCurrentPage().path;
-
-                        if (state[SDL_SCANCODE_BACKSPACE] && path.length() > 0)
-                            path.pop_back();
+                        if (state[SDL_SCANCODE_F12])
+                            console.toggleConsole();
                         
-                        if (state[SDL_SCANCODE_RETURN])
-                            go = true;
+                        if (GUI->State.action == "SELECTED_ADDRESSBAR") {
+                            std::string path = STACK->getCurrentPage().path;
 
-                        
-                        STACK->setPath(path, go);
-                    }
+                            if (state[SDL_SCANCODE_BACKSPACE] && path.length() > 0)
+                                path.pop_back();
+                            
+                            if (state[SDL_SCANCODE_RETURN])
+                                go = true;
+
+                            
+                            STACK->setPath(path, go);
+                        }
+                    #endif
                 #endif
                 return true;
             }

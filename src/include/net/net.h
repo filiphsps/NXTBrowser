@@ -9,7 +9,6 @@
 #include "../stack/stack.h"
 #include "../dom/dom.h"
 
-extern Console console;
 extern device_aspect DEVICE;
 
 std::string data;
@@ -36,7 +35,7 @@ namespace browser {
                 if (!Stack.go)
                     return false;
 
-                console.printf("NET->Downloading: " + Stack.path + "...");
+                printf("NET->Downloading: "); printf(Stack.path.c_str()); printf("...\n");
 
                 curl_easy_setopt(curl, CURLOPT_URL, Stack.path.c_str());
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
@@ -50,9 +49,9 @@ namespace browser {
                     STACK->setSource(data, false);
                     DOM->SHOULD_UPDATE = true;
 
-                    console.printf("NET->Download Completed: " + Stack.path);
+                    printf("NET->Download Completed: "); printf(Stack.path.c_str()); printf("\n");
                 } else {
-                    console.printf("NET->Failed To Download: " + Stack.path);
+                    printf("NET->Failed To Download: "); printf(Stack.path.c_str()); printf("\n");
                 }
                 return DOM->SHOULD_UPDATE;
             };

@@ -2,12 +2,15 @@
 #include <fstream>
 #include <stdio.h>
 #include <iostream>
+#include <functional>
 
 #ifdef __SWITCH__
     #include <switch.h>
 #elif __MACOS__
     #include <sys/time.h>
     #include <sys/resource.h>
+#elif __LINUX__
+    #define ___NATIVE_GUI___
 #elif __WIN32__
 #endif
 
@@ -20,7 +23,18 @@
 #include "dom/dom.h"
 #include "console.h"
 
-Console console;
+#ifdef ___NATIVE_GUI___
+    #include "ui/mainWindow.h"
+#endif
+
+unsigned int currentTick = 0, lastTick = 0, delta = 0, lastSize = DEVICE.h + DEVICE.w;
+
+browser::INPUT *INPUT;
+browser::NET *NET;
+browser::STACK *STACK;
+browser::DOM *DOM;
+browser::GUI *GUI;
+
 device_aspect DEVICE;
 
 long getMemoryUsage() {
@@ -33,34 +47,14 @@ long getMemoryUsage() {
     return 0;
 }
 
-bool running = true;
-int main(int argc, char* argv[]) {
-    printf("APP->Init\n");
-    browser::INPUT *INPUT = new browser::INPUT();
-    browser::NET *NET = new browser::NET();
-    browser::STACK *STACK = new browser::STACK();
-    browser::DOM *DOM = new browser::DOM();
-    browser::GUI *GUI = new browser::GUI();
-    printf("APP->Init done\n");
+int render(void*) {
+    //INPUT->prepareTick();
+    NET->prepareTick();
+    STACK->prepareTick();
+    DOM->prepareTick();
+    //GUI->prepareTick();
 
-    if (argc > 1)
-        STACK->setSource(argv[1], true);
-
-    unsigned int currentTick = 0, lastTick = 0, delta = 0, lastSize = DEVICE.h + DEVICE.w;
-    #ifdef __SWITCH__
-    while(appletMainLoop() && running) {
-    #else
-    while(running) {
-    #endif
-        currentTick = SDL_GetTicks();
-        delta = currentTick - lastTick;
-            
-        INPUT->prepareTick();
-        NET->prepareTick();
-        STACK->prepareTick();
-        DOM->prepareTick();
-        GUI->prepareTick();
-
+    #ifndef ___NATIVE_GUI___
         browser::UIElements::AddressBar::Render(GUI, STACK);
         browser::UIElements::Console::Render(GUI);
         browser::UIElements::Console::RenderStat(GUI, 1,
@@ -73,26 +67,65 @@ int main(int argc, char* argv[]) {
         browser::UIElements::Console::RenderStat(GUI, 3,
             std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
             + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: " + std::to_string(DEVICE.scaling)));
+    #endif
 
-        if (lastSize != (unsigned int)(DEVICE.h + DEVICE.w)) {
-            lastSize = DEVICE.h + DEVICE.w;
-            DOM->SHOULD_UPDATE = true;
-        }
-
-        INPUT->doTick(STACK, DOM, GUI);
-        NET->doTick(STACK, DOM);
-        STACK->doTick();
-        DOM->doTick(STACK, GUI);
-        GUI->doTick();
-
+    /*if (lastSize != (unsigned int)(DEVICE.h + DEVICE.w)) {
         lastSize = DEVICE.h + DEVICE.w;
-        #ifndef __SWITCH__
-        SDL_PumpEvents();
-        #endif
+        DOM->SHOULD_UPDATE = true;
+    }*/
 
-        SDL_Delay(10);
-        lastTick = currentTick;
-    }
+    //INPUT->doTick(STACK, DOM, GUI);
+    NET->doTick(STACK, DOM);
+    STACK->doTick();
+    DOM->doTick(STACK, GUI);
+    //GUI->doTick();
+
+    //lastSize = DEVICE.h + DEVICE.w;
+
+    #ifdef ___NATIVE_GUI___
+        return 1;
+    #endif
+
+    #ifndef __SWITCH__
+    SDL_PumpEvents();
+    #endif
+}
+
+bool running = true;
+int main(int argc, char* argv[]) {
+    printf("APP->Init\n");
+    INPUT = new browser::INPUT();
+    NET = new browser::NET();
+    STACK = new browser::STACK();
+    DOM = new browser::DOM();
+    GUI = new browser::GUI();
+    printf("APP->Init done\n");
+
+    #ifdef ___NATIVE_GUI___
+        MainWindow *window = new MainWindow();
+    #endif
+
+    if (argc > 1)
+        STACK->setSource(argv[1], true);
+    
+    #ifndef ___NATIVE_GUI___
+        #ifdef __SWITCH__
+            while(appletMainLoop() && running) {
+        #else
+            while(running) {
+        #endif
+                currentTick = SDL_GetTicks();
+                delta = currentTick - lastTick;
+                    
+                render();
+
+                SDL_Delay(10);
+                lastTick = currentTick;
+            };
+    #else
+        uiTimer(1000, &render, NULL);
+        uiMain();
+    #endif
 
     delete GUI, DOM, STACK, NET, INPUT;
     return 0;

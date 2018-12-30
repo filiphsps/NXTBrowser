@@ -3,7 +3,7 @@
 #---------------------------------------------------------------------------------
 TOPDIR ?= $(CURDIR)
 
-CC := clang++ -arch x86_64
+CC := clang++
 
 
 #---------------------------------------------------------------------------------
@@ -56,11 +56,10 @@ CXXFLAGS	:= $(CFLAGS) -Wno-missing-field-initializers -Wno-implicit-fallthrough 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=${DEVKITPRO}/libnx/switch.specs -g -Wl,-Map,$(notdir $*.map)
 
-LIBS	:=  -lcurl -ltidy -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
+LIBS	:=  -lui -lcurl -ltidy -lfreetype -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs`
 
 #---------------------------------------------------------------------------------
 $(TARGET): $(OBJECTS)
-	@clear
 	@mkdir -p bin
 	@mkdir -p bin/linux
 	@echo "Linking..."

@@ -7,7 +7,6 @@
 #include "../gui/gui.h"
 #include "../stack/stack.h"
 
-extern Console console;
 extern device_aspect DEVICE;
 
 
@@ -29,7 +28,7 @@ namespace browser {
                     if(!this->SHOULD_UPDATE) //TODO
                         return false;
                     
-                    console.printf("DOM->Started drawing the DOM...");
+                    printf("DOM->Started drawing the DOM...\n");
                     
                     if (browser_height < DEVICE.h) {
                         browser_height = DEVICE.h  - SCROLLBAR_WIDTH;
@@ -47,14 +46,14 @@ namespace browser {
                     SDL_BlitSurface(browser, NULL, GUI->_browser_surface, NULL);
                     SDL_FreeSurface(browser);
                     
-                    console.printf("DOM->Draw->Parsing Document...");
+                    printf("DOM->Draw->Parsing Document...\n");
                     auto element = doc->FirstChildElement("html")->FirstChildElement("body");
                     for(const tinyxml2::XMLElement* child = element->FirstChildElement(); child != NULL; child=child->NextSiblingElement()) {
                         // TODO: Do this properly
                         std::string type = child->Value();
                         position = browser::parser::html_parser(child, type, position, GUI->_browser_surface);
                     }
-                    console.printf("DOM->Draw->Done Parsing Document");
+                    printf("DOM->Draw->Done Parsing Document\n");
 
                     if (position > browser_height) {
                         browser_height = position * DEVICE.scaling;
@@ -68,9 +67,9 @@ namespace browser {
                         // _scroll_position.h = browser_height;
                     }
 
-                    console.printf("DOM->Successfully drew the DOM");
+                    printf("DOM->Successfully drew the DOM\n");
                 } catch(...) {
-                    console.printf("DOM->Failed to draw DOM");
+                    printf("DOM->Failed to draw DOM\n");
                 }
                 this->SHOULD_UPDATE = false;
 

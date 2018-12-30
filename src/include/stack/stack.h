@@ -4,7 +4,6 @@
 #include "../main.h"
 #include "../console.h"
 
-extern Console console;
 extern device_aspect DEVICE;
 
 struct stack {
@@ -56,7 +55,7 @@ namespace browser {
                 this->Stack.go = false;
                 
                 if (file) {
-                    console.printf(std::string("STACK->Loading file: " + page));
+                    printf(std::string("STACK->Loading file: " + page).c_str());
                     //std::ifstream ifs = std::ifstream(page);
                     //this->Stack.source = browser::validator::validate_and_fix(std::string(std::istreambuf_iterator<char>{ifs}, {}));
                     this->Stack.path = "file://" + page;

@@ -11,7 +11,6 @@
 #include "../properties.h"
 #include "genericElement.h"
 
-extern Console console;
 extern device_aspect DEVICE;
 
 namespace browser {
@@ -26,7 +25,7 @@ namespace browser {
 
                     if(!prepend.empty()) {
                         this->content = std::string(prepend) + this->content;
-                        console.printf(this->content);
+                        printf(this->content.c_str());
                     }
                     if(!append.empty())
                         this->content.append(append);

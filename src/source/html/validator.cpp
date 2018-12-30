@@ -12,8 +12,6 @@
 #include "console.h"
 #include "libs/tinyxml2/tinyxml2.h"
 
-extern Console console;
-
 namespace browser {
     std::string validator::validate_and_fix (std::string page_source) {
         char *output = (char *)malloc(1);
@@ -55,7 +53,7 @@ namespace browser {
                 }
             }*/
         } catch (...) {
-            console.printf("DOM->Validator->Tidy->Failed to fix the element");
+            printf("DOM->Validator->Tidy->Failed to fix the element");
         }
 
         tinyxml2::XMLDocument *doc;
@@ -63,8 +61,8 @@ namespace browser {
             doc = new tinyxml2::XMLDocument();
             doc->Parse((const char*)new_page_source.c_str(), new_page_source.size());
         } catch (...) {
-            console.printf("DOM->Validator->tinyxml2->ErrorName" + std::string(doc->ErrorName()));
-            console.printf("DOM->Validator->tinyxml2->ErrorId" + std::to_string(doc->ErrorID()));
+            printf("DOM->Validator->tinyxml2->ErrorName "); printf(std::string(doc->ErrorName()).c_str());
+            printf("DOM->Validator->tinyxml2->ErrorId "); printf(std::to_string(doc->ErrorID()).c_str());
         }
         
         return new_page_source;

@@ -22,8 +22,6 @@ struct fontSurface {
     SDL_Surface *surface;
 };
 
-extern Console console;
-
 static std::vector<font> fontCache;
 static std::vector<fontSurface> fontSurfaceCache;
 namespace browser {

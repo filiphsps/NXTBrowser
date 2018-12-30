@@ -16,8 +16,6 @@
 static SDL_Window *_window;
 static SDL_Renderer *_renderer;
 
-extern Console console;
-
 namespace sdl_helper {
     void init() {
         SDL_Init(SDL_INIT_EVERYTHING);
@@ -67,7 +65,7 @@ namespace sdl_helper {
     SDL_Rect renderText (std::string text, SDL_Surface *_surface, SDL_Rect pos, int width,
                         TTF_Font *font, SDL_Color color) {
         if(text.empty() || font == NULL) {
-            console.printf("SDL->Failed to render text");
+            printf("SDL->Failed to render text\n");
             return {0, 0, 0, 0};
         }
         
@@ -86,7 +84,7 @@ namespace sdl_helper {
                         TTF_Font *font, SDL_Color color) {
         if(text.empty() || font == NULL) {
             if(!text.empty())
-                console.printf("SDL->Failed to render text");
+                printf("SDL->Failed to render text");
             return {0, 0, 0, 0};
         }
         

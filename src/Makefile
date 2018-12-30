@@ -4,11 +4,13 @@
 all:
 	make -f Makefile.switch all
 	make -f Makefile.macos
+	make -f Makefile.linux
 #	make -f Makefile.win32
 
 clean:
-	make -f Makefile.switch clean
+#s	make -f Makefile.switch clean
 	make -f Makefile.macos clean
+	make -f Makefile.linux clean
 #	make -f Makefile.win32 clean
 
 macos:

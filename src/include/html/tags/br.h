@@ -10,8 +10,6 @@
 #include "../properties.h"
 #include "genericElement.h"
 
-extern Console console;
-
 namespace browser {
     namespace elements {
         class Br: public browser::elements::GenericElement {

@@ -4,7 +4,7 @@ MainWindow::MainWindow() {
 	window = uiNewWindow("NXTBrowser", 640, 480, 1);
 
     address_bar_entry = uiNewEntry();
-    uiEntrySetText(address_bar_entry, "http://ite.cnn.io/en");
+    uiEntrySetText(address_bar_entry, "http://lite.cnn.io/en");
 
     address_bar_group = uiNewForm();
     uiFormSetPadded(address_bar_group, 0);

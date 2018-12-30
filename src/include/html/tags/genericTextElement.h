@@ -22,7 +22,6 @@ namespace browser {
 
                     if(!prepend.empty()) {
                         this->content = std::string(prepend) + this->content;
-                        printf(this->content.c_str());
                     }
                     if(!append.empty())
                         this->content.append(append);

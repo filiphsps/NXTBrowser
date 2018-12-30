@@ -55,17 +55,6 @@ int render(void*) {
 
     #ifndef ___NATIVE_GUI___
         browser::UIElements::AddressBar::Render(GUI, STACK);
-        browser::UIElements::Console::Render(GUI);
-        browser::UIElements::Console::RenderStat(GUI, 1,
-            std::string("FPS: " + std::to_string(1000 / delta)));
-        browser::UIElements::Console::RenderStat(GUI, 2,
-            std::string("Memory: " + std::to_string(
-                getMemoryUsage()) + "/" +
-                std::to_string(SDL_GetSystemRAM())
-                + " MB"));
-        browser::UIElements::Console::RenderStat(GUI, 3,
-            std::string("Browser Aspect: " + std::to_string(GUI->_gui_surface->w)
-            + "/" + std::to_string(GUI->_gui_surface->h) + ", Scaling: " + std::to_string(DEVICE.scaling)));
     #endif
 
     /*if (lastSize != (unsigned int)(DEVICE.h + DEVICE.w)) {
@@ -116,7 +105,7 @@ int main(int argc, char* argv[]) {
                 currentTick = SDL_GetTicks();
                 delta = currentTick - lastTick;
                     
-                render();
+                render(NULL);
 
                 SDL_Delay(10);
                 lastTick = currentTick;

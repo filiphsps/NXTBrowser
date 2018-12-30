@@ -53,7 +53,7 @@ namespace browser {
                 }
             }*/
         } catch (...) {
-            printf("DOM->Validator->Tidy->Failed to fix the element");
+            printf("DOM->Validator->Tidy->Failed to fix the element\n");
         }
 
         tinyxml2::XMLDocument *doc;
@@ -61,8 +61,8 @@ namespace browser {
             doc = new tinyxml2::XMLDocument();
             doc->Parse((const char*)new_page_source.c_str(), new_page_source.size());
         } catch (...) {
-            printf("DOM->Validator->tinyxml2->ErrorName "); printf(std::string(doc->ErrorName()).c_str());
-            printf("DOM->Validator->tinyxml2->ErrorId "); printf(std::to_string(doc->ErrorID()).c_str());
+            printf("DOM->Validator->tinyxml2->ErrorName %s\n", std::string(doc->ErrorName()).c_str());
+            printf("DOM->Validator->tinyxml2->ErrorId %s\n", std::to_string(doc->ErrorID()).c_str());
         }
         
         return new_page_source;

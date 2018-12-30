@@ -21,7 +21,6 @@
 #include "stack/stack.h"
 #include "dom/dom.h"
 
-
 #ifdef ___NATIVE_GUI___
     #include "ui/mainWindow.h"
 #endif

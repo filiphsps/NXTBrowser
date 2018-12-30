@@ -32,7 +32,7 @@ namespace browser {
 
             GUI() {
                 #ifndef ___NATIVE_GUI___
-                    sdl_helper::init();
+                    // sdl_helper::init();
                 #else
                     uiInitOptions options;
                     memset(&options, 0, sizeof (uiInitOptions));
@@ -41,7 +41,7 @@ namespace browser {
             }
             ~GUI() {
                 #ifndef ___NATIVE_GUI___
-                    sdl_helper::exit();
+                    // sdl_helper::exit();
                 #else
                     uiUninit();
                 #endif
@@ -116,55 +116,4 @@ namespace browser {
                 return true;
             }
     };
-
-    #ifndef ___NATIVE_GUI___
-        namespace UIElements {
-            namespace AddressBar {
-                void Render (browser::GUI *GUI, browser::STACK *STACK) {
-                    short height = ADDRESS_BAR_HEIGHT;
-                    stack Stack = STACK->getCurrentPage();
-
-                    #ifdef __SWITCH__
-                        TTF_Font *font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (height/2-2) * DEVICE.scaling);
-                    #elif __MACOS__
-                        TTF_Font *font = browser::utils::get_font_from_cache("/Library/Fonts/Microsoft Sans Serif.ttf", (height/2-2) * DEVICE.scaling);
-                    #elif __LINUX__
-                        TTF_Font *font = browser::utils::get_font_from_cache("/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf", (height/2-2) * DEVICE.scaling);
-                    #else
-                        TTF_Font *font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (height/2-2) * DEVICE.scaling);
-                    #endif
-
-                    sdl_helper::renderBackground (GUI->_gui_surface, {
-                        0,
-                        0,
-                        DEVICE.w,
-                        height * DEVICE.scaling
-                    }, {235, 235, 235, 255});
-                    sdl_helper::renderBackground (GUI->_gui_surface, {
-                        (height + height/2) * DEVICE.scaling,
-                        5 * DEVICE.scaling,
-                        DEVICE.w - ((height*2) * DEVICE.scaling),
-                        (height - 10) * DEVICE.scaling
-                    }, {255, 255, 255, 255});
-
-                    sdl_helper::renderText(Stack.path, GUI->_gui_surface, {(height + height/2 + 10) * DEVICE.scaling, ((height - height/2-2)/2) * DEVICE.scaling, DEVICE.w , 25 * DEVICE.scaling}, DEVICE.w, font, {0, 0, 0, 255});
-
-                    // Home Icon
-                    sdl_helper::renderBackground (GUI->_gui_surface, {
-                        10 * DEVICE.scaling,
-                        5 * DEVICE.scaling,
-                        (height - 5) * DEVICE.scaling,
-                        (height - 10) * DEVICE.scaling
-                    }, {255, 255, 255, 255});
-
-                    sdl_helper::renderBackground (GUI->_overlay_surface, {
-                        0,
-                        height * DEVICE.scaling,
-                        (int)(DEVICE.w * (Stack.loaded/100)),
-                        2 * DEVICE.scaling
-                    }, {0, 255, 0, 255});
-                }
-            }
-        }
-    #endif
 }

@@ -5,10 +5,8 @@
 // Debug-specific
 #define DEBUG
 #define DEBUG_CONSOLE_WIDTH 350
-//#define DEBUG_DRAW_DOM
 
 // Feature-toggles
-#define TODO true
 #ifdef __LINUX__
     #define ___NATIVE_GUI___ true
 #endif

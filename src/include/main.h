@@ -9,7 +9,9 @@
 
 // Feature-toggles
 #define TODO true
-#define ___NATIVE_GUI___ true
+#ifdef __LINUX__
+    #define ___NATIVE_GUI___ true
+#endif
 
 #include <iostream>
 #include <vector>

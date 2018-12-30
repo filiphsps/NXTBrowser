@@ -10,7 +10,6 @@
     #include <sys/time.h>
     #include <sys/resource.h>
 #elif __LINUX__
-    #define ___NATIVE_GUI___
 #elif __WIN32__
 #endif
 
@@ -21,7 +20,7 @@
 #include "net/net.h"
 #include "stack/stack.h"
 #include "dom/dom.h"
-#include "console.h"
+
 
 #ifdef ___NATIVE_GUI___
     #include "ui/mainWindow.h"

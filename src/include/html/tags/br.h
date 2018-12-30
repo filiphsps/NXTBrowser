@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "../../console.h"
+
 
 #include "../properties.h"
 #include "genericElement.h"

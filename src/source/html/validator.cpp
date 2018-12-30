@@ -9,7 +9,7 @@
 
 #include "main.h"
 #include "html/validator.h"
-#include "console.h"
+
 #include "libs/tinyxml2/tinyxml2.h"
 
 namespace browser {

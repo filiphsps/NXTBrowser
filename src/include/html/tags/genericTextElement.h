@@ -5,9 +5,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "../../console.h"
-
-#include "../utils.h"
 #include "../properties.h"
 #include "genericElement.h"
 
@@ -47,30 +44,32 @@ namespace browser {
                         this->properties.padding.left + this->properties.padding.right) * DEVICE.scaling;
 
                     // Set font style
-                    switch (this->properties.fontStyle) {
-                        case Bold:
-                            #ifdef __SWITCH__
-                                this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
-                                TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
-                            #elif __MACOS__
-                                this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial Bold.ttf", (int)this->properties.fontSize * DEVICE.scaling);
-                            #else
-                                this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
-                                TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
-                            #endif
-                            break;
-                        case Normal:
-                        default:
-                            #ifdef __SWITCH__
-                                this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
-                            #elif __MACOS__
-                                this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", (int)this->properties.fontSize * DEVICE.scaling);
-                            #else
-                                this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
-                            #endif
-                            TTF_SetFontStyle(this->font, TTF_STYLE_NORMAL);
-                            break;
-                    }
+                    #ifndef ___NATIVE_GUI___
+                        switch (this->properties.fontStyle) {
+                            case Bold:
+                                #ifdef __SWITCH__
+                                    this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
+                                    TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
+                                #elif __MACOS__
+                                    this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial Bold.ttf", (int)this->properties.fontSize * DEVICE.scaling);
+                                #else
+                                    this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
+                                    TTF_SetFontStyle(this->font, TTF_STYLE_BOLD);
+                                #endif
+                                break;
+                            case Normal:
+                            default:
+                                #ifdef __SWITCH__
+                                    this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
+                                #elif __MACOS__
+                                    this->font = browser::utils::get_font_from_cache("/Library/Fonts/Arial.ttf", (int)this->properties.fontSize * DEVICE.scaling);
+                                #else
+                                    this->font = browser::utils::get_font_from_cache("../../resources/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
+                                #endif
+                                TTF_SetFontStyle(this->font, TTF_STYLE_NORMAL);
+                                break;
+                        }
+                    #endif
 
                     if (!this->content.empty()) {
                         // Calculate text width & height

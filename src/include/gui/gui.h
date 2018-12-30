@@ -2,13 +2,10 @@
 #include <iostream>
 
 #include "../main.h"
-#ifndef ___NATIVE_GUI___
-    #include "../sdl_helper.h"
-#else
+#ifdef ___NATIVE_GUI___
     #include "ui/mainWindow.h";
 #endif
-#include "../html/utils.h"
-#include "../console.h"
+
 
 #include "../stack/stack.h"
 

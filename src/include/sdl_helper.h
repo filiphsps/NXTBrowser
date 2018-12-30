@@ -2,65 +2,68 @@
 
 #include <iostream>
 
-#include <SDL2/SDL.h>
 #ifdef __SWITCH__
 #include <SDL2/SDL2_gfxPrimitives.h>
 #endif
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 
 #include "main.h"
-#include "console.h"
-#include "html/utils.h"
 
-static SDL_Window *_window;
-static SDL_Renderer *_renderer;
+#ifndef ___NATIVE_GUI___
+    static SDL_Window *_window;
+    static SDL_Renderer *_renderer;
+#endif
 
 namespace sdl_helper {
     void init() {
         SDL_Init(SDL_INIT_EVERYTHING);
 
-        #ifdef __SWITCH__
-        SDL_CreateWindowAndRenderer(1280, 720, 0, &_window, &_renderer);
-        #else
-        _window = SDL_CreateWindow(
-            "NXTBrowser",
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
-            1280,
-            720,
-            SDL_WINDOW_ALLOW_HIGHDPI
-        );
-        SDL_SetWindowResizable(_window, SDL_TRUE);
-        _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
-        SDL_RenderSetIntegerScale(_renderer, SDL_TRUE);
+        #ifndef ___NATIVE_GUI___
+            #ifdef __SWITCH__
+                SDL_CreateWindowAndRenderer(1280, 720, 0, &_window, &_renderer);
+            #else
+                _window = SDL_CreateWindow(
+                    "NXTBrowser",
+                    SDL_WINDOWPOS_UNDEFINED,
+                    SDL_WINDOWPOS_UNDEFINED,
+                    1280,
+                    720,
+                    SDL_WINDOW_ALLOW_HIGHDPI
+                );
+                SDL_SetWindowResizable(_window, SDL_TRUE);
+                _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
+                SDL_RenderSetIntegerScale(_renderer, SDL_TRUE);
+            #endif
+        
+            SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+            SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
         #endif
-        SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
-        SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
         IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG | IMG_INIT_WEBP | IMG_INIT_TIF);
         TTF_Init();
     }
 
     void exit() {
-        SDL_DestroyRenderer(_renderer);
-        SDL_DestroyWindow(_window);
+        #ifndef ___NATIVE_GUI___
+            SDL_DestroyRenderer(_renderer);
+            SDL_DestroyWindow(_window);
+        #endif
         
         TTF_Quit();
         IMG_Quit();
         SDL_Quit();
     }
 
-    void drawTexture(SDL_Surface *_surface, std::string path, int x, int y) {
-        SDL_Surface *surface = IMG_Load(path.c_str());
-        SDL_Rect position;
+    #ifndef ___NATIVE_GUI___
+        void drawTexture(SDL_Surface *_surface, std::string path, int x, int y) {
+            SDL_Surface *surface = IMG_Load(path.c_str());
+            SDL_Rect position;
 
-        SDL_Rect src = {0, 0, surface->w, surface->h};
-        SDL_Rect dst = {x, y, surface->w, surface->h};
+            SDL_Rect src = {0, 0, surface->w, surface->h};
+            SDL_Rect dst = {x, y, surface->w, surface->h};
 
-        SDL_BlitSurface(surface, NULL, _surface, NULL);
-        SDL_FreeSurface(surface);
-    }
+            SDL_BlitSurface(surface, NULL, _surface, NULL);
+            SDL_FreeSurface(surface);
+        }
 
     SDL_Rect renderText (std::string text, SDL_Surface *_surface, SDL_Rect pos, int width,
                         TTF_Font *font, SDL_Color color) {
@@ -112,4 +115,6 @@ namespace sdl_helper {
         pos.w = w;
         SDL_FillRect(_surface, &pos, SDL_MapRGBA(_surface->format, r, g, b, a));
     }
+
+    #endif
 }

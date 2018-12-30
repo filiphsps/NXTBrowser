@@ -4,7 +4,7 @@
 #include <curl/easy.h>
 
 #include "main.h"
-#include "console.h"
+
 
 #include "../stack/stack.h"
 #include "../dom/dom.h"

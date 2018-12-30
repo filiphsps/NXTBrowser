@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "../main.h"
-#include "../console.h"
+#include "../html/validator.h"
 
 extern device_aspect DEVICE;
 

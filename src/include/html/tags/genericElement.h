@@ -1,7 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
 
-#include "../../console.h"
 #include "../properties.h"
 
 extern device_aspect DEVICE;

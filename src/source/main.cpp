@@ -25,7 +25,7 @@
     #include "ui/mainWindow.h"
 #endif
 
-unsigned int currentTick = 0, lastTick = 0, delta = 0, lastSize = DEVICE.h + DEVICE.w;
+unsigned int currentTick = 0, lastTick = 0, delta = 0;
 
 browser::INPUT *INPUT;
 browser::NET *NET;
@@ -46,7 +46,7 @@ long getMemoryUsage() {
 }
 
 int render(void*) {
-    //INPUT->prepareTick();
+    INPUT->prepareTick();
     NET->prepareTick();
     STACK->prepareTick();
     DOM->prepareTick();
@@ -56,18 +56,11 @@ int render(void*) {
         browser::UIElements::AddressBar::Render(GUI, STACK);
     #endif
 
-    /*if (lastSize != (unsigned int)(DEVICE.h + DEVICE.w)) {
-        lastSize = DEVICE.h + DEVICE.w;
-        DOM->SHOULD_UPDATE = true;
-    }*/
-
-    //INPUT->doTick(STACK, DOM, GUI);
+    INPUT->doTick(STACK, DOM, GUI);
     NET->doTick(STACK, DOM);
     STACK->doTick();
     DOM->doTick(STACK, GUI);
     //GUI->doTick();
-
-    //lastSize = DEVICE.h + DEVICE.w;
 
     #ifdef ___NATIVE_GUI___
         return 1;

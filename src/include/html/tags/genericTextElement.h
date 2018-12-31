@@ -46,7 +46,7 @@ namespace browser {
 
                     // Set font style
                     #ifndef ___NATIVE_GUI___
-                        switch (this->properties.fontStyle) {
+                        /*switch (this->properties.fontStyle) {
                             case Bold:
                                 #ifdef __SWITCH__
                                     this->font = browser::utils::get_font_from_cache("romfs:/fonts/NintendoStandard.ttf", (int)this->properties.fontSize * DEVICE.scaling);
@@ -69,7 +69,7 @@ namespace browser {
                                 #endif
                                 TTF_SetFontStyle(this->font, TTF_STYLE_NORMAL);
                                 break;
-                        }
+                        }*/
                     #endif
 
                     if (!this->content.empty()) {

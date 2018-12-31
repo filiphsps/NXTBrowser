@@ -22,11 +22,13 @@ MainWindow::MainWindow() {
 
     // BrowserArea
     browser_area_handler->Draw = BrowserAreaOnDraw;
+    browser_area_handler->MouseEvent = BrowserAreaMouseEvent;
+    browser_area_handler->MouseCrossed = BrowserAreaMouseCrossed;
     browser_area = uiNewScrollingArea(browser_area_handler, 640, 1000);
 
     uiBoxAppend(container,
         uiControl(browser_area),
-        0);
+        1);
 
     uiWindowSetChild(window, uiControl(container));
     uiControlShow(uiControl(window));
@@ -37,5 +39,20 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::BrowserAreaOnDraw(uiAreaHandler* handler, uiArea* area, uiAreaDrawParams* params) {
-    //TODO
+    uiDrawBrush *brush = new uiDrawBrush;
+    brush->Type = uiDrawBrushTypeSolid;
+    brush->A = 255;
+    brush->R = 255;
+    brush->G = 255;
+    brush->B = 255;
+
+    uiDrawPath *path = uiDrawNewPath(uiDrawFillModeWinding);
+    uiDrawPathAddRectangle(path, 0, 0, 640, 1000);
+    uiDrawPathEnd(path);
+
+    uiDrawFill(params->Context, path, brush);
+}
+void MainWindow::BrowserAreaMouseEvent(uiAreaHandler *, uiArea *, uiAreaMouseEvent *) {}
+void MainWindow::BrowserAreaMouseCrossed(uiAreaHandler *, uiArea *, int left) {
+    // printf("GUI->UI->MainWindow->Mouse->%d\n", left);
 }

@@ -9,6 +9,8 @@ class MainWindow {
         ~MainWindow();
 
         static void BrowserAreaOnDraw(uiAreaHandler* handler, uiArea* area, uiAreaDrawParams* params);
+        static void BrowserAreaMouseEvent(uiAreaHandler *, uiArea *, uiAreaMouseEvent *);
+        static void BrowserAreaMouseCrossed(uiAreaHandler *, uiArea *, int left);
     private:
         uiWindow *window;
 

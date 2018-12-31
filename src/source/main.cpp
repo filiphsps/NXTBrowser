@@ -50,17 +50,15 @@ int render(void*) {
     NET->prepareTick();
     STACK->prepareTick();
     DOM->prepareTick();
-    //GUI->prepareTick();
+    GUI->prepareTick();
 
-    #ifndef ___NATIVE_GUI___
-        browser::UIElements::AddressBar::Render(GUI, STACK);
-    #endif
+    // TODO: ?
 
     INPUT->doTick(STACK, DOM, GUI);
     NET->doTick(STACK, DOM);
     STACK->doTick();
     DOM->doTick(STACK, GUI);
-    //GUI->doTick();
+    GUI->doTick();
 
     #ifdef ___NATIVE_GUI___
         return 1;

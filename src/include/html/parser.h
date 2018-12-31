@@ -50,10 +50,8 @@
 #include "../main.h"
 #include "html/elements.h"
 
-static int browser_height = 0;
-
 namespace browser {
     namespace parser {
-        int html_parser (const tinyxml2::XMLElement* child, std::string type, int position, SDL_Surface* _browser_surface);
+        int html_parser (const tinyxml2::XMLElement* child, std::string type, int position);
     }
 }

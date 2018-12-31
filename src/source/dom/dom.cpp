@@ -19,7 +19,7 @@ namespace browser {
             for(const tinyxml2::XMLElement* child = element->FirstChildElement(); child != NULL; child=child->NextSiblingElement()) {
                 // TODO: Do this properly
                 std::string type = child->Value();
-                position = browser::parser::html_parser(child, type, position, GUI->_browser_surface);
+                position = browser::parser::html_parser(child, type, position);
             }
             printf("DOM->Draw->Done Parsing Document\n");
 

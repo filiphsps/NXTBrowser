@@ -7,7 +7,7 @@
 #include "html/elements.h"
 
 namespace browser {
-    int parser::html_parser (const tinyxml2::XMLElement* child, std::string type, int position, SDL_Surface* _browser_surface) {
+    int parser::html_parser (const tinyxml2::XMLElement* child, std::string type, int position) {
         browser::elements::GenericElement *tag;
         browser::elements::renderQueueItem renderItem;
 
@@ -67,16 +67,16 @@ namespace browser {
             printf("DOM->Parser->Error!\n");
         }
 
-        switch (tag->elementType) {
+        /*switch (tag->elementType) {
             case browser::elements::elementTypes::Text:
-                renderItem = tag->getRenderQueueItem(_browser_surface);
+                //renderItem = tag->getRenderQueueItem(_browser_surface);
 
                 position += renderItem.properties.margin.top;
 
                 #ifndef ___NATIVE_GUI___
-                    /*sdl_helper::renderText(text, _browser_surface,
+                    sdl_helper::renderText(text, _browser_surface,
                         {renderItem.properties.margin.left + renderItem.properties.padding.left,
-                        position, 0, 0}, renderItem.properties.width, tag->getFont(), {0, 0, 0, 255});*/
+                        position, 0, 0}, renderItem.properties.width, tag->getFont(), {0, 0, 0, 255});
                 #endif
 
                 position += renderItem.properties.height;
@@ -89,12 +89,12 @@ namespace browser {
             default:
                 // TODO:
                 break;
-        }
+        }*/
 
         delete tag, renderItem;
         for(const tinyxml2::XMLElement* c = child->FirstChildElement(); c != NULL; c = c->NextSiblingElement()) {
             std::string type = c->Value();
-            position = browser::parser::html_parser(c, type, position, _browser_surface);
+            position = browser::parser::html_parser(c, type, position);
         }
 
         return position;

@@ -1,5 +1,5 @@
 # NXTBrowser
-[![Build Status](https://travis-ci.org/filfat/SimpleWebNX.svg?branch=master)](https://travis-ci.org/filfat/SimpleWebNX)
+[![Build Status](https://travis-ci.org/filfat/NXTBrowser.svg?branch=master)](https://travis-ci.org/filfat/NXTBrowser)
 
 A shitty HTML renderer based on tinyxml2.  
 Don't use this.. like really.

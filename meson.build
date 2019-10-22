@@ -27,7 +27,7 @@ cpp_args = [
 link_args = []
 dep = [
     dependency('tidy'),
-    dependency('curl'),
+    dependency('libcurl'),
     dependency('sdl2'),
     dependency('sdl2_image'),
     dependency('sdl2_ttf')
